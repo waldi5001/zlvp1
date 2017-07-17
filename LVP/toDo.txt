@@ -22,3 +22,5 @@ trim interceptor
 Actions weiter ausbauen.
 
 importController muss weiter importieren auch wenn fehler in zeile
+
+java -cp lib/*:target/zlvp-0.1-SNAPSHOT-jar-with-dependencies.jar de.zlvp.StartKlasse

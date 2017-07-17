@@ -271,7 +271,8 @@ public class FensterKlasse extends JFrame {
             jMenuItemUeber.setText("Info");
             jMenuItemUeber.addActionListener(e -> {
                 try {
-                    AboutDialog.showDialog(SwingUtilities.getWindowAncestor((Component) e.getSource()), null, "", "");
+                    AboutDialog.showDialog(SwingUtilities.getWindowAncestor((Component) e.getSource()), null, "",
+                            String.format("Version: %s", getClass().getPackage().getImplementationVersion()));
                 } catch (IOException e1) {
                     throw new RuntimeException(e1.getMessage(), e1);
                 }
