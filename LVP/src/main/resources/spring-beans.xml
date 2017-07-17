@@ -54,7 +54,9 @@
 		<property name="jdbc" ref="jdbcTemplate" />
 	</bean>
 
-	<bean id="controllerProxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+	<bean id="personDao" class="de.zlvp.dao.PersonDao" parent="abstractDao" />
+
+	<bean class="org.springframework.aop.framework.ProxyFactoryBean">
 		<property name="target">
 			<bean class="de.zlvp.controller.ControllerImpl">
 				<property name="anredeDao">
@@ -96,9 +98,7 @@
 				<property name="materialwartDao">
 					<bean class="de.zlvp.dao.MaterialwartDao" parent="abstractDao" />
 				</property>
-				<property name="personDao">
-					<bean class="de.zlvp.dao.PersonDao" parent="abstractDao" />
-				</property>
+				<property name="personDao" ref="personDao" />
 				<property name="programmDao">
 					<bean class="de.zlvp.dao.ProgrammDao" parent="abstractDao" />
 				</property>
@@ -137,8 +137,17 @@
 		</property>
 	</bean>
 
-	<bean class="de.zlvp.controller.ExcelControllerImpl">
-		<property name="controller" ref="controllerProxy" />
+	<bean class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target">
+			<bean class="de.zlvp.controller.ExcelControllerImpl">
+				<property name="personDao" ref="personDao" />
+			</bean>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>transactionInterceptor</value>
+			</list>
+		</property>
 	</bean>
 
 </beans>

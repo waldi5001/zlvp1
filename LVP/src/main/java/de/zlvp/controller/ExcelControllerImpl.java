@@ -1,10 +1,19 @@
 package de.zlvp.controller;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.swing.ProgressMonitor;
+import javax.swing.SwingWorker;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDataValidationHelper;
@@ -21,10 +30,18 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddressList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class ExcelControllerImpl implements ExcelController {
+import de.javasoft.swing.DetailsDialog;
+import de.zlvp.dao.PersonDao;
+import de.zlvp.ui.DesktopPane;
 
-    private Controller controller;
+public class ExcelControllerImpl implements ExcelController, PropertyChangeListener {
+
+    private static Logger log = LoggerFactory.getLogger(ExcelController.class);
+
+    private PersonDao personDao;
 
     @Override
     public byte[] getVorlage() {
@@ -89,54 +106,99 @@ public class ExcelControllerImpl implements ExcelController {
         }
     }
 
+    ProgressMonitor progressMonitor = new ProgressMonitor(DesktopPane.get(), "Personen importieren", "", 0, 100);
+
     @Override
     public void importieren(byte[] sheet) {
         try {
             HSSFWorkbook wb = new HSSFWorkbook(new ByteArrayInputStream(sheet));
             HSSFSheet s = wb.getSheetAt(0);
-            for (int r = 1; r < s.getPhysicalNumberOfRows(); r++) {
-                HSSFRow row = s.getRow(r);
 
-                String anrede = null, nachname = null, vorname = null, strasse = null, plz = null, ort = null,
-                        telefon = null, handy = null, nottel = null, email = null;
-                Date gebdat = null;
+            List<Object[]> failed = new ArrayList<>();
 
-                for (int c = 0; c < row.getLastCellNum(); c++) {
-                    HSSFCell cell = row.getCell(c);
-                    if (c == 0) {
-                        anrede = cell.getStringCellValue();
-                    } else if (c == 1) {
-                        nachname = cell.getStringCellValue();
-                    } else if (c == 2) {
-                        vorname = cell.getStringCellValue();
-                    } else if (c == 3) {
-                        strasse = cell.getStringCellValue();
-                    } else if (c == 4) {
-                        plz = cell.getStringCellValue();
-                    } else if (c == 5) {
-                        ort = cell.getStringCellValue();
-                    } else if (c == 6) {
-                        gebdat = cell.getDateCellValue();
-                    } else if (c == 7) {
-                        telefon = cell.getStringCellValue();
-                    } else if (c == 8) {
-                        handy = cell.getStringCellValue();
-                    } else if (c == 9) {
-                        nottel = cell.getStringCellValue();
-                    } else if (c == 10) {
-                        email = cell.getStringCellValue();
+            progressMonitor.setProgress(0);
+            progressMonitor.setMillisToPopup(10);
+            SwingWorker<Integer, Object[]> sw = new SwingWorker<Integer, Object[]>() {
+                @Override
+                protected Integer doInBackground() throws Exception {
+                    for (int r = 1; r < s.getPhysicalNumberOfRows(); r++) {
+                        HSSFRow row = s.getRow(r);
+                        String anrede = null, nachname = null, vorname = null, strasse = null, plz = null, ort = null,
+                                telefon = null, handy = null, nottel = null, email = null;
+                        Date gebdat = null;
+
+                        for (int c = 0; c < row.getLastCellNum(); c++) {
+                            HSSFCell cell = row.getCell(c);
+                            if (c == 0) {
+                                anrede = cell.getStringCellValue().trim();
+                            } else if (c == 1) {
+                                nachname = cell.getStringCellValue().trim();
+                            } else if (c == 2) {
+                                vorname = cell.getStringCellValue().trim();
+                            } else if (c == 3) {
+                                strasse = cell.getStringCellValue().trim();
+                            } else if (c == 4) {
+                                plz = cell.getStringCellValue().trim();
+                            } else if (c == 5) {
+                                ort = cell.getStringCellValue().trim();
+                            } else if (c == 6) {
+                                gebdat = cell.getDateCellValue();
+                            } else if (c == 7) {
+                                telefon = cell.getStringCellValue().trim();
+                            } else if (c == 8) {
+                                handy = cell.getStringCellValue().trim();
+                            } else if (c == 9) {
+                                nottel = cell.getStringCellValue().trim();
+                            } else if (c == 10) {
+                                email = cell.getStringCellValue().trim();
+                            }
+                        }
+
+                        setProgress(r * 100 / s.getPhysicalNumberOfRows());
+                        try {
+                            personDao.speichern(null, vorname, nachname, gebdat, strasse, plz, ort, telefon, email,
+                                    "Herr".equals(anrede) ? 1 : 2, handy, nottel);
+                            Thread.sleep(100L);
+                        } catch (Throwable e) {
+                            log.error(e.getMessage(), e);
+                            failed.add(new Object[] { anrede, vorname, nachname, gebdat, strasse, plz, ort, telefon,
+                                    email, handy, nottel, "\n\t" + e.getCause().getMessage().replaceAll("\n", "") });
+                        }
+
+                    }
+                    return 1;
+                }
+
+                @Override
+                protected void done() {
+                    progressMonitor.setProgress(100);
+                    if (!failed.isEmpty()) {
+                        List<String> collect = failed.stream().map(f -> Arrays.toString(f) + "\n")
+                                .collect(Collectors.toList());
+                        DetailsDialog.showDialog(null, "Fehler beim Import",
+                                "Einige Einträge konnten nicht importiert werden. Siehe Details",
+                                collect.toString().substring(1), DetailsDialog.ERROR_TYPE);
                     }
                 }
-                controller.speicherePerson(null, "Herr".equals(anrede) ? 1 : 2, vorname, nachname, strasse, plz, ort,
-                        gebdat, telefon, email, handy, nottel);
-            }
+            };
+            sw.addPropertyChangeListener(this);
+            sw.execute();
         } catch (Throwable e) {
-            throw new RuntimeException(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
     }
 
-    public void setController(Controller controller) {
-        this.controller = controller;
+    public void setPersonDao(PersonDao personDao) {
+        this.personDao = personDao;
     }
 
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ("progress" == evt.getPropertyName()) {
+            int progress = (Integer) evt.getNewValue();
+            progressMonitor.setProgress(progress);
+            String message = String.format("Completed %d%%.\n", progress);
+            progressMonitor.setNote(message);
+        }
+    }
 }
