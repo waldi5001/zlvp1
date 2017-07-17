@@ -175,7 +175,7 @@ public class LoginDialog extends InternalFrame {
         if (jPanel4 == null) {
             jPanel4 = new JPanel();
             jPanel4.setLayout(new BorderLayout());
-            Image bild = Toolkit.getDefaultToolkit().getImage("logo.jpg");
+            Image bild = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/logo.jpg"));
             jPanel4.add(new ImageComponent(bild), java.awt.BorderLayout.CENTER);
         }
         return jPanel4;

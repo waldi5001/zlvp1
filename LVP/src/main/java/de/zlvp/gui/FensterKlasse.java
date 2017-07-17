@@ -193,7 +193,7 @@ public class FensterKlasse extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setJMenuBar(getJJMenuBar());
         this.setSize(800, 800);
-        this.setIconImage(getToolkit().getImage("zelt.jpg"));
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/zelt.jpg")));
 
         // set state after #setVisible to make sure maximized icon is set
         if (this.getRootPane().getUI() instanceof SyntheticaRootPaneUI) {
