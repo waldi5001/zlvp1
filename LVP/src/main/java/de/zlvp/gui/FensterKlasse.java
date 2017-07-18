@@ -1,7 +1,6 @@
 package de.zlvp.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.io.File;
@@ -18,7 +17,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
 import com.google.common.eventbus.Subscribe;
@@ -271,7 +269,7 @@ public class FensterKlasse extends JFrame {
             jMenuItemUeber.setText("Info");
             jMenuItemUeber.addActionListener(e -> {
                 try {
-                    AboutDialog.showDialog(SwingUtilities.getWindowAncestor((Component) e.getSource()), null, "",
+                    AboutDialog.showDialog(null, null, "",
                             String.format("Version: %s", getClass().getPackage().getImplementationVersion()));
                 } catch (IOException e1) {
                     throw new RuntimeException(e1.getMessage(), e1);
@@ -303,7 +301,8 @@ public class FensterKlasse extends JFrame {
                 if (chooser.showOpenDialog(DesktopPane.get()) == ExtendedFileChooser.APPROVE_OPTION) {
                     try {
                         byte[] vorlage = Client.getExcelController().getVorlage();
-                        Path path = Paths.get(chooser.getSelectedFile().getCanonicalPath());
+                        String canonicalPath = chooser.getSelectedFile().getCanonicalPath();
+                        Path path = Paths.get(canonicalPath.endsWith("xlsx") ? canonicalPath : canonicalPath + ".xlsx");
                         Files.write(path, vorlage);
                         Desktop.getDesktop().open(path.toFile());
                     } catch (IOException e1) {
