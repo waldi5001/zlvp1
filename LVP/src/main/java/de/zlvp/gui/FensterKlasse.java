@@ -493,7 +493,7 @@ public class FensterKlasse extends JFrame {
         return jMenuZelt;
     }
 
-    public JMenuItem getJMenuItemTeStatistik() {
+    private JMenuItem getJMenuItemTeStatistik() {
         if (jMenuItemTeStatistik == null) {
             jMenuItemTeStatistik = new JMenuItem();
             jMenuItemTeStatistik.setText("Statistik");
@@ -614,7 +614,7 @@ public class FensterKlasse extends JFrame {
         return jMenuItemLeJaAusf;
     }
 
-    public JMenuItem getJMenuItemLaAlg() {
+    private JMenuItem getJMenuItemLaAlg() {
         if (jMenuItemLaAlg == null) {
             jMenuItemLaAlg = new JMenuItem();
             jMenuItemLaAlg.setText("Lagerübersicht");
@@ -624,7 +624,7 @@ public class FensterKlasse extends JFrame {
         return jMenuItemLaAlg;
     }
 
-    public JMenuItem getJMenuItemJaAlg() {
+    private JMenuItem getJMenuItemJaAlg() {
         if (jMenuItemJaAlg == null) {
             jMenuItemJaAlg = new JMenuItem();
             jMenuItemJaAlg.setText("Jahresübersicht");
@@ -653,7 +653,7 @@ public class FensterKlasse extends JFrame {
         return jMenuItemGesStatistik;
     }
 
-    public JMenuItem getJMenuItemJaStatistik() {
+    private JMenuItem getJMenuItemJaStatistik() {
         if (jMenuItemJaStatistik == null) {
             jMenuItemJaStatistik = new JMenuItem();
             jMenuItemJaStatistik.setText("Jahresstatistik");
@@ -663,7 +663,7 @@ public class FensterKlasse extends JFrame {
         return jMenuItemJaStatistik;
     }
 
-    public JMenuItem getJMenuItemZeLager() {
+    private JMenuItem getJMenuItemZeLager() {
         if (jMenuItemZeLager == null) {
             jMenuItemZeLager = new JMenuItem();
             jMenuItemZeLager.setText("Zelt / Lager");
@@ -780,7 +780,7 @@ public class FensterKlasse extends JFrame {
         return jMenuItemBezLöschen;
     }
 
-    public JMenuItem getJMenuItemNachtWache() {
+    private JMenuItem getJMenuItemNachtWache() {
         if (jMenuItemNachtWache == null) {
             jMenuItemNachtWache = new JMenuItem();
             jMenuItemNachtWache.setText("Nachtwache");
@@ -790,7 +790,7 @@ public class FensterKlasse extends JFrame {
         return jMenuItemNachtWache;
     }
 
-    public JMenuItem getJMenuItemNachtWacheGruppe() {
+    private JMenuItem getJMenuItemNachtWacheGruppe() {
         if (jMenuItemNachtWacheGruppe == null) {
             jMenuItemNachtWacheGruppe = new JMenuItem();
             jMenuItemNachtWacheGruppe.setText("Nachtwache nach Gruppen");
@@ -800,7 +800,7 @@ public class FensterKlasse extends JFrame {
         return jMenuItemNachtWacheGruppe;
     }
 
-    public JMenuItem getJMenuItemLegendaListen() {
+    private JMenuItem getJMenuItemLegendaListen() {
         if (jMenuItemLegendaListen == null) {
             jMenuItemLegendaListen = new JMenuItem();
             jMenuItemLegendaListen.setText("Legenda");
@@ -830,7 +830,7 @@ public class FensterKlasse extends JFrame {
         return jMenuItemTeAusfHaEmASC;
     }
 
-    public JMenuItem getJMenuItemEtiketten() {
+    private JMenuItem getJMenuItemEtiketten() {
         if (jMenuItemEtiketten == null) {
             jMenuItemEtiketten = new JMenuItem();
             jMenuItemEtiketten.setText("Etiketten");
@@ -881,7 +881,7 @@ public class FensterKlasse extends JFrame {
         return jMenuItemEtikettenLI;
     }
 
-    public JMenuItem getJMenuItemEMailLager() {
+    private JMenuItem getJMenuItemEMailLager() {
         if (jMenuItemEMailLager == null) {
             jMenuItemEMailLager = new JMenuItem();
             jMenuItemEMailLager.setText("EMail Adressen / Lager");
@@ -924,7 +924,7 @@ public class FensterKlasse extends JFrame {
         return jMenuItemEtikettenLI1;
     }
 
-    public JMenuItem getJMenuItemEMailJahr() {
+    private JMenuItem getJMenuItemEMailJahr() {
         if (jMenuItemEMailJahr == null) {
             jMenuItemEMailJahr = new JMenuItem();
             jMenuItemEMailJahr.setEnabled(false);
@@ -935,7 +935,7 @@ public class FensterKlasse extends JFrame {
         return jMenuItemEMailJahr;
     }
 
-    public JMenuItem getJMenuItemLegendaJahr() {
+    private JMenuItem getJMenuItemLegendaJahr() {
         if (jMenuItemLegendaJahr == null) {
             jMenuItemLegendaJahr = new JMenuItem();
             jMenuItemLegendaJahr.setEnabled(false);
@@ -962,7 +962,7 @@ public class FensterKlasse extends JFrame {
         return jMenuLager;
     }
 
-    public JMenuItem getJMenuItemProgramm() {
+    private JMenuItem getJMenuItemProgramm() {
         if (jMenuItemProgramm == null) {
             jMenuItemProgramm = new JMenuItem();
             jMenuItemProgramm.setText("Programm");
@@ -973,7 +973,7 @@ public class FensterKlasse extends JFrame {
         return jMenuItemProgramm;
     }
 
-    public JMenuItem getJMenuItemEssen() {
+    private JMenuItem getJMenuItemEssen() {
         if (jMenuItemEssen == null) {
             jMenuItemEssen = new JMenuItem();
             jMenuItemEssen.setText("Essen");
@@ -1016,7 +1016,7 @@ public class FensterKlasse extends JFrame {
         return jMenuItemLagerOrt;
     }
 
-    public JMenuItem getJMenuItemOutlookLager() {
+    private JMenuItem getJMenuItemOutlookLager() {
         if (jMenuItemOutlookLager == null) {
             jMenuItemOutlookLager = new JMenuItem();
             jMenuItemOutlookLager.setText("Outlook / Lager");
