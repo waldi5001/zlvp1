@@ -11,29 +11,44 @@ import de.zlvp.entity.Teilnehmer;
 public class TreeData {
 
     public DefaultMutableTreeNode getTreeModel(Jahr jahr) {
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode(jahr);
+        DefaultMutableTreeNode root = new UserObjectEqualMutableTreeNode(jahr);
         for (Lager lager : jahr.getLager()) {
-            DefaultMutableTreeNode lagerLeaf = new DefaultMutableTreeNode(lager);
+            DefaultMutableTreeNode lagerLeaf = new UserObjectEqualMutableTreeNode(lager);
             root.add(lagerLeaf);
             for (Gruppe gruppe : lager.getGruppe()) {
-                DefaultMutableTreeNode gruppeLeaf = new DefaultMutableTreeNode(gruppe);
+                DefaultMutableTreeNode gruppeLeaf = new UserObjectEqualMutableTreeNode(gruppe);
                 lagerLeaf.add(gruppeLeaf);
 
-                DefaultMutableTreeNode LEITER = new DefaultMutableTreeNode("Leiter");
-                DefaultMutableTreeNode TEILNEHMER = new DefaultMutableTreeNode("Teilnehmer");
+                DefaultMutableTreeNode LEITER = new UserObjectEqualMutableTreeNode("Leiter");
+                DefaultMutableTreeNode TEILNEHMER = new UserObjectEqualMutableTreeNode("Teilnehmer");
 
                 gruppeLeaf.add(LEITER);
                 gruppeLeaf.add(TEILNEHMER);
 
                 for (Teilnehmer t : gruppe.getTeilnehmer()) {
-                    TEILNEHMER.add(new DefaultMutableTreeNode(t));
+                    TEILNEHMER.add(new UserObjectEqualMutableTreeNode(t));
                 }
                 for (Leiter l : gruppe.getLeiter()) {
-                    LEITER.add(new DefaultMutableTreeNode(l));
+                    LEITER.add(new UserObjectEqualMutableTreeNode(l));
                 }
             }
         }
         return root;
+    }
+
+    public static class UserObjectEqualMutableTreeNode extends DefaultMutableTreeNode {
+
+        private static final long serialVersionUID = 1L;
+
+        public UserObjectEqualMutableTreeNode(Object userObject) {
+            super(userObject, true);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return this.getUserObject().equals(((UserObjectEqualMutableTreeNode) obj).getUserObject());
+        }
+
     }
 
 }

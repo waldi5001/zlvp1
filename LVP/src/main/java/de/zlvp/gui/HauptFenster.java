@@ -66,6 +66,9 @@ public class HauptFenster extends InternalFrame {
 
         initialize();
         setUp();
+        setResizable(true);
+        setIconifiable(true);
+        setMaximizable(true);
         try {
             setMaximum(true);
         } catch (PropertyVetoException e1) {
@@ -241,19 +244,22 @@ public class HauptFenster extends InternalFrame {
             jTree.setDropMode(ON);
             jTree.setTransferHandler(new JTreeTransferHandler());
         }
-        expandAllNodes(jTree, 0, jTree.getRowCount());
+        expandNodes(jTree, 2);
         ToolTipManager.sharedInstance().registerComponent(jTree);
         return jTree;
     }
 
-    private void expandAllNodes(JTree tree, int startingIndex, int rowCount) {
-        for (int i = startingIndex; i < rowCount; ++i) {
-            tree.expandRow(i);
-        }
+    private void expandNodes(JTree tree, int level) {
+        DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
 
-        if (tree.getRowCount() != rowCount) {
-            expandAllNodes(tree, rowCount, tree.getRowCount());
-        }
+        DefaultMutableTreeNode currentNode = root.getNextNode();
+        do {
+            if (currentNode.getLevel() == level) {
+                tree.expandPath(new TreePath(currentNode.getPath()));
+            }
+            currentNode = currentNode.getNextNode();
+        } while (currentNode != null);
     }
 
     private void aktualisieren() {
@@ -266,8 +272,11 @@ public class HauptFenster extends InternalFrame {
             @Override
             protected void done() {
                 try {
+                    TreePath selectionPath = getJTree().getSelectionModel().getSelectionPath();
                     getJTree().setModel(new DefaultTreeModel(new TreeData().getTreeModel(get())));
-                    expandAllNodes(getJTree(), 0, getJTree().getRowCount());
+                    TreePath newSelectionPath = findNewSelectionPath(selectionPath);
+                    getJTree().setSelectionPath(newSelectionPath);
+                    // expandAllNodes(getJTree(), 0, getJTree().getRowCount());
                 } catch (InterruptedException | ExecutionException e) {
                     throw new RuntimeException(e.getMessage(), e);
                 }
@@ -275,6 +284,39 @@ public class HauptFenster extends InternalFrame {
 
         };
         worker.execute();
+    }
+
+    private TreePath findNewSelectionPath(TreePath oldSelectionPath) {
+        TreePath newSelectionPath = null;
+
+        if (oldSelectionPath != null) {
+            Object[] oldPathComponents = oldSelectionPath.getPath();
+            Object[] newPathComponents = new Object[oldPathComponents.length];
+
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) getJTree().getModel().getRoot();
+
+            // Set the root
+            if (oldPathComponents[0].equals(node)) {
+                newPathComponents[0] = node;
+            }
+
+            // Set the rest of the path components
+            for (int n = 1; n < oldPathComponents.length; n++) {
+                for (int k = 0; k < node.getChildCount(); k++) {
+                    if (oldPathComponents[n].equals(node.getChildAt(k))) {
+                        newPathComponents[n] = node.getChildAt(k);
+                        node = (DefaultMutableTreeNode) node.getChildAt(k);
+                        break;
+                    }
+                }
+            }
+
+            // Make sure that the last path component exists
+            if (newPathComponents[newPathComponents.length - 1] != null) {
+                newSelectionPath = new TreePath(newPathComponents);
+            }
+        }
+        return newSelectionPath;
     }
 
     @Subscribe
