@@ -15,11 +15,6 @@ import java.util.stream.Collectors;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingWorker;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFDataValidationHelper;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
@@ -30,6 +25,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.xssf.usermodel.XSSFDataValidationHelper;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +45,7 @@ public class ExcelControllerImpl implements ExcelController, PropertyChangeListe
     public byte[] getVorlage() {
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            Workbook wb = new HSSFWorkbook();
+            Workbook wb = new XSSFWorkbook();
 
             CellStyle cs = wb.createCellStyle();
             DataFormat dateFormat = wb.createDataFormat();
@@ -56,7 +54,7 @@ public class ExcelControllerImpl implements ExcelController, PropertyChangeListe
             Sheet s = wb.createSheet();
             Row titelRow = s.createRow(0);
 
-            DataValidationHelper validationHelper = new HSSFDataValidationHelper((HSSFSheet) s);
+            DataValidationHelper validationHelper = new XSSFDataValidationHelper((XSSFSheet) s);
             CellRangeAddressList addressList = new CellRangeAddressList(1, 1000, 0, 0);
             DataValidationConstraint constraint = validationHelper
                     .createExplicitListConstraint(new String[] { "Herr", "Frau" });
@@ -111,8 +109,8 @@ public class ExcelControllerImpl implements ExcelController, PropertyChangeListe
     @Override
     public void importieren(byte[] sheet) {
         try {
-            HSSFWorkbook wb = new HSSFWorkbook(new ByteArrayInputStream(sheet));
-            HSSFSheet s = wb.getSheetAt(0);
+            Workbook wb = new XSSFWorkbook(new ByteArrayInputStream(sheet));
+            Sheet s = wb.getSheetAt(0);
 
             List<Object[]> failed = new ArrayList<>();
 
@@ -122,13 +120,13 @@ public class ExcelControllerImpl implements ExcelController, PropertyChangeListe
                 @Override
                 protected Integer doInBackground() throws Exception {
                     for (int r = 1; r < s.getPhysicalNumberOfRows(); r++) {
-                        HSSFRow row = s.getRow(r);
+                        Row row = s.getRow(r);
                         String anrede = null, nachname = null, vorname = null, strasse = null, plz = null, ort = null,
                                 telefon = null, handy = null, nottel = null, email = null;
                         Date gebdat = null;
 
                         for (int c = 0; c < row.getLastCellNum(); c++) {
-                            HSSFCell cell = row.getCell(c);
+                            Cell cell = row.getCell(c);
                             if (c == 0) {
                                 anrede = cell.getStringCellValue().trim();
                             } else if (c == 1) {
@@ -197,7 +195,7 @@ public class ExcelControllerImpl implements ExcelController, PropertyChangeListe
         if ("progress" == evt.getPropertyName()) {
             int progress = (Integer) evt.getNewValue();
             progressMonitor.setProgress(progress);
-            String message = String.format("Completed %d%%.\n", progress);
+            String message = String.format("Fertig: %d%%.\n", progress);
             progressMonitor.setNote(message);
         }
     }
