@@ -332,8 +332,11 @@ public class ControllerImpl implements Controller {
                 nottel);
 
         if (id == null) {
-            Stab stab = stabDao.speichern(lagerId, personId);
-            stabDao.speichereStaabFunktion(stab.getId(), funktionId);
+            // Wenn ein Stab ohne Funktion ausgewählt wird.
+            if (funktionId != null) {
+                Stab stab = stabDao.speichern(lagerId, personId);
+                stabDao.speichereStaabFunktion(stab.getId(), funktionId);
+            }
         } else {
             if (funktionId == null) {
                 stabDao.loeschen(id);
