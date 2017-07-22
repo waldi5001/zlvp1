@@ -21,6 +21,17 @@ trim interceptor
 
 Actions weiter ausbauen.
 
-importController muss weiter importieren auch wenn fehler in zeile
-
 java -cp lib/*:target/zlvp-0.1-SNAPSHOT-jar-with-dependencies.jar de.zlvp.StartKlasse
+
+jreports öffnen können
+
+leiterliste fehlt stab
+wochentag bei essen und programm
+sortierung bei leiterliste nicht nach geschlecht
+
+uniquness von personen überdenken
+imporieren enable nicht immer
+anzahl der lager im nachtwachenplan
+
+
+benutzer anlegen / löschen
