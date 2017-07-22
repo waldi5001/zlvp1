@@ -81,7 +81,7 @@ public class JTableBuilders {
                         ColumnBuilder
                                 .get(Funktion.class).add("Funktion").add(JComboBoxBuilder
                                         .get(Funktion.class, () -> allFunktion).map(f -> f.getBezeichnung()).build())
-                                .build());
+                                .desc().build());
     }
 
     public static JTableBuilder<Materialwart> materialwart(Lager lager, Loader<Materialwart> loader) {
@@ -456,7 +456,7 @@ public class JTableBuilders {
                         lg.getBemerkung()))//
                 .addColumn(ColumnBuilder.get(Legendatyp.class)
                         .add(JComboBoxBuilder.get(Legendatyp.class, () -> Client.get().getAllLegendatyp()).build())
-                        .add("Typ").build())//
+                        .add("Typ").desc().build())//
                 .addColumn(ColumnBuilder.get(Anrede.class)
                         .add(JComboBoxBuilder.get(Anrede.class, () -> Client.get().getAllAnrede()).build())
                         .add("Anrede").build())//

@@ -140,21 +140,17 @@ public class JTableBuilder<E> {
             TableColumn tableColumn = this.table.getColumnModel().getColumn(i);
             if (column.getCellComboBox() != null) {
                 tableColumn.setCellEditor(new DefaultCellEditor(column.getCellComboBox()));
-
-                // TODO An Column ziehen.
-                JYTableSortController<? extends javax.swing.table.TableModel> rowSorter = (JYTableSortController<? extends javax.swing.table.TableModel>) this.table
-                        .getRowSorter();
-                rowSorter.setSortOrder(i, SortOrder.DESCENDING);
-                rowSorter.sort();
             }
 
             if (column.getClazz() == Date.class) {
                 tableColumn.setCellEditor(new DateFormateTableCellEditor());
                 tableColumn.setCellRenderer(new DateTableCellRenderer());
-            } else if (column.getClazz() == Boolean.class) {
+            }
+
+            if (column.getSortOrder() != null) {
                 JYTableSortController<? extends javax.swing.table.TableModel> rowSorter = (JYTableSortController<? extends javax.swing.table.TableModel>) this.table
                         .getRowSorter();
-                rowSorter.setSortOrder(i, SortOrder.DESCENDING);
+                rowSorter.setSortOrder(i, column.getSortOrder());
                 rowSorter.sort();
             }
 
@@ -271,6 +267,16 @@ public class JTableBuilder<E> {
             return this;
         }
 
+        public ColumnBuilder<T> asc() {
+            column.asc();
+            return this;
+        }
+
+        public ColumnBuilder<T> desc() {
+            column.desc();
+            return this;
+        }
+
         public Column<T> build() {
             return column;
         }
@@ -287,6 +293,8 @@ public class JTableBuilder<E> {
         private boolean editable = true;
         private boolean multiline = false;
         private Class<T> clazz;
+
+        private SortOrder sortOrder = null;
 
         public Column(Class<T> clazz) {
             this.clazz = clazz;
@@ -344,6 +352,18 @@ public class JTableBuilder<E> {
             return multiline;
         }
 
+        public SortOrder getSortOrder() {
+            return sortOrder;
+        }
+
+        public void asc() {
+            sortOrder = SortOrder.ASCENDING;
+        }
+
+        public void desc() {
+            sortOrder = SortOrder.DESCENDING;
+        }
+
     }
 
     @FunctionalInterface
@@ -372,7 +392,7 @@ public class JTableBuilder<E> {
     }
 
     public static class Columns {
-        public static Column<Boolean> CHECK = ColumnBuilder.get(Boolean.class).add("").width(150).build();
+        public static Column<Boolean> CHECK = ColumnBuilder.get(Boolean.class).add("").desc().width(150).build();
         public static Column<String> WOCHENTAG = ColumnBuilder.get(String.class).add("Tag").editable(false).width(50)
                 .build();
     }
