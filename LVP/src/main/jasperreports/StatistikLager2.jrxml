@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="StatistikLager2"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="535"
+		 pageHeight="842"
+		 columnWidth="535"
+		 columnSpacing="0"
+		 leftMargin="0"
+		 rightMargin="0"
+		 topMargin="0"
+		 bottomMargin="0"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<parameter name="laid" isForPrompting="true" class="java.lang.Integer"/>
+	<queryString><![CDATA[SELECT * FROM
+(
+	SELECT COUNT(p.peid) AS teilnehmer
+	FROM Person p
+	INNER JOIN stTeGr ON p.peid = stTeGr.person
+	INNER JOIN gruppe g ON stTeGr.gruppe = g.grid
+	INNER JOIN stGrLa ON stGrLa.gruppe = g.grid
+	INNER JOIN lager l ON stGrLa.lager = l.laid
+	WHERE l.laid = $P{laid}
+
+) aa,
+
+
+
+(
+	SELECT COUNT(p.peid) AS leiter
+	FROM Person p
+	INNER JOIN stGrLe ON stGrLe.person = p.peid
+	INNER JOIN gruppe g ON stGrLe.gruppe = g.grid
+	INNER JOIN stGrLa ON stGrLa.gruppe = g.grid
+	INNER JOIN lager l ON stGrLa.lager = l.laid
+	WHERE l.laid = $P{laid}
+) bb,
+
+
+
+(
+	SELECT COUNT (p.peid) AS staab
+	FROM Person p 
+	INNER JOIN stLaSt ON stLaSt.person = p.peid
+	INNER JOIN lager l ON stLaSt.lager = l.laid
+	WHERE l.laid = $P{laid}
+) cc,
+
+(
+	SELECT sum(x.a) AS gesamt FROM
+	(
+		SELECT COUNT(p.peid) AS a
+		FROM Person p
+		INNER JOIN stTeGr ON p.peid = stTeGr.person
+		INNER JOIN gruppe g ON stTeGr.gruppe = g.grid
+		INNER JOIN stGrLa ON stGrLa.gruppe = g.grid
+		INNER JOIN lager l ON stGrLa.lager = l.laid
+		WHERE l.laid = $P{laid}
+
+		UNION ALL
+
+		SELECT COUNT(p.peid) AS a
+		FROM Person p
+		INNER JOIN stGrLe ON stGrLe.person = p.peid
+		INNER JOIN gruppe g ON stGrLe.gruppe = g.grid
+		INNER JOIN stGrLa ON stGrLa.gruppe = g.grid
+		INNER JOIN lager l ON stGrLa.lager = l.laid
+		WHERE l.laid = $P{laid}
+
+		UNION ALL
+
+		SELECT COUNT (p.peid) AS a
+		FROM Person p 
+		INNER JOIN stLaSt ON stLaSt.person = p.peid
+		INNER JOIN lager l ON stLaSt.lager = l.laid
+		WHERE l.laid = $P{laid}
+	) x
+) dd,
+
+(
+	SELECT COUNT (g.grid) AS gruppe
+	FROM gruppe g
+	INNER JOIN stGrLa st ON g.grid = st.gruppe
+	INNER JOIN lager l ON st.lager = l.laid
+	WHERE l.laid = $P{laid}
+) ee,
+
+(
+	SELECT name
+	FROM lager l
+	WHERE l.laid = $P{laid}
+) ff,
+
+(
+	SELECT COUNT(p.peid) AS "TeilnehmerM"
+	FROM Person p
+	INNER JOIN stTeGr ON p.peid = stTeGr.person
+	INNER JOIN gruppe g ON stTeGr.gruppe = g.grid
+	INNER JOIN stGrLa ON stGrLa.gruppe = g.grid
+	INNER JOIN lager l ON stGrLa.lager = l.laid
+	WHERE l.laid = $P{laid} AND p.geschlecht = 1
+
+) gg,
+
+(
+	SELECT COUNT(p.peid) AS "TeilnehmerW"
+	FROM Person p
+	INNER JOIN stTeGr ON p.peid = stTeGr.person
+	INNER JOIN gruppe g ON stTeGr.gruppe = g.grid
+	INNER JOIN stGrLa ON stGrLa.gruppe = g.grid
+	INNER JOIN lager l ON stGrLa.lager = l.laid
+	WHERE l.laid = $P{laid} AND p.geschlecht = 2
+
+) hh,
+
+(
+	SELECT COUNT(p.peid) AS "LeiterM"
+	FROM Person p
+	INNER JOIN stGrLe ON stGrLe.person = p.peid
+	INNER JOIN gruppe g ON stGrLe.gruppe = g.grid
+	INNER JOIN stGrLa ON stGrLa.gruppe = g.grid
+	INNER JOIN lager l ON stGrLa.lager = l.laid
+	WHERE l.laid = $P{laid} AND p.geschlecht = 1
+) ii,
+
+(
+	SELECT COUNT(p.peid) AS "LeiterW"
+	FROM Person p
+	INNER JOIN stGrLe ON stGrLe.person = p.peid
+	INNER JOIN gruppe g ON stGrLe.gruppe = g.grid
+	INNER JOIN stGrLa ON stGrLa.gruppe = g.grid
+	INNER JOIN lager l ON stGrLa.lager = l.laid
+	WHERE l.laid = $P{laid} AND p.geschlecht = 2
+) jj,
+
+(
+	SELECT COUNT (p.peid) AS "StaabM"
+	FROM Person p 
+	INNER JOIN stLaSt ON stLaSt.person = p.peid
+	INNER JOIN lager l ON stLaSt.lager = l.laid
+	WHERE l.laid = $P{laid} AND p.geschlecht = 1
+) kk,
+
+(
+	SELECT COUNT (p.peid) AS "StaabW"
+	FROM Person p 
+	INNER JOIN stLaSt ON stLaSt.person = p.peid
+	INNER JOIN lager l ON stLaSt.lager = l.laid
+	WHERE l.laid = $P{laid} AND p.geschlecht = 2
+) ll,
+
+(
+	SELECT sum(x.a) AS "gesamtM" FROM
+	(
+		SELECT COUNT(p.peid) AS a
+		FROM Person p
+		INNER JOIN stTeGr ON p.peid = stTeGr.person
+		INNER JOIN gruppe g ON stTeGr.gruppe = g.grid
+		INNER JOIN stGrLa ON stGrLa.gruppe = g.grid
+		INNER JOIN lager l ON stGrLa.lager = l.laid
+		WHERE l.laid = $P{laid} AND p.geschlecht = 1
+
+		UNION ALL
+
+		SELECT COUNT(p.peid) AS a
+		FROM Person p
+		INNER JOIN stGrLe ON stGrLe.person = p.peid
+		INNER JOIN gruppe g ON stGrLe.gruppe = g.grid
+		INNER JOIN stGrLa ON stGrLa.gruppe = g.grid
+		INNER JOIN lager l ON stGrLa.lager = l.laid
+		WHERE l.laid = $P{laid} AND p.geschlecht = 1
+
+
+		UNION ALL
+
+		SELECT COUNT (p.peid) AS a
+		FROM Person p 
+		INNER JOIN stLaSt ON stLaSt.person = p.peid
+		INNER JOIN lager l ON stLaSt.lager = l.laid
+		WHERE l.laid = $P{laid} AND p.geschlecht = 1
+	) x
+) mm,
+
+(
+	SELECT sum(x.a) AS "gesamtW" FROM
+	(
+		SELECT COUNT(p.peid) AS a
+		FROM Person p
+		INNER JOIN stTeGr ON p.peid = stTeGr.person
+		INNER JOIN gruppe g ON stTeGr.gruppe = g.grid
+		INNER JOIN stGrLa ON stGrLa.gruppe = g.grid
+		INNER JOIN lager l ON stGrLa.lager = l.laid
+		WHERE l.laid = $P{laid} AND p.geschlecht = 2
+
+		UNION ALL
+
+		SELECT COUNT(p.peid) AS a
+		FROM Person p
+		INNER JOIN stGrLe ON stGrLe.person = p.peid
+		INNER JOIN gruppe g ON stGrLe.gruppe = g.grid
+		INNER JOIN stGrLa ON stGrLa.gruppe = g.grid
+		INNER JOIN lager l ON stGrLa.lager = l.laid
+		WHERE l.laid = $P{laid} AND p.geschlecht = 2
+
+
+		UNION ALL
+
+		SELECT COUNT (p.peid) AS a
+		FROM Person p 
+		INNER JOIN stLaSt ON stLaSt.person = p.peid
+		INNER JOIN lager l ON stLaSt.lager = l.laid
+		WHERE l.laid = $P{laid} AND p.geschlecht = 2
+	) x
+) nn]]></queryString>
+
+	<field name="teilnehmer" class="java.lang.Long"/>
+	<field name="leiter" class="java.lang.Long"/>
+	<field name="staab" class="java.lang.Long"/>
+	<field name="gesamt" class="java.math.BigDecimal"/>
+	<field name="gruppe" class="java.lang.Long"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="TeilnehmerM" class="java.lang.Long"/>
+	<field name="TeilnehmerW" class="java.lang.Long"/>
+	<field name="LeiterM" class="java.lang.Long"/>
+	<field name="LeiterW" class="java.lang.Long"/>
+	<field name="StaabM" class="java.lang.Long"/>
+	<field name="StaabW" class="java.lang.Long"/>
+	<field name="gesamtM" class="java.math.BigDecimal"/>
+	<field name="gesamtW" class="java.math.BigDecimal"/>
+
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="-1"
+						width="531"
+						height="0"
+						key="line-2"/>
+					<graphicElement stretchType="NoStretch" pen="2Point"/>
+				</line>
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="53"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="244"
+						y="-1"
+						width="71"
+						height="18"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-1"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman" size="14"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{teilnehmer}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="325"
+						y="-1"
+						width="40"
+						height="18"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-2"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman" size="14"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{leiter}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="374"
+						y="-1"
+						width="37"
+						height="18"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-3"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman" size="14"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{staab}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="421"
+						y="-1"
+						width="47"
+						height="18"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-4"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman" size="14"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{gesamt}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="481"
+						y="-1"
+						width="46"
+						height="18"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-5"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman" size="14"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{gruppe}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="-1"
+						width="212"
+						height="18"
+						key="textField-6"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement>
+						<font fontName="Times New Roman" size="14"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{name}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="244"
+						y="17"
+						width="70"
+						height="18"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman" size="14"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{TeilnehmerM}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="244"
+						y="35"
+						width="70"
+						height="18"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman" size="14"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{TeilnehmerW}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="325"
+						y="17"
+						width="40"
+						height="18"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman" size="14"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{LeiterM}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="325"
+						y="35"
+						width="40"
+						height="18"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman" size="14"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{LeiterW}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="374"
+						y="17"
+						width="37"
+						height="18"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman" size="14"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{StaabM}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="374"
+						y="35"
+						width="37"
+						height="18"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman" size="14"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{StaabW}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="421"
+						y="17"
+						width="46"
+						height="18"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman" size="14"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{gesamtM}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="421"
+						y="35"
+						width="46"
+						height="18"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField"/>
+					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<textElement textAlignment="Center">
+						<font fontName="Times New Roman" size="14"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{gesamtW}]]></textFieldExpression>
+				</textField>
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>
