@@ -6,12 +6,15 @@ import javax.swing.JInternalFrame;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.javasoft.swing.DetailsDialog;
 import de.zlvp.gui.FensterKlasse;
 import de.zlvp.ui.DesktopPane;
 
 public class SpinnerAndErrorInterceptor implements MethodInterceptor {
+    private static Logger log = LoggerFactory.getLogger(SpinnerAndErrorInterceptor.class);
 
     private FensterKlasse fensterKlasse;
 
@@ -25,7 +28,12 @@ public class SpinnerAndErrorInterceptor implements MethodInterceptor {
 
             return invocation.proceed();
         } catch (Throwable e) {
-            DetailsDialog.showDialog(null, "Fehler", e.getMessage(), e);
+            log.error(e.getMessage(), e);
+            String message = e.getMessage();
+            if (message == null || message.length() == 0) {
+                message = "Fatal: " + e.getClass();
+            }
+            DetailsDialog.showDialog(null, "Fehler", message, e);
         } finally {
             for (JInternalFrame jInternalFrame : DesktopPane.get().getAllFrames()) {
                 jInternalFrame.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
