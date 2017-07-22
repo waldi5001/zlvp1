@@ -1,5 +1,7 @@
 package de.zlvp;
 
+import static java.lang.String.copyValueOf;
+
 import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
@@ -20,10 +22,10 @@ public class Client implements ApplicationContextAware {
         return applicationContext.getBean(Controller.class);
     }
 
-    public static boolean login(String user, String passwort) {
+    public static boolean login(String user, char[] passwort) {
         SingleConnectionDataSource datasource = applicationContext.getBean(SingleConnectionDataSource.class);
         datasource.setUsername(user);
-        datasource.setPassword(passwort);
+        datasource.setPassword(copyValueOf(passwort));
         try {
             datasource.getConnection();
             return true;

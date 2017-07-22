@@ -135,7 +135,7 @@ public interface Controller {
 
     void speichereZeltZuLager(Integer id, int zeltId, Integer lagerId);
 
-    void aenderePasswort(String user, String neuesPasswort);
+    void aenderePasswort(String user, char[] neuesPasswort);
 
     void speichereProgramm(Integer lagerId, Integer id, Date datum, String morgen, String mittag, String abend);
 

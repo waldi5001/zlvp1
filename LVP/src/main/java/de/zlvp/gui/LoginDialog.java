@@ -100,7 +100,7 @@ public class LoginDialog extends InternalFrame {
             jButtonOK.addActionListener(e -> {
                 String name = getJTextField().getText().trim();
                 char[] passwort = getJPasswordField().getPassword();
-                boolean login = Client.login(name, String.copyValueOf(passwort));
+                boolean login = Client.login(name, passwort);
                 if (login) {
                     setVisible(false);
                     Events.get().fireLoginSuccessfull(name);

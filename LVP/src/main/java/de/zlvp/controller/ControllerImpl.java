@@ -1,5 +1,7 @@
 package de.zlvp.controller;
 
+import static java.lang.String.valueOf;
+
 import java.time.Year;
 import java.util.Date;
 import java.util.List;
@@ -463,8 +465,8 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void aenderePasswort(String user, String neuesPasswort) {
-        userDao.changePasswort(user, neuesPasswort);
+    public void aenderePasswort(String user, char[] neuesPasswort) {
+        userDao.changePasswort(user, valueOf(neuesPasswort));
     }
 
     @Override

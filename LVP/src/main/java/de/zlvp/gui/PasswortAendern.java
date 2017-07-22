@@ -156,13 +156,12 @@ public class PasswortAendern extends InternalFrame {
             jButtonOK.setText("OK");
             jButtonOK.addActionListener(e -> {
                 String name = getJTextFieldBenutzer().getText().trim();
-                String alt = String.valueOf(getJPasswordFieldPasswortAlt().getPassword());
                 String neu = String.valueOf(getJPasswordFieldPasswortNeu().getPassword());
                 String wdhlg = String.valueOf(getJPasswordFieldPasswortWdhlg().getPassword());
 
                 if (neu.equals(wdhlg)) {
-                    Client.login(name, alt);
-                    Client.get().aenderePasswort(name, neu);
+                    Client.login(name, getJPasswordFieldPasswortAlt().getPassword());
+                    Client.get().aenderePasswort(name, getJPasswordFieldPasswortNeu().getPassword());
                 }
 
                 setVisible(false);
