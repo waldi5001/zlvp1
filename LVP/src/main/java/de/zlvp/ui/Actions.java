@@ -9,12 +9,14 @@ import de.zlvp.Client;
 import de.zlvp.Events;
 import de.zlvp.entity.Jahr;
 import de.zlvp.entity.Lager;
+import de.zlvp.gui.Benutzerverwaltung;
 import de.zlvp.gui.LagerAnlegen;
 
 public class Actions {
 
     private static final LagerAnlegenAction lagerAnlegen = new LagerAnlegenAction();
     private static final GruppeAnlegenAction gruppeAnlegen = new GruppeAnlegenAction();
+    private static final BenutzerverwaltungAction benutzerverwaltung = new BenutzerverwaltungAction();
 
     private Actions() {
     }
@@ -25,6 +27,10 @@ public class Actions {
 
     public static GruppeAnlegenAction gruppeAnlegen() {
         return gruppeAnlegen;
+    }
+
+    public static BenutzerverwaltungAction benutzerverwaltung() {
+        return benutzerverwaltung;
     }
 
     public static class LagerAnlegenAction extends AbstractAction {
@@ -70,6 +76,19 @@ public class Actions {
         public void setLager(Lager lager) {
             setEnabled(true);
             this.lager = lager;
+        }
+    }
+
+    public static class BenutzerverwaltungAction extends AbstractAction {
+        private static final long serialVersionUID = 1L;
+
+        public BenutzerverwaltungAction() {
+            super("Benutzerverwaltung");
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            new Benutzerverwaltung();
         }
     }
 

@@ -112,6 +112,7 @@ public class FensterKlasse extends JFrame {
     private JMenuItem jMenuItemPerson;
 
     private JMenuItem jMenuItemUeber;
+    private JMenuItem jMenuItemBenutzerverwaltung;
 
     private JDesktopPane jDesktopPane;
 
@@ -236,6 +237,7 @@ public class FensterKlasse extends JFrame {
             jMenuDatei.add(getJMenuItemUeber());
             jMenuDatei.add(getJMenuExcelItemVorlageSpeichern());
             jMenuDatei.add(getJMenuExcelItemExcelImportieren());
+            jMenuDatei.add(getjMenuItemBenutzerverwaltung());
             jMenuDatei.add(getJMenuItemBeende());
         }
         return jMenuDatei;
@@ -1025,6 +1027,13 @@ public class FensterKlasse extends JFrame {
                     e -> Client.getReports().exportOutlook(SelectionContext.get().getLager().getId()));
         }
         return jMenuItemOutlookLager;
+    }
+
+    public JMenuItem getjMenuItemBenutzerverwaltung() {
+        if (jMenuItemBenutzerverwaltung == null) {
+            jMenuItemBenutzerverwaltung = new JMenuItem(Actions.benutzerverwaltung());
+        }
+        return jMenuItemBenutzerverwaltung;
     }
 
     @Subscribe

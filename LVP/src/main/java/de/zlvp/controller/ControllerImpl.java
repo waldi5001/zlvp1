@@ -3,8 +3,12 @@ package de.zlvp.controller;
 import static java.lang.String.valueOf;
 
 import java.time.Year;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import de.zlvp.dao.AnredeDao;
 import de.zlvp.dao.EssenDao;
@@ -47,6 +51,7 @@ import de.zlvp.entity.Programm;
 import de.zlvp.entity.Schaden;
 import de.zlvp.entity.Stab;
 import de.zlvp.entity.Teilnehmer;
+import de.zlvp.entity.User;
 import de.zlvp.entity.Zelt;
 import de.zlvp.entity.Zeltdetail;
 import de.zlvp.entity.ZeltdetailBezeichnung;
@@ -523,6 +528,39 @@ public class ControllerImpl implements Controller {
         Teilnehmer teilnehmer = teilnehmerDao.get(id);
         teilnehmerDao.loesche(id);
         teilnehmerDao.speichere(gruppeId, teilnehmer.getOriginalId());
+    }
+
+    @Override
+    public void createUser(String username, char[] cs) {
+        userDao.createUser(username, valueOf(cs));
+    }
+
+    @Override
+    public List<String> getAllGroups() {
+        return userDao.getAllGroups();
+    }
+
+    @Override
+    public List<User> getAllUsers() {
+        List<User> result = new ArrayList<>();
+        for (String userId : userDao.getAllUsers()) {
+            User user = new User(userId);
+            user.getGroups().addAll(userDao.getGroupsForUser(userId));
+            result.add(user);
+        }
+        return result;
+    }
+
+    @Override
+    public void grantUser(Map<String, Set<String>> userAndGroups) {
+        for (Entry<String, Set<String>> entry : userAndGroups.entrySet()) {
+            userDao.grantUser(entry.getKey(), entry.getValue());
+        }
+    }
+
+    @Override
+    public void dropUser(String username) {
+        userDao.dropUser(username);
     }
 
     public void setJahrDao(JahrDao jahrDao) {

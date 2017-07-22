@@ -2,6 +2,8 @@ package de.zlvp.controller;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import de.zlvp.entity.Anrede;
 import de.zlvp.entity.Essen;
@@ -21,6 +23,7 @@ import de.zlvp.entity.Programm;
 import de.zlvp.entity.Schaden;
 import de.zlvp.entity.Stab;
 import de.zlvp.entity.Teilnehmer;
+import de.zlvp.entity.User;
 import de.zlvp.entity.Zelt;
 import de.zlvp.entity.Zeltdetail;
 import de.zlvp.entity.ZeltdetailBezeichnung;
@@ -150,5 +153,15 @@ public interface Controller {
     void verschiebeLeiter(int id, int gruppeId);
 
     void verschiebeTeilnehmer(int id, int gruppeId);
+
+    List<User> getAllUsers();
+
+    List<String> getAllGroups();
+
+    void createUser(String username, char[] cs);
+
+    void grantUser(Map<String, Set<String>> userAndGroups);
+
+    void dropUser(String username);
 
 }
