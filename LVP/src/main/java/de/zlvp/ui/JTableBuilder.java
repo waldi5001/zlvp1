@@ -373,6 +373,8 @@ public class JTableBuilder<E> {
 
     public static class Columns {
         public static Column<Boolean> CHECK = ColumnBuilder.get(Boolean.class).add("").width(150).build();
+        public static Column<String> WOCHENTAG = ColumnBuilder.get(String.class).add("Tag").editable(false).width(50)
+                .build();
     }
 
     private static class DoublClickTableCellEditor extends ObjectTableCellEditor {

@@ -1,7 +1,9 @@
 package de.zlvp.ui;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import de.zlvp.Client;
 import de.zlvp.entity.Anrede;
@@ -316,11 +318,11 @@ public class JTableBuilders {
                 .set((programm, val, index) -> {
                     if (index == 0) {
                         programm.setDatum((Date) val);
-                    } else if (index == 1) {
-                        programm.setMorgen((String) val);
                     } else if (index == 2) {
-                        programm.setMittag((String) val);
+                        programm.setMorgen((String) val);
                     } else if (index == 3) {
+                        programm.setMittag((String) val);
+                    } else if (index == 4) {
                         programm.setAbend((String) val);
                     }
                 })//
@@ -328,10 +330,12 @@ public class JTableBuilders {
                     if (index == 0) {
                         return programm.getDatum();
                     } else if (index == 1) {
-                        return programm.getMorgen();
+                        return getWochentag(programm.getDatum());
                     } else if (index == 2) {
-                        return programm.getMittag();
+                        return programm.getMorgen();
                     } else if (index == 3) {
+                        return programm.getMittag();
+                    } else if (index == 4) {
                         return programm.getAbend();
                     }
                     return null;
@@ -340,6 +344,7 @@ public class JTableBuilders {
                         p.getMittag(), p.getAbend()))//
                 .delete(p -> Client.get().speichereProgramm(null, p.getId(), null, null, null, null))//
                 .addColumn(ColumnBuilder.get(Date.class).add("Datum").width(100).build())//
+                .addColumn(Columns.WOCHENTAG)//
                 .addColumn(ColumnBuilder.get(String.class).add("Morgen").multiline().build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Mittag").multiline().build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Abend").multiline().build());//
@@ -350,11 +355,11 @@ public class JTableBuilders {
                 .set((essen, val, index) -> {
                     if (index == 0) {
                         essen.setDatum((Date) val);
-                    } else if (index == 1) {
-                        essen.setMorgen((String) val);
                     } else if (index == 2) {
-                        essen.setMittag((String) val);
+                        essen.setMorgen((String) val);
                     } else if (index == 3) {
+                        essen.setMittag((String) val);
+                    } else if (index == 4) {
                         essen.setAbend((String) val);
                     }
                 })//
@@ -362,10 +367,12 @@ public class JTableBuilders {
                     if (index == 0) {
                         return essen.getDatum();
                     } else if (index == 1) {
-                        return essen.getMorgen();
+                        return getWochentag(essen.getDatum());
                     } else if (index == 2) {
-                        return essen.getMittag();
+                        return essen.getMorgen();
                     } else if (index == 3) {
+                        return essen.getMittag();
+                    } else if (index == 4) {
                         return essen.getAbend();
                     }
                     return null;
@@ -374,9 +381,16 @@ public class JTableBuilders {
                         e.getMittag(), e.getAbend()))//
                 .delete(e -> Client.get().speichereEssen(null, e.getId(), null, null, null, null))//
                 .addColumn(ColumnBuilder.get(Date.class).add("Datum").width(100).build())//
+                .addColumn(Columns.WOCHENTAG)//
                 .addColumn(ColumnBuilder.get(String.class).add("Morgen").multiline().build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Mittag").multiline().build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Abend").multiline().build());//
+    }
+
+    private static String getWochentag(Date datum) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(datum);
+        return calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.GERMAN);
     }
 
     public static JTableBuilder<Legenda> legenda(Lagerort lagerort, Loader<Legenda> loader) {
