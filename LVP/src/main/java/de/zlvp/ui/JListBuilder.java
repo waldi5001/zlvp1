@@ -15,7 +15,7 @@ public class JListBuilder<E> {
     private Loader<E> loader;
 
     public static <E> JListBuilder<E> get(Class<E> clazz, Loader<E> loader) {
-        return new JListBuilder<E>(loader);
+        return new JListBuilder<>(loader);
     }
 
     private JListBuilder(Loader<E> loader) {
@@ -33,7 +33,7 @@ public class JListBuilder<E> {
     }
 
     public JList<E> build() {
-        this.jlist = new JList<E>();
+        this.jlist = new JList<>(new DefaultListModel<>());
         this.jlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.jlist.setCellRenderer(new DefaultListCellRenderer() {
             private static final long serialVersionUID = 1L;
@@ -43,7 +43,11 @@ public class JListBuilder<E> {
                     boolean cellHasFocus) {
                 DefaultListCellRenderer c = (DefaultListCellRenderer) super.getListCellRendererComponent(list, value,
                         index, isSelected, cellHasFocus);
-                c.setText(mapper.get((E) value));
+                if (mapper != null) {
+                    c.setText(mapper.get((E) value));
+                } else {
+                    c.setText(value.toString());
+                }
                 return c;
             }
         });
@@ -62,10 +66,10 @@ public class JListBuilder<E> {
     }
 
     public void refresh() {
-        DefaultListModel<E> listModel = new DefaultListModel<E>();
+        DefaultListModel<E> listModel = (DefaultListModel<E>) jlist.getModel();
+        listModel.clear();
         for (E e : loader.get()) {
             listModel.addElement(e);
         }
-        this.jlist.setModel(listModel);
     }
 }
