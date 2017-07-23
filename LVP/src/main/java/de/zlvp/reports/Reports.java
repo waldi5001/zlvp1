@@ -4,9 +4,9 @@ public interface Reports {
 
     public void lageruebersicht(int lagerId);
 
-    public void leiterLagerAusfuehrlichASC(int lagerId);
+    public void leiterLagerAusfuehrlich(int lagerId);
 
-    public void leiterJahrAusfuehrlichASC(int jahrId);
+    public void leiterJahrAusfuehrlich(int jahrId);
 
     public void teilnehmerStatistik(int personId);
 

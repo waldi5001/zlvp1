@@ -32,7 +32,7 @@
 	INNER JOIN gruppe g ON stGrLe.gruppe = g.grid
 	INNER JOIN stGrLa ON stGrLa.gruppe = g.grid
 	INNER JOIN lager l ON stGrLa.lager = l.laid
-	WHERE l.LaID = $P{LaIDB} AND p.geschlecht = 1
+	WHERE l.LaID = $P{LaIDB}
 
 	UNION ALL
 
@@ -41,9 +41,7 @@
 	INNER JOIN stLaSt ON stLaSt.person = p.peid
 	INNER JOIN lager l ON stLaSt.lager = l.laid
 	WHERE l.LaID = $P{LaIDB}
- AND p.geschlecht = 1
-) x ORDER BY nachname
-;]]></queryString>
+) x ORDER BY nachname, vorname;]]></queryString>
 
 	<field name="vorname" class="java.lang.String"/>
 	<field name="nachname" class="java.lang.String"/>

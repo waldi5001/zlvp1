@@ -602,7 +602,7 @@ public class FensterKlasse extends JFrame {
             jMenuItemLeLaAusf = new JMenuItem();
             jMenuItemLeLaAusf.setText("Ausführlich");
             jMenuItemLeLaAusf.addActionListener(
-                    e -> Client.getReports().leiterLagerAusfuehrlichASC(SelectionContext.get().getLager().getId()));
+                    e -> Client.getReports().leiterLagerAusfuehrlich(SelectionContext.get().getLager().getId()));
         }
         return jMenuItemLeLaAusf;
     }
@@ -612,7 +612,7 @@ public class FensterKlasse extends JFrame {
             jMenuItemLeJaAusf = new JMenuItem();
             jMenuItemLeJaAusf.setText("Ausführlich");
             jMenuItemLeJaAusf.addActionListener(
-                    e -> Client.getReports().leiterJahrAusfuehrlichASC(SelectionContext.get().getLager().getId()));
+                    e -> Client.getReports().leiterJahrAusfuehrlich(SelectionContext.get().getJahr().getId()));
         }
         return jMenuItemLeJaAusf;
     }

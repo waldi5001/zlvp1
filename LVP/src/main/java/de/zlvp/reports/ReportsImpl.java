@@ -36,12 +36,12 @@ public class ReportsImpl implements Reports {
     }
 
     @Override
-    public void leiterLagerAusfuehrlichASC(int lagerId) {
+    public void leiterLagerAusfuehrlich(int lagerId) {
         showReport("LeiterlisteAdresse", map("LID", lagerId));
     }
 
     @Override
-    public void leiterJahrAusfuehrlichASC(int jahrId) {
+    public void leiterJahrAusfuehrlich(int jahrId) {
         showReport("LeiterlisteAdresseJahr", map("JaID", jahrId));
     }
 
