@@ -23,7 +23,7 @@ public class JListBuilder<E> {
     }
 
     public JListBuilder<E> multiselect() {
-        // this.jlist.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        this.jlist.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         return this;
     }
 
