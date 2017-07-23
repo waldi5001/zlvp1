@@ -174,8 +174,7 @@ public class ZeltVerwalten extends InternalFrame {
 
     private JList<Zelt> getJList() {
         if (jList == null) {
-            jList = JListBuilder.get(Zelt.class, () -> Client.get().getAllZelt()).map(z -> z.getBezeichnung())
-                    .multiselect().build();
+            jList = JListBuilder.get(Zelt.class, () -> Client.get().getAllZelt()).map(z -> z.getBezeichnung()).build();
             jList.addListSelectionListener(e -> {
                 Zelt zelt = getJList().getSelectedValue();
                 if (zelt != null) {
