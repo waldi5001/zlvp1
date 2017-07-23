@@ -320,6 +320,7 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemExcelImportieren == null) {
             jMenuItemExcelImportieren = new JMenuItem();
             jMenuItemExcelImportieren.setText("Excel importieren");
+            jMenuItemExcelImportieren.setEnabled(false);
             jMenuItemExcelImportieren.addActionListener(e -> {
                 ExtendedFileChooser chooser = new ExtendedFileChooser();
 
@@ -714,7 +715,6 @@ public class FensterKlasse extends JFrame {
         getJMenuItemOutlookLager().setEnabled(false);
         getJMenuItemLegendaListen().setEnabled(false);
         getJMenuItemLegendaJahr().setEnabled(false);
-        getJMenuExcelItemExcelImportieren().setEnabled(false);
 
         Actions.lagerAnlegen().setEnabled(false);
         Actions.gruppeAnlegen().setEnabled(false);
