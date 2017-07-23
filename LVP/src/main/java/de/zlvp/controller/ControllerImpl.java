@@ -6,9 +6,6 @@ import java.time.Year;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import de.zlvp.dao.AnredeDao;
 import de.zlvp.dao.EssenDao;
@@ -545,17 +542,21 @@ public class ControllerImpl implements Controller {
         List<User> result = new ArrayList<>();
         for (String userId : userDao.getAllUsers()) {
             User user = new User(userId);
-            user.getGroups().addAll(userDao.getGroupsForUser(userId));
+            List<String> groupsForUser = userDao.getGroupsForUser(userId);
+            user.getGroups().addAll(groupsForUser);
             result.add(user);
         }
         return result;
     }
 
     @Override
-    public void grantUser(Map<String, Set<String>> userAndGroups) {
-        for (Entry<String, Set<String>> entry : userAndGroups.entrySet()) {
-            userDao.grantUser(entry.getKey(), entry.getValue());
-        }
+    public void grantUser(String user, String groups) {
+        userDao.grantUser(user, groups);
+    }
+
+    @Override
+    public void revokeUser(String user, String groups) {
+        userDao.revokeUser(user, groups);
     }
 
     @Override

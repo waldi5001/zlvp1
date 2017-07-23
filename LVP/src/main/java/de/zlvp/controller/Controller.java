@@ -2,8 +2,6 @@ package de.zlvp.controller;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import de.zlvp.entity.Anrede;
 import de.zlvp.entity.Essen;
@@ -160,7 +158,9 @@ public interface Controller {
 
     void createUser(String username, char[] cs);
 
-    void grantUser(Map<String, Set<String>> userAndGroups);
+    void grantUser(String user, String group);
+
+    void revokeUser(String user, String group);
 
     void dropUser(String username);
 

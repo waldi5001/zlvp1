@@ -1,6 +1,8 @@
 package de.zlvp.ui;
 
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
@@ -31,5 +33,14 @@ public class InternalFrame extends JInternalFrame {
     }
 
     private static final long serialVersionUID = 1L;
+
+    protected GridBagConstraints defaultGridbagConstraints() {
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.weightx = 1.0;
+        constraints.weighty = 1.0;
+        return constraints;
+    }
 
 }

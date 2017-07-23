@@ -1,83 +1,99 @@
 package de.zlvp.gui;
 
+import static javax.swing.JSplitPane.VERTICAL_SPLIT;
+
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Component;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.awt.GridBagLayout;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
 import de.zlvp.Client;
 import de.zlvp.entity.User;
+import de.zlvp.ui.DualListField;
+import de.zlvp.ui.DualListField.ElementAddedCallback;
+import de.zlvp.ui.DualListField.ElementRemovedCallback;
 import de.zlvp.ui.InternalFrame;
 import de.zlvp.ui.JListBuilder;
 
 public class Benutzerverwaltung extends InternalFrame {
+    private static final long serialVersionUID = 1L;
 
     private JButton jButtonOK;
-    private JButton jButtonAbbrechen;
     private JButton jButtonAnlegen;
     private JButton jButtonLoeschen;
     private JPanel jPanelSouth;
     private JPanel jPanelButtons;
-    private JPanel jPanelCheckboxes;
 
     private JList<User> jListBenutzer;
     private JScrollPane jScrollPaneBenutzerListe;
-    private JPanel jPanel;
+    private JSplitPane jSplitPane;
 
-    private static final long serialVersionUID = 1L;
     private JListBuilder<User> jListBuilder;
+    private JListBuilder<String> jListBuilderTo;
+    private JListBuilder<String> jListBuilderFrom;
 
     public Benutzerverwaltung() {
         jListBuilder = JListBuilder.get(User.class, () -> Client.get().getAllUsers()).map(u -> u.getName());
 
         initialize();
         setUp();
-        showEmpty();
     }
 
     private void initialize() {
-        this.setSize(500, 300);
+        this.setSize(500, 350);
         this.setTitle("Benutzerverwaltung");
-        this.setContentPane(getJPanel());
 
-        getJPanel().add(getjScrollPaneBenutzerListe(), BorderLayout.CENTER);
-        getJPanel().add(getjPanelSouth(), BorderLayout.SOUTH);
+        JPanel jPanel = new JPanel(new GridBagLayout());
+        jPanel.add(getJSplitPane(), defaultGridbagConstraints());
 
-        getjPanelSouth().add(getjPanelCheckboxes(), BorderLayout.CENTER);
+        getContentPane().add(jPanel, BorderLayout.CENTER);
 
-        refreshCheckBoxPane();
+        getJSplitPane().add(getjScrollPaneBenutzerListe());
 
-        getjPanelSouth().add(getjPanelButtons(), BorderLayout.SOUTH);
+        List<String> allGroups = Client.get().getAllGroups();
+
+        jListBuilderFrom = JListBuilder.get(String.class, () -> new ArrayList<>(allGroups));
+        jListBuilderTo = JListBuilder.get(String.class, () -> {
+            if (getjListBenutzer().getSelectedValue() != null) {
+                return new ArrayList<>(getjListBenutzer().getSelectedValue().getGroups());
+            }
+            return new ArrayList<>();
+        });
+
+        DualListField<String, String> dualListField = createDualListField();
+        getJSplitPane().add(dualListField);
+
+        getContentPane().add(getjPanelButtons(), BorderLayout.SOUTH);
         getjPanelButtons().add(getjButtonAnlegen());
         getjPanelButtons().add(getjButtonOK());
-        getjPanelButtons().add(getjButtonAbbrechen());
         getjPanelButtons().add(getjButtonLoeschen());
+    }
+
+    private DualListField<String, String> createDualListField() {
+        return new DualListField<>(jListBuilderFrom.build(),
+                jListBuilderTo.build(), (ElementAddedCallback<String>) from -> {
+                    Client.get().grantUser(getjListBenutzer().getSelectedValue().getName(), from);
+                }, (ElementRemovedCallback<String>) to -> {
+                    Client.get().revokeUser(getjListBenutzer().getSelectedValue().getName(), to);
+                });
     }
 
     public JList<User> getjListBenutzer() {
         if (jListBenutzer == null) {
             jListBenutzer = jListBuilder.build();
             jListBenutzer.addListSelectionListener(e -> {
-                User user = getjListBenutzer().getSelectedValue();
-                if (user != null) {
-                    CardLayout layout = (CardLayout) getjPanelCheckboxes().getLayout();
-                    layout.show(getjPanelCheckboxes(), user.getName());
-                }
+                jListBuilderFrom.refresh();
+                jListBuilderTo.refresh();
             });
         }
         return jListBenutzer;
@@ -90,47 +106,20 @@ public class Benutzerverwaltung extends InternalFrame {
         return jScrollPaneBenutzerListe;
     }
 
-    public JPanel getJPanel() {
-        if (jPanel == null) {
-            jPanel = new JPanel(new BorderLayout());
+    public JSplitPane getJSplitPane() {
+        if (jSplitPane == null) {
+            jSplitPane = new JSplitPane(VERTICAL_SPLIT);
+            jSplitPane.setResizeWeight(0.3);
         }
-        return jPanel;
+        return jSplitPane;
     }
 
     public JButton getjButtonOK() {
         if (jButtonOK == null) {
             jButtonOK = new JButton("OK");
-            jButtonOK.addActionListener(e -> {
-                save();
-
-                setVisible(false);
-            });
+            jButtonOK.addActionListener(e -> setVisible(false));
         }
         return jButtonOK;
-    }
-
-    private void save() {
-        Map<String, Set<String>> map = new HashMap<>();
-        for (Component component : getjPanelCheckboxes().getComponents()) {
-            if (component.getName() != null) {
-                map.put(component.getName(), new HashSet<>());
-                for (Component c : ((JPanel) component).getComponents()) {
-                    JCheckBox checkBox = (JCheckBox) c;
-                    if (checkBox.isSelected()) {
-                        map.get(component.getName()).add(checkBox.getText());
-                    }
-                }
-            }
-        }
-        Client.get().grantUser(map);
-    }
-
-    public JButton getjButtonAbbrechen() {
-        if (jButtonAbbrechen == null) {
-            jButtonAbbrechen = new JButton("Abbrechen");
-            jButtonAbbrechen.addActionListener(e -> setVisible(false));
-        }
-        return jButtonAbbrechen;
     }
 
     public JButton getjButtonAnlegen() {
@@ -145,7 +134,6 @@ public class Benutzerverwaltung extends InternalFrame {
                 if (option == JOptionPane.OK_OPTION) {
                     Client.get().createUser(username.getText(), password.getPassword());
                     jListBuilder.refresh();
-                    refreshCheckBoxPane();
                 }
             });
         }
@@ -167,53 +155,16 @@ public class Benutzerverwaltung extends InternalFrame {
         return jPanelButtons;
     }
 
-    public JPanel getjPanelCheckboxes() {
-        if (jPanelCheckboxes == null) {
-            jPanelCheckboxes = new JPanel(new CardLayout());
-        }
-        return jPanelCheckboxes;
-    }
-
     public JButton getjButtonLoeschen() {
         if (jButtonLoeschen == null) {
             jButtonLoeschen = new JButton("Löschen");
             jButtonLoeschen.addActionListener(e -> {
-                save();
                 User user = getjListBenutzer().getSelectedValue();
                 Client.get().dropUser(user.getName());
-                refreshCheckBoxPane();
                 jListBuilder.refresh();
-                showEmpty();
             });
         }
         return jButtonLoeschen;
     }
 
-    private void refreshCheckBoxPane() {
-        getjPanelCheckboxes().removeAll();
-
-        getjPanelCheckboxes().add(new JPanel(), "EMPTY");
-
-        List<String> allGroups = Client.get().getAllGroups();
-
-        for (User user : Client.get().getAllUsers()) {
-            JPanel checkboxpanelForUser = new JPanel(new GridLayout(3, 0));
-            checkboxpanelForUser.setName(user.getName());
-            for (String group : allGroups) {
-                JCheckBox checkbox = new JCheckBox(group);
-                for (String groupOfUser : user.getGroups()) {
-                    if (group.equals(groupOfUser)) {
-                        checkbox.setSelected(true);
-                    }
-                }
-                checkboxpanelForUser.add(checkbox);
-            }
-            getjPanelCheckboxes().add(checkboxpanelForUser, checkboxpanelForUser.getName());
-        }
-    }
-
-    private void showEmpty() {
-        CardLayout layout = (CardLayout) getjPanelCheckboxes().getLayout();
-        layout.show(getjPanelCheckboxes(), "EMPTY");
-    }
 }
