@@ -1,205 +1,129 @@
-<?xml version="1.0" encoding="UTF-8"  ?>
-<!-- Created with iReport - A designer for JasperReports -->
-<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
-<jasperReport
-		 name="TeilnehmerlisteNachtwache"
-		 columnCount="1"
-		 printOrder="Vertical"
-		 orientation="Landscape"
-		 pageWidth="802"
-		 pageHeight="535"
-		 columnWidth="802"
-		 columnSpacing="0"
-		 leftMargin="0"
-		 rightMargin="0"
-		 topMargin="0"
-		 bottomMargin="0"
-		 whenNoDataType="NoPages"
-		 isTitleNewPage="false"
-		 isSummaryNewPage="false">
-	<property name="ireport.scriptlethandling" value="0" />
-	<property name="ireport.encoding" value="UTF-8" />
-	<import value="java.util.*" />
-	<import value="net.sf.jasperreports.engine.*" />
-	<import value="net.sf.jasperreports.engine.data.*" />
-
-	<parameter name="LaIDB" isForPrompting="true" class="java.lang.Integer"/>
-	<queryString><![CDATA[SELECT Person.Vorname, Person.Nachname, Person.GebDat, Person.Strasse, Person.PLZ, Person.Ort, Person.TelNr, Person.Email
-FROM Person INNER JOIN ((Gruppe INNER JOIN (Lager INNER JOIN stGrLa ON Lager.LaID = stGrLa.Lager) ON Gruppe.GrID = stGrLa.Gruppe) INNER JOIN stTeGr ON Gruppe.GrID = stTeGr.Gruppe) ON Person.PeID = stTeGr.Person
-WHERE Lager.LaID = $P{LaIDB}
-ORDER BY Person.Nachname;]]></queryString>
-
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TeilnehmerlisteNachtwache" pageWidth="802" pageHeight="535" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="c434a4d5-f581-46ba-8950-97cc2fef2b08">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="3.797498335832415"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="LaIDB" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select
+	p.*,
+(
+	select count(gr_la.lager) as anzahl from sttegr te_gr
+	inner join Gruppe g on te_gr.gruppe = g.grid
+	inner join stGrLa gr_la on gr_la.gruppe = g.grid
+	where te_gr.person = p.peid
+)
+from person p
+inner join sttegr te_gr on p.peid = te_gr.person
+inner join Gruppe g on te_gr.gruppe = g.grid
+inner join stGrLa gr_la on gr_la.gruppe = g.grid
+where
+	gr_la.lager = $P{LaIDB}
+order by p.nachname, p.vorname;]]>
+	</queryString>
+	<field name="peid" class="java.lang.Integer"/>
 	<field name="vorname" class="java.lang.String"/>
 	<field name="nachname" class="java.lang.String"/>
-	<field name="gebdat" class="java.sql.Date"/>
+	<field name="geschlecht" class="java.lang.Integer"/>
+	<field name="jahrgang" class="java.lang.Integer"/>
 	<field name="strasse" class="java.lang.String"/>
 	<field name="plz" class="java.lang.String"/>
 	<field name="ort" class="java.lang.String"/>
 	<field name="telnr" class="java.lang.String"/>
 	<field name="email" class="java.lang.String"/>
-
-		<background>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</background>
-		<title>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</title>
-		<pageHeader>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</pageHeader>
-		<columnHeader>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</columnHeader>
-		<detail>
-			<band height="15"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="0"
-						y="-1"
-						width="143"
-						height="15"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="textField"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement>
-						<font fontName="Times New Roman" size="12"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{nachname}+" "+$F{vorname}]]></textFieldExpression>
-				</textField>
-				<line direction="TopDown">
-					<reportElement
-						x="0"
-						y="14"
-						width="782"
-						height="1"
-						key="line-1"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="145"
-						y="0"
-						width="0"
-						height="15"
-						key="line-3"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="198"
-						y="0"
-						width="0"
-						height="15"
-						key="line-4"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="251"
-						y="0"
-						width="0"
-						height="15"
-						key="line-5"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="304"
-						y="0"
-						width="0"
-						height="15"
-						key="line-6"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="357"
-						y="0"
-						width="0"
-						height="15"
-						key="line-7"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="410"
-						y="0"
-						width="0"
-						height="15"
-						key="line-8"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="463"
-						y="0"
-						width="0"
-						height="15"
-						key="line-9"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="516"
-						y="0"
-						width="0"
-						height="15"
-						key="line-10"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="569"
-						y="0"
-						width="0"
-						height="15"
-						key="line-11"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="622"
-						y="0"
-						width="0"
-						height="15"
-						key="line-12"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="675"
-						y="0"
-						width="0"
-						height="15"
-						key="line-13"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="734"
-						y="0"
-						width="0"
-						height="15"
-						key="line-14"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-			</band>
-		</detail>
-		<columnFooter>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</columnFooter>
-		<pageFooter>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</pageFooter>
-		<summary>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</summary>
+	<field name="gebdat" class="java.sql.Date"/>
+	<field name="vornamenachname" class="java.lang.String"/>
+	<field name="handy" class="java.lang.String"/>
+	<field name="nottel" class="java.lang.String"/>
+	<field name="anzahl" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="0" y="-1" width="134" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="02387882-2950-4e38-9549-5345ec993068"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nachname}+" "+$F{vorname}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line-1" x="0" y="14" width="782" height="1" uuid="801e8e46-4980-4501-8698-315d059c32c1"/>
+			</line>
+			<line>
+				<reportElement key="line-3" x="145" y="0" width="1" height="15" uuid="c1047aac-5034-4be8-a88a-ef9c8ef762e6"/>
+			</line>
+			<line>
+				<reportElement key="line-4" x="198" y="0" width="1" height="15" uuid="4d4410e8-c58c-4e70-94e4-aa3ae130010f"/>
+			</line>
+			<line>
+				<reportElement key="line-5" x="251" y="0" width="1" height="15" uuid="7347d262-cfea-4e21-bb9e-055ce769bf82"/>
+			</line>
+			<line>
+				<reportElement key="line-6" x="304" y="0" width="1" height="15" uuid="bf1cebea-971e-4f12-893b-725557413da1"/>
+			</line>
+			<line>
+				<reportElement key="line-7" x="357" y="0" width="1" height="15" uuid="e6f9e072-6a32-4521-9ef2-08032de2f78c"/>
+			</line>
+			<line>
+				<reportElement key="line-8" x="410" y="0" width="1" height="15" uuid="1624d04b-4987-4582-90e9-5e90b15853e8"/>
+			</line>
+			<line>
+				<reportElement key="line-9" x="463" y="0" width="1" height="15" uuid="c6017f22-a4d4-4a18-90d4-10395a9783b7"/>
+			</line>
+			<line>
+				<reportElement key="line-10" x="516" y="0" width="1" height="15" uuid="1d549984-0730-4b4d-9b98-4c008a7a3227"/>
+			</line>
+			<line>
+				<reportElement key="line-11" x="569" y="0" width="1" height="15" uuid="8e09d775-afc5-4b23-869d-28ea130c0790"/>
+			</line>
+			<line>
+				<reportElement key="line-12" x="622" y="0" width="1" height="15" uuid="9692e36d-386b-479f-aaa5-23150609e6d2"/>
+			</line>
+			<line>
+				<reportElement key="line-13" x="675" y="0" width="1" height="15" uuid="ae2ec048-34de-41dc-8548-4ab98d3ea616"/>
+			</line>
+			<line>
+				<reportElement key="line-14" x="734" y="0" width="1" height="15" uuid="d3b6050a-36ff-4d82-bc16-26100ebede7c"/>
+			</line>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="134" y="0" width="11" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="5801da44-dd77-4cde-aac4-376d7960a9f4"/>
+				<textElement verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{anzahl}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
 </jasperReport>
