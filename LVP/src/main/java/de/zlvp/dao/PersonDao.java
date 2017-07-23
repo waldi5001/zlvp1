@@ -81,7 +81,6 @@ public class PersonDao extends AbstractDao<Person> {
 
     public List<Person> findPerson(String vorname, String nachname) {
         return select(find, ps -> {
-
             if (vorname != null && !vorname.isEmpty()) {
                 ps.setString(1, "%" + vorname + "%");
             } else {
@@ -93,8 +92,6 @@ public class PersonDao extends AbstractDao<Person> {
             } else {
                 ps.setString(2, nachname);
             }
-
-            ps.setString(2, nachname);
         }, rs -> {
             Person person = new Person(rs.getInt("peid"), rs.getString("vorname"), rs.getString("nachname"),
                     rs.getString("strasse"), rs.getString("plz"), rs.getString("ort"), rs.getDate("gebDat"),
