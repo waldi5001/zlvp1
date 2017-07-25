@@ -30,7 +30,6 @@ order by p.nachname, p.vorname;]]>
 	<field name="vorname" class="java.lang.String"/>
 	<field name="nachname" class="java.lang.String"/>
 	<field name="geschlecht" class="java.lang.Integer"/>
-	<field name="jahrgang" class="java.lang.Integer"/>
 	<field name="strasse" class="java.lang.String"/>
 	<field name="plz" class="java.lang.String"/>
 	<field name="ort" class="java.lang.String"/>

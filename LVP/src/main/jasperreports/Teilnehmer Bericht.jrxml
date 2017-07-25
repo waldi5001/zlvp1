@@ -38,7 +38,6 @@
 	<field name="ort" class="java.lang.String"/>
 	<field name="telnr" class="java.lang.String"/>
 	<field name="email" class="java.lang.String"/>
-	<field name="jahrgang" class="java.lang.Integer"/>
 	<field name="vornamenachname" class="java.lang.String"/>
 
 

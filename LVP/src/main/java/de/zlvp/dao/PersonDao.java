@@ -1,10 +1,6 @@
 package de.zlvp.dao;
 
-import static java.lang.String.format;
-import static java.util.Calendar.YEAR;
-
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import de.zlvp.entity.Geschlecht;
@@ -16,11 +12,11 @@ public class PersonDao extends AbstractDao<Person> {
     private static final String find = "select p.*, g.* from person p inner join geschlecht g on p.geschlecht = g.geid where p.vorname ilike ? or p.nachname ilike ? order by p.nachname, p.vorname";
 
     private static final String insertPerson = "insert into persont "
-            + "(vorname, nachname, gebdat, strasse, plz, ort, telnr, email, jahrgang, vornamenachname, geschlecht, handy, nottel) "
-            + "values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            + "(vorname, nachname, gebdat, strasse, plz, ort, telnr, email, geschlecht, handy, nottel) "
+            + "values (?,?,?,?,?,?,?,?,?,?,?)";
 
     private static final String updatePerson = "update persont set "
-            + "vorname = ?, nachname = ?, gebdat = ?, strasse = ?, plz = ?, ort = ?, telnr = ?, email = ?, jahrgang = ?, vornamenachname = ?, geschlecht = ?, handy = ?, nottel = ? "
+            + "vorname = ?, nachname = ?, gebdat = ?, strasse = ?, plz = ?, ort = ?, telnr = ?, email = ?, geschlecht = ?, handy = ?, nottel = ? "
             + "where peid = ?";
 
     public List<Person> getAll() {
@@ -38,44 +34,11 @@ public class PersonDao extends AbstractDao<Person> {
     public void speichern(Integer id, String vorname, String nachname, Date gebdat, String strasse, String plz,
             String ort, String telnr, String email, int geschlecht, String handy, String nottel) {
         if (id == null) {
-            insertOrUpdate(insertPerson, ps -> {
-                GregorianCalendar gc = new GregorianCalendar();
-                gc.setTime(gebdat);
-                int gebJahr = gc.get(YEAR);
-                ps.setString(1, vorname);
-                ps.setString(2, nachname);
-                ps.setDate(3, new java.sql.Date(gebdat.getTime()));
-                ps.setString(4, strasse);
-                ps.setString(5, plz);
-                ps.setString(6, ort);
-                ps.setString(7, telnr);
-                ps.setString(8, email);
-                ps.setInt(9, gebJahr);
-                ps.setString(10, format("%s%s%s", vorname, nachname, gebJahr));
-                ps.setInt(11, geschlecht);
-                ps.setString(12, handy);
-                ps.setString(13, nottel);
-            });
+            jdbc.update(insertPerson, vorname, nachname, new java.sql.Date(gebdat.getTime()), strasse, plz, ort, telnr,
+                    email, geschlecht, handy, nottel);
         } else {
-            insertOrUpdate(updatePerson, ps -> {
-                GregorianCalendar gc = new GregorianCalendar();
-                gc.setTime(gebdat);
-                int gebJahr = gc.get(YEAR);
-                ps.setString(1, vorname);
-                ps.setString(2, nachname);
-                ps.setDate(3, new java.sql.Date(gebdat.getTime()));
-                ps.setString(4, strasse);
-                ps.setString(5, plz);
-                ps.setString(6, ort);
-                ps.setString(7, telnr);
-                ps.setString(8, email);
-                ps.setInt(9, gebJahr);
-                ps.setString(10, format("%s%s%s", vorname, nachname, gebJahr));
-                ps.setInt(11, geschlecht);
-                ps.setString(12, handy);
-                ps.setString(13, nottel);
-                ps.setInt(14, id);
-            });
+            jdbc.update(updatePerson, vorname, nachname, new java.sql.Date(gebdat.getTime()), strasse, plz, ort, telnr,
+                    email, geschlecht, handy, nottel, id);
         }
     }
 
