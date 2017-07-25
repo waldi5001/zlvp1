@@ -1,506 +1,326 @@
-<?xml version="1.0" encoding="UTF-8"  ?>
-<!-- Created with iReport - A designer for JasperReports -->
-<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
-<jasperReport
-		 name="Nachtwachenliste"
-		 columnCount="1"
-		 printOrder="Vertical"
-		 orientation="Landscape"
-		 pageWidth="842"
-		 pageHeight="595"
-		 columnWidth="782"
-		 columnSpacing="0"
-		 leftMargin="30"
-		 rightMargin="30"
-		 topMargin="20"
-		 bottomMargin="20"
-		 whenNoDataType="NoPages"
-		 isTitleNewPage="false"
-		 isSummaryNewPage="false">
-	<property name="ireport.scriptlethandling" value="0" />
-	<property name="ireport.encoding" value="UTF-8" />
-	<import value="java.util.*" />
-	<import value="net.sf.jasperreports.engine.*" />
-	<import value="net.sf.jasperreports.engine.data.*" />
-
-	<parameter name="LID" isForPrompting="true" class="java.lang.Integer"/>
-	<queryString><![CDATA[SELECT Lager.LaID, Lager.Name
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Nachtwachenliste" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="782" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="36f4c290-f91f-4dd8-b7e7-e5a279599ee7">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="2.853116706110003"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="44"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="LID" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT Lager.LaID, Lager.Name
 FROM Lager
-WHERE Lager.LaID = $P{LID}]]></queryString>
-
+WHERE Lager.LaID = $P{LID}]]>
+	</queryString>
 	<field name="laid" class="java.lang.Integer"/>
 	<field name="name" class="java.lang.String"/>
-
-
-		<group  name="detail2" >
-			<groupExpression><![CDATA[]]></groupExpression>
-			<groupHeader>
-			<band height="37"  isSplitAllowed="true" >
-				<subreport  isUsingCache="true">
-					<reportElement
-						x="0"
-						y="0"
-						width="782"
-						height="30"
-						key="subreport-1"/>
-					<subreportParameter  name="LaIDB">
+	<group name="detail2">
+		<groupExpression><![CDATA[]]></groupExpression>
+		<groupHeader>
+			<band height="37" splitType="Stretch">
+				<subreport isUsingCache="true">
+					<reportElement key="subreport-1" x="0" y="0" width="782" height="30" uuid="8efe72f4-12e3-4ca8-93d4-0fb704b4c55d"/>
+					<subreportParameter name="LaIDB">
 						<subreportParameterExpression><![CDATA[$P{LID}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression  class="java.lang.String"><![CDATA["TeilnehmerlisteGruppeNachtwache.jasper"]]></subreportExpression>
+					<subreportExpression><![CDATA["TeilnehmerlisteGruppeNachtwache.jasper"]]></subreportExpression>
 				</subreport>
 			</band>
-			</groupHeader>
-			<groupFooter>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-			</groupFooter>
-		</group>
-		<background>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</background>
-		<title>
-			<band height="48"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="0"
-						y="0"
-						width="782"
-						height="37"
-						key="textField-1"/>
-					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+		</groupHeader>
+		<groupFooter>
+			<band splitType="Stretch"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="48" splitType="Stretch">
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField-1" x="0" y="0" width="782" height="37" uuid="90d6a267-a314-44c8-bcc7-678631dcf0b6"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Times New Roman" pdfFontName="Helvetica-Oblique" size="24" isItalic="true"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["Nachtwachenplan: " + $F{name}]]></textFieldExpression>
-				</textField>
-			</band>
-		</title>
-		<pageHeader>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</pageHeader>
-		<columnHeader>
-			<band height="24"  isSplitAllowed="true" >
-				<staticText>
-					<reportElement
-						x="0"
-						y="0"
-						width="56"
-						height="19"
-						key="staticText-2"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="24" isItalic="true" pdfFontName="Helvetica-Oblique"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Nachtwachenplan: " + $F{name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-2" x="0" y="0" width="56" height="19" uuid="377d6ca2-dbf6-4959-a6f9-f768f9fdacdc"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font fontName="Times New Roman" size="16" isUnderline="true"/>
-					</textElement>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="16" isUnderline="true"/>
+				</textElement>
 				<text><![CDATA[Name]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="155"
-						y="0"
-						width="36"
-						height="23"
-						key="staticText-3"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-3" x="155" y="0" width="36" height="23" uuid="cc80b856-44ab-4677-bc46-31c6642238e6"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="17" isUnderline="false"/>
-					</textElement>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="17" isUnderline="false"/>
+				</textElement>
 				<text><![CDATA[MO]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="208"
-						y="0"
-						width="36"
-						height="23"
-						key="staticText-4"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-4" x="208" y="0" width="36" height="23" uuid="8b7e0528-196c-4da2-96f1-79fd1e4fd665"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="17" isUnderline="false"/>
-					</textElement>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="17" isUnderline="false"/>
+				</textElement>
 				<text><![CDATA[DI]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="261"
-						y="0"
-						width="36"
-						height="23"
-						key="staticText-5"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-5" x="261" y="0" width="36" height="23" uuid="e37b32ba-1b91-4c1f-b32d-2a088e9fe960"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="17" isUnderline="false"/>
-					</textElement>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="17" isUnderline="false"/>
+				</textElement>
 				<text><![CDATA[MI]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="314"
-						y="0"
-						width="36"
-						height="23"
-						key="staticText-6"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-6" x="314" y="0" width="36" height="23" uuid="4229dde6-9317-4180-b91d-44312c625df3"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="17" isUnderline="false"/>
-					</textElement>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="17" isUnderline="false"/>
+				</textElement>
 				<text><![CDATA[DO]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="367"
-						y="0"
-						width="36"
-						height="23"
-						key="staticText-7"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-7" x="367" y="0" width="36" height="23" uuid="3aceb1aa-5722-4741-a344-2c9d6f525703"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="17" isUnderline="false"/>
-					</textElement>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="17" isUnderline="false"/>
+				</textElement>
 				<text><![CDATA[FR]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="420"
-						y="0"
-						width="36"
-						height="23"
-						key="staticText-8"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-8" x="420" y="0" width="36" height="23" uuid="0d619c8c-acf0-4958-ad56-4928769eb5c3"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="17" isUnderline="false"/>
-					</textElement>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="17" isUnderline="false"/>
+				</textElement>
 				<text><![CDATA[SA]]></text>
-				</staticText>
-				<line direction="TopDown">
-					<reportElement
-						x="0"
-						y="23"
-						width="782"
-						height="0"
-						key="line-16"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<staticText>
-					<reportElement
-						x="526"
-						y="0"
-						width="36"
-						height="23"
-						key="staticText-10"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-10" x="526" y="0" width="36" height="23" uuid="7aef2739-5014-4076-9004-ed3848ddbfad"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="17" isUnderline="false"/>
-					</textElement>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="17" isUnderline="false"/>
+				</textElement>
 				<text><![CDATA[MO]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="579"
-						y="0"
-						width="36"
-						height="23"
-						key="staticText-11"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-11" x="579" y="0" width="36" height="23" uuid="96c9ee99-8054-457c-95fd-e54323209094"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="17" isUnderline="false"/>
-					</textElement>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="17" isUnderline="false"/>
+				</textElement>
 				<text><![CDATA[DI]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="632"
-						y="0"
-						width="36"
-						height="23"
-						key="staticText-12"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-12" x="632" y="0" width="36" height="23" uuid="27e55795-07ae-4083-a8b5-b4345791da36"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="17" isUnderline="false"/>
-					</textElement>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="17" isUnderline="false"/>
+				</textElement>
 				<text><![CDATA[MI]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="475"
-						y="0"
-						width="36"
-						height="23"
-						key="staticText-15"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-15" x="475" y="0" width="36" height="23" uuid="85932fa6-b8c3-437c-bf44-1c2360107922"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="17" isUnderline="false"/>
-					</textElement>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="17" isUnderline="false"/>
+				</textElement>
 				<text><![CDATA[SO]]></text>
-				</staticText>
-				<line direction="TopDown">
-					<reportElement
-						x="145"
-						y="0"
-						width="0"
-						height="24"
-						key="line-1"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="198"
-						y="0"
-						width="0"
-						height="24"
-						key="line-3"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="251"
-						y="0"
-						width="0"
-						height="24"
-						key="line-5"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="304"
-						y="0"
-						width="0"
-						height="24"
-						key="line-6"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="357"
-						y="0"
-						width="0"
-						height="24"
-						key="line-7"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="410"
-						y="0"
-						width="0"
-						height="24"
-						key="line-22"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="463"
-						y="0"
-						width="0"
-						height="24"
-						key="line-9"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="516"
-						y="0"
-						width="0"
-						height="24"
-						key="line-10"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="569"
-						y="0"
-						width="0"
-						height="24"
-						key="line-21"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="622"
-						y="0"
-						width="0"
-						height="24"
-						key="line-17"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="675"
-						y="0"
-						width="0"
-						height="24"
-						key="line-20"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="734"
-						y="0"
-						width="0"
-						height="24"
-						key="line-19"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<staticText>
-					<reportElement
-						x="685"
-						y="0"
-						width="36"
-						height="23"
-						key="staticText-16"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</staticText>
+			<line>
+				<reportElement key="line-1" x="145" y="0" width="1" height="24" uuid="d8a14e20-f2ad-427d-863f-d64004a4ec95"/>
+			</line>
+			<line>
+				<reportElement key="line-3" x="198" y="0" width="1" height="24" uuid="b9e1168a-20c4-453e-b966-6a5fda76f428"/>
+			</line>
+			<line>
+				<reportElement key="line-5" x="251" y="0" width="1" height="24" uuid="f292b48a-404e-4c50-a063-b62bfcad71d0"/>
+			</line>
+			<line>
+				<reportElement key="line-6" x="304" y="0" width="1" height="24" uuid="a6a735de-fbd5-4dd1-84eb-7f57e10141e6"/>
+			</line>
+			<line>
+				<reportElement key="line-7" x="357" y="0" width="1" height="24" uuid="3af3b18e-7be4-4b2c-882d-7c475280baaa"/>
+			</line>
+			<line>
+				<reportElement key="line-22" x="410" y="0" width="1" height="24" uuid="288ac9bf-ccce-45a3-97fc-28f5a3af815a"/>
+			</line>
+			<line>
+				<reportElement key="line-9" x="463" y="0" width="1" height="24" uuid="83dff510-fd92-4268-80d3-c02889626bad"/>
+			</line>
+			<line>
+				<reportElement key="line-10" x="516" y="0" width="1" height="24" uuid="14bdcaa3-a3ac-4796-8472-6def5d857590"/>
+			</line>
+			<line>
+				<reportElement key="line-21" x="569" y="0" width="1" height="24" uuid="594208b2-702e-4c5f-a30a-9e0c9acbef5d"/>
+			</line>
+			<line>
+				<reportElement key="line-17" x="622" y="0" width="1" height="24" uuid="9fbe0521-275f-4358-8d7d-7ff7d26e98c1"/>
+			</line>
+			<line>
+				<reportElement key="line-20" x="675" y="0" width="1" height="24" uuid="ebc9ad0d-86ed-4132-a66d-ec235369c287"/>
+			</line>
+			<line>
+				<reportElement key="line-19" x="734" y="0" width="1" height="24" uuid="8aabf510-9587-41e3-a298-fd01b64ba543"/>
+			</line>
+			<staticText>
+				<reportElement key="staticText-16" x="685" y="0" width="36" height="23" uuid="708adc72-9c53-45ab-8714-080069f61979"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Times New Roman" size="17" isUnderline="false"/>
-					</textElement>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="17" isUnderline="false"/>
+				</textElement>
 				<text><![CDATA[DO]]></text>
-				</staticText>
-			</band>
-		</columnHeader>
-		<detail>
-			<band height="33"  isSplitAllowed="true" >
-				<subreport  isUsingCache="true">
-					<reportElement
-						x="0"
-						y="0"
-						width="782"
-						height="30"
-						key="subreport-4"/>
-					<subreportParameter  name="LaIDB">
-						<subreportParameterExpression><![CDATA[$P{LID}]]></subreportParameterExpression>
-					</subreportParameter>
-					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression  class="java.lang.String"><![CDATA["LeiterStaablisteNachtwache.jasper"]]></subreportExpression>
-				</subreport>
-			</band>
-		</detail>
-		<columnFooter>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</columnFooter>
-		<pageFooter>
-			<band height="18"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="dd.MM.yy" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="0"
-						y="0"
-						width="100"
-						height="18"
-						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="33" splitType="Stretch">
+			<subreport isUsingCache="true">
+				<reportElement key="subreport-4" x="0" y="0" width="782" height="30" uuid="3d15a4a7-af8e-4334-b92e-eedfc7a93c3e"/>
+				<subreportParameter name="LaIDB">
+					<subreportParameterExpression><![CDATA[$P{LID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["LeiterStaablisteNachtwache.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="18" splitType="Stretch">
+			<textField evaluationTime="Report" pattern="dd.MM.yy" isBlankWhenNull="false">
+				<reportElement key="textField" x="0" y="0" width="100" height="18" uuid="db453435-b199-4413-813a-28d2bb01e9bb"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font fontName="Times New Roman" size="12"/>
-					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="575"
-						y="0"
-						width="100"
-						height="18"
-						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="575" y="0" width="100" height="18" uuid="5cb5dc46-a00d-46d5-bbd3-55ba99dfed7a"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Right">
-						<font fontName="Times New Roman" size="12"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["Seite " + $V{PAGE_NUMBER} + " von "]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="675"
-						y="0"
-						width="100"
-						height="18"
-						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Seite " + $V{PAGE_NUMBER} + " von "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" isBlankWhenNull="false">
+				<reportElement key="textField" x="675" y="0" width="100" height="18" uuid="36beb3b5-3a5a-4551-9d8c-1ca062892f76"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font fontName="Times New Roman" size="12"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["" + $V{PAGE_NUMBER} + ""]]></textFieldExpression>
-				</textField>
-			</band>
-		</pageFooter>
-		<summary>
-			<band height="20"  isSplitAllowed="true" >
-				<subreport  isUsingCache="true">
-					<reportElement
-						x="0"
-						y="0"
-						width="782"
-						height="20"
-						key="subreport-2"/>
-					<subreportParameter  name="LaID">
-						<subreportParameterExpression><![CDATA[$P{LID}]]></subreportParameterExpression>
-					</subreportParameter>
-					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression  class="java.lang.String"><![CDATA["AnzahlTeilnehmer.jasper"]]></subreportExpression>
-				</subreport>
-			</band>
-		</summary>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER} + ""]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="20" splitType="Stretch">
+			<subreport isUsingCache="true">
+				<reportElement key="subreport-2" x="0" y="0" width="782" height="20" uuid="310e3f86-1fb3-436a-ae57-a99797fbb25a"/>
+				<subreportParameter name="LaID">
+					<subreportParameterExpression><![CDATA[$P{LID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["AnzahlTeilnehmer.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
 </jasperReport>

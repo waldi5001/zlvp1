@@ -1,209 +1,158 @@
-<?xml version="1.0" encoding="UTF-8"  ?>
-<!-- Created with iReport - A designer for JasperReports -->
-<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
-<jasperReport
-		 name="TeilnehmerlisteNachtwache"
-		 columnCount="1"
-		 printOrder="Vertical"
-		 orientation="Landscape"
-		 pageWidth="802"
-		 pageHeight="535"
-		 columnWidth="802"
-		 columnSpacing="0"
-		 leftMargin="0"
-		 rightMargin="0"
-		 topMargin="0"
-		 bottomMargin="0"
-		 whenNoDataType="NoPages"
-		 isTitleNewPage="false"
-		 isSummaryNewPage="false">
-	<property name="ireport.scriptlethandling" value="0" />
-	<property name="ireport.encoding" value="UTF-8" />
-	<import value="java.util.*" />
-	<import value="net.sf.jasperreports.engine.*" />
-	<import value="net.sf.jasperreports.engine.data.*" />
-
-	<parameter name="LaIDB" isForPrompting="true" class="java.lang.Integer"/>
-	<queryString><![CDATA[SELECT Person.Vorname, Person.Nachname, Person.GebDat, Person.Strasse, Person.PLZ, Person.Ort, Person.TelNr, Person.Email
-FROM Person INNER JOIN ((Gruppe INNER JOIN (Lager INNER JOIN stGrLa ON Lager.LaID = stGrLa.Lager) ON Gruppe.GrID = stGrLa.Gruppe) INNER JOIN stTeGr ON Gruppe.GrID = stTeGr.Gruppe) ON Person.PeID = stTeGr.Person
-WHERE Lager.LaID = $P{LaIDB}
-ORDER BY Gruppe.grid, person.nachname]]></queryString>
-
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TeilnehmerlisteNachtwache" pageWidth="802" pageHeight="535" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="16f8ce13-68d8-4ad1-9553-efc1634ab479">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="5.559917313492243"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="LaIDB" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select
+	p.*,g.*,
+(
+	select count(gr_la.lager) as anzahl from sttegr te_gr
+	inner join Gruppe g on te_gr.gruppe = g.grid
+	inner join stGrLa gr_la on gr_la.gruppe = g.grid
+	where te_gr.person = p.peid
+)
+from person p
+inner join sttegr te_gr on p.peid = te_gr.person
+inner join Gruppe g on te_gr.gruppe = g.grid
+inner join stGrLa gr_la on gr_la.gruppe = g.grid
+where
+	gr_la.lager = $P{LaIDB}
+order by g.grid, p.nachname, p.vorname;]]>
+	</queryString>
+	<field name="peid" class="java.lang.Integer"/>
 	<field name="vorname" class="java.lang.String"/>
 	<field name="nachname" class="java.lang.String"/>
-	<field name="gebdat" class="java.sql.Date"/>
+	<field name="geschlecht" class="java.lang.Integer"/>
+	<field name="jahrgang" class="java.lang.Integer"/>
 	<field name="strasse" class="java.lang.String"/>
 	<field name="plz" class="java.lang.String"/>
 	<field name="ort" class="java.lang.String"/>
 	<field name="telnr" class="java.lang.String"/>
 	<field name="email" class="java.lang.String"/>
-
-		<background>
-			<band height="0"  isSplitAllowed="true" >
+	<field name="gebdat" class="java.sql.Date"/>
+	<field name="vornamenachname" class="java.lang.String"/>
+	<field name="handy" class="java.lang.String"/>
+	<field name="nottel" class="java.lang.String"/>
+	<field name="grid" class="java.lang.Integer"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="schlachtruf" class="java.lang.String"/>
+	<field name="anzahl" class="java.lang.Long"/>
+	<group name="grupe" keepTogether="true">
+		<groupExpression><![CDATA[$F{grid}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<rectangle>
+					<reportElement mode="Opaque" x="0" y="0" width="782" height="15" backcolor="#CCCCCC" uuid="7277f3df-5e46-48bb-94df-e9128b8da4d2"/>
+				</rectangle>
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="4" y="0" width="304" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="d0d4b9b7-fdce-4563-b685-37e2ad78793b"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="Times New Roman" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+				</textField>
 			</band>
-		</background>
-		<title>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</title>
-		<pageHeader>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</pageHeader>
-		<columnHeader>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</columnHeader>
-		<detail>
-			<band height="15"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="0"
-						y="-1"
-						width="143"
-						height="15"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="textField"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="4" y="0" width="132" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="f3ee91cf-55ff-42bc-b599-171a76180f84"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement>
-						<font fontName="Times New Roman" size="12"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{nachname}+" "+$F{vorname}]]></textFieldExpression>
-				</textField>
-				<line direction="TopDown">
-					<reportElement
-						x="0"
-						y="14"
-						width="782"
-						height="1"
-						key="line-1"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="145"
-						y="0"
-						width="0"
-						height="15"
-						key="line-3"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="198"
-						y="0"
-						width="0"
-						height="15"
-						key="line-4"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="251"
-						y="0"
-						width="0"
-						height="15"
-						key="line-5"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="304"
-						y="0"
-						width="0"
-						height="15"
-						key="line-6"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="357"
-						y="0"
-						width="0"
-						height="15"
-						key="line-7"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="410"
-						y="0"
-						width="0"
-						height="15"
-						key="line-8"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="463"
-						y="0"
-						width="0"
-						height="15"
-						key="line-9"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="516"
-						y="0"
-						width="0"
-						height="15"
-						key="line-10"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="569"
-						y="0"
-						width="0"
-						height="15"
-						key="line-11"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="622"
-						y="0"
-						width="0"
-						height="15"
-						key="line-12"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="675"
-						y="0"
-						width="0"
-						height="15"
-						key="line-13"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="734"
-						y="0"
-						width="0"
-						height="15"
-						key="line-14"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-			</band>
-		</detail>
-		<columnFooter>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</columnFooter>
-		<pageFooter>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</pageFooter>
-		<summary>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</summary>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nachname}+" "+$F{vorname}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line-1" x="0" y="0" width="782" height="1" uuid="103188ff-bb04-4569-a498-091204e3dda0"/>
+			</line>
+			<line>
+				<reportElement key="line-3" x="145" y="0" width="1" height="15" uuid="53a0d830-8c10-4bb8-829c-9411aa8ad10e"/>
+			</line>
+			<line>
+				<reportElement key="line-4" x="198" y="0" width="1" height="15" uuid="f1b35a1a-c82d-4a1f-bef2-bfa83c4e1808"/>
+			</line>
+			<line>
+				<reportElement key="line-5" x="251" y="0" width="1" height="15" uuid="f30d6ac9-1b83-4f37-8967-6920324f0a0a"/>
+			</line>
+			<line>
+				<reportElement key="line-6" x="304" y="0" width="1" height="15" uuid="6457149f-cbae-40fc-b289-82f835539d7d"/>
+			</line>
+			<line>
+				<reportElement key="line-7" x="357" y="0" width="1" height="15" uuid="503507ae-1458-4b95-9c10-624aac30a529"/>
+			</line>
+			<line>
+				<reportElement key="line-8" x="410" y="0" width="1" height="15" uuid="2c861150-1d56-4dde-a308-b62c937a7aaa"/>
+			</line>
+			<line>
+				<reportElement key="line-9" x="463" y="0" width="1" height="15" uuid="c4186643-d3f9-4dba-a360-039c51f51d6b"/>
+			</line>
+			<line>
+				<reportElement key="line-10" x="516" y="0" width="1" height="15" uuid="a3cbb239-e435-44f1-aa90-8aa37408ee30"/>
+			</line>
+			<line>
+				<reportElement key="line-11" x="569" y="0" width="1" height="15" uuid="a19a9cba-8fd7-4f62-9593-b761187b059a"/>
+			</line>
+			<line>
+				<reportElement key="line-12" x="622" y="0" width="1" height="15" uuid="b5ea3488-7f09-4bd1-99b7-991dc6ddb50d"/>
+			</line>
+			<line>
+				<reportElement key="line-13" x="675" y="0" width="1" height="15" uuid="c05b49f2-bca8-420d-a0ef-e200fa8e6766"/>
+			</line>
+			<line>
+				<reportElement key="line-14" x="734" y="0" width="1" height="15" uuid="2bbd8175-889d-4770-b91e-9f1c10b01321"/>
+			</line>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="135" y="0" width="10" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="95c2ab9f-f2b0-4d4a-ab8a-f7da52d2637c"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{anzahl}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
 </jasperReport>
