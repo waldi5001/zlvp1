@@ -23,7 +23,7 @@ public class PersonDao extends AbstractDao<Person> {
         return select(findAll, rs -> {
             Person person = new Person(rs.getInt("peid"), rs.getString("vorname"), rs.getString("nachname"),
                     rs.getString("strasse"), rs.getString("plz"), rs.getString("ort"), rs.getDate("gebDat"),
-                    rs.getString("handy"), rs.getString("telnr"), rs.getString("email"));
+                    rs.getString("handy"), rs.getString("telnr"), rs.getString("email"), rs.getString("nottel"));
 
             person.setGeschlecht(new Geschlecht(rs.getInt("geid"), rs.getString("name")));
 
@@ -58,7 +58,7 @@ public class PersonDao extends AbstractDao<Person> {
         }, rs -> {
             Person person = new Person(rs.getInt("peid"), rs.getString("vorname"), rs.getString("nachname"),
                     rs.getString("strasse"), rs.getString("plz"), rs.getString("ort"), rs.getDate("gebDat"),
-                    rs.getString("handy"), rs.getString("telnr"), rs.getString("email"));
+                    rs.getString("handy"), rs.getString("telnr"), rs.getString("email"), rs.getString("nottel"));
 
             person.setGeschlecht(new Geschlecht(rs.getInt("geid"), rs.getString("name")));
 

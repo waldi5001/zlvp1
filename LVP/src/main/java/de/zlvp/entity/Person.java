@@ -7,7 +7,7 @@ import java.util.Date;
 public class Person extends AbstractEntity {
 
     public Person(Integer id, String vorname, String name, String strasse, String sPLZ, String ort, Date daGebDat,
-            String handy, String telNr, String email) {
+            String handy, String telNr, String email, String nottel) {
         this.vorname = vorname;
         this.strasse = strasse;
         this.plz = sPLZ;
@@ -17,6 +17,7 @@ public class Person extends AbstractEntity {
         this.email = email;
         this.gebDat = daGebDat;
         this.handy = handy;
+        this.nottel = nottel;
         setId(id);
     }
 

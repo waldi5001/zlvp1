@@ -6,13 +6,13 @@ public class Teilnehmer extends Person {
 
     public Teilnehmer(Integer id, int personId, String vorname, String name, String strasse, String sPLZ, String ort,
             Date daGebDat, String handy, String telNr, String email) {
-        super(id, vorname, name, strasse, sPLZ, ort, daGebDat, handy, telNr, email);
+        super(id, vorname, name, strasse, sPLZ, ort, daGebDat, handy, telNr, email, null);
         setOriginalId(personId);
     }
 
     public Teilnehmer(Person person) {
         super(null, person.getVorname(), person.getName(), person.getStrasse(), person.getPlz(), person.getOrt(),
-                person.getGebDat(), person.getHandy(), person.getTelNr(), person.getEmail());
+                person.getGebDat(), person.getHandy(), person.getTelNr(), person.getEmail(), person.getNottel());
         setOriginalId(person.getId());
         setGeschlecht(person.getGeschlecht());
     }
