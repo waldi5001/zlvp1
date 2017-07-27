@@ -104,60 +104,39 @@
 			<version>42.1.1</version>
 		</dependency>
 		<dependency>
-			<groupId>de.javasoft</groupId>
-			<artifactId>jytable</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/jytable.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>de.javasoft</groupId>
-			<artifactId>jywidget</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/jywidgets.jar</systemPath>
-		</dependency>
-		<dependency>
 			<groupId>org.jdesktop</groupId>
 			<artifactId>swingx</artifactId>
 			<version>1.6.5</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/swingx-1.6.5.jar</systemPath>
 		</dependency>
 		<dependency>
-			<groupId>org.jdesktop</groupId>
-			<artifactId>swing-worker</artifactId>
-			<version>1.1</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/swing-worker-1.1.jar</systemPath>
+			<groupId>de.javasoft</groupId>
+			<artifactId>jytable</artifactId>
+			<version>2.19.1</version>
+		</dependency>
+		<dependency>
+			<groupId>de.javasoft</groupId>
+			<artifactId>jywidgets</artifactId>
+			<version>2.19.1</version>
 		</dependency>
 		<dependency>
 			<groupId>de.javasoft</groupId>
 			<artifactId>synthetica</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/synthetica.jar</systemPath>
+			<version>2.19.1</version>
 		</dependency>
 		<dependency>
 			<groupId>de.javasoft</groupId>
 			<artifactId>syntheticaAddons</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/syntheticaAddons.jar</systemPath>
+			<version>1.9.1</version>
 		</dependency>
 		<dependency>
 			<groupId>de.javasoft</groupId>
 			<artifactId>syntheticaBlackStar</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/syntheticaBlackStar.jar</systemPath>
+			<version>2.19.1</version>
 		</dependency>
 		<dependency>
 			<groupId>de.javasoft</groupId>
 			<artifactId>syntheticaBlackStarAddon</artifactId>
-			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/syntheticaBlackStarAddon.jar</systemPath>
+			<version>1.9.1</version>
 		</dependency>
 
 		<dependency>
@@ -206,7 +185,7 @@
 					<!-- These are the default configurations: -->
 					<compiler>net.sf.jasperreports.engine.design.JRJdtCompiler</compiler>
 					<sourceDirectory>src/main/jasperreports</sourceDirectory>
-					<outputDirectory>${project.build.directory}/jasper</outputDirectory>
+					<outputDirectory>${project.build.outputDirectory}</outputDirectory>
 					<outputFileExt>.jasper</outputFileExt>
 					<xmlValidation>true</xmlValidation>
 					<verbose>false</verbose>
@@ -240,12 +219,25 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<transformers>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+									<resource>${project.build.directory}/*.jasper</resource>
+								</transformer>
+								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>de.zlvp.StartKlasse</mainClass>
+								</transformer>
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
