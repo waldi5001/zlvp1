@@ -102,7 +102,7 @@ public class ReportsImpl implements Reports {
 
     @Override
     public void zeltSchaeden(int zeltId) {
-        showReport("ZeltSchäden", map("zeID", zeltId));
+        showReport("ZeltSchaeden", map("zeID", zeltId));
     }
 
     @Override
