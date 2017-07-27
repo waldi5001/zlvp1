@@ -1,13 +1,10 @@
 package de.zlvp.gui;
 
-import static de.zlvp.Helferlein.toListModel;
-
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import javax.swing.JButton;
@@ -60,7 +57,11 @@ public class ZeltVerwalten extends InternalFrame {
 
     private JScrollPane jScrollPane;
 
+    private JListBuilder<Zelt> jListBuilder;
+
     public ZeltVerwalten() {
+        jListBuilder = JListBuilder.get(Zelt.class, () -> Client.get().getAllZelt()).map(z -> z.getBezeichnung());
+
         initialize();
         setUp();
         getJButtonVerleih().setEnabled(false);
@@ -241,12 +242,10 @@ public class ZeltVerwalten extends InternalFrame {
                 String bezeichnung = getJTextFieldBezeichnung().getText();
                 Date angeschafft = (Date) getJFormattedTextFieldAngeschafft().getValue();
                 double preis = 0;
-
                 Client.get().speichereZelt(selectedValue.getId(), bezeichnung, angeschafft, preis);
 
-                List<Zelt> aktualisiert = Client.get().getAllZelt();
+                jListBuilder.refresh();
 
-                getJList().setModel(toListModel(aktualisiert));
                 getJList().setSelectedValue(selectedValue, true);
 
             });
