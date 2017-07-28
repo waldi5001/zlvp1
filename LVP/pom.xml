@@ -216,10 +216,6 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
 					<archive>
@@ -240,9 +236,11 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
 							<transformers>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
-									<resource>${project.build.directory}/*.jasper</resource>
+									<resource>src/main/resources</resource>
+									<file>zlvp.properties</file>
 								</transformer>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>de.zlvp.StartKlasse</mainClass>
@@ -255,7 +253,7 @@
 		</plugins>
 	</build>
 	<scm>
-		<connection>scm:git:file:///home/fk/Documents/zlvp1/</connection>
+		<developerConnection>scm:git:file:///home/fk/Documents/zlvp1/</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 </project>
