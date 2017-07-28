@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.zlvp</groupId>
 	<artifactId>zlvp</artifactId>
-	<version>0.3-SNAPSHOT</version>
+	<version>0.3</version>
 	<distributionManagement>
 		<repository>
 			<id>internal.repo</id>
