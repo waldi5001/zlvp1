@@ -4,10 +4,11 @@ import java.util.Date;
 
 public class Stab extends Person {
 
-    public Stab(Integer id, Geschlecht geschlecht, int personId, String vorname, String name, String strasse,
-            String sPLZ, String ort, Date daGebDat, String handy, String telNr, String email) {
+    public Stab(Integer id, Geschlecht geschlecht, Funktion funktion, int personId, String vorname, String name,
+            String strasse, String sPLZ, String ort, Date daGebDat, String handy, String telNr, String email) {
         super(id, geschlecht, vorname, name, strasse, sPLZ, ort, daGebDat, handy, telNr, email, null);
         setOriginalId(personId);
+        this.funktion = funktion;
     }
 
     public Stab(Person person) {

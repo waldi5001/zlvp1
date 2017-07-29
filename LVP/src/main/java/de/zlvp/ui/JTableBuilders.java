@@ -1,8 +1,9 @@
 package de.zlvp.ui;
 
+import static java.util.Arrays.asList;
+
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import de.zlvp.Client;
@@ -28,9 +29,6 @@ import de.zlvp.ui.JTableBuilder.Loader;
 public class JTableBuilders {
 
     public static JTableBuilder<Stab> stab(Lager lager, Loader<Stab> loader) {
-        List<Funktion> allFunktion = Client.get().getAllFunktion();
-        allFunktion.add(0, new Funktion(null, null));
-
         return JTableBuilder.get(Stab.class, () -> loader.get())//
                 .set((person, val, index) -> {
                     if (index == 0) {
@@ -63,25 +61,22 @@ public class JTableBuilders {
                     } else if (index == 5) {
                         return person.getGebDat();
                     } else if (index == 6) {
-                        return person.getFunktion();
+                        return person.getFunktion() != null ? person.getFunktion().getBezeichnung() : null;
                     }
                     return null;
                 })
                 .save(s -> Client.get().speichereStab(s.getId(), s.getOriginalId(), s.getGeschlecht(), s.getVorname(),
                         s.getName(), s.getStrasse(), s.getPlz(), s.getOrt(), s.getGebDat(), s.getTelNr(), s.getEmail(),
-                        s.getHandy(), s.getTelNr(), s.getFunktion() != null ? s.getFunktion().getId() : null,
-                        lager.getId()))//
+                        s.getHandy(), s.getTelNr(), s.getFunktion(), lager.getId()))//
                 .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Vorname").build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Straße").build())//
                 .addColumn(ColumnBuilder.get(String.class).add("PLZ").build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Ort").build())//
                 .addColumn(ColumnBuilder.get(Date.class).add("Geburtsdatum").build())//
-                .addColumn(
-                        ColumnBuilder
-                                .get(Funktion.class).add("Funktion").add(JComboBoxBuilder
-                                        .get(Funktion.class, () -> allFunktion).map(f -> f.getBezeichnung()).build())
-                                .desc().build());
+                .addColumn(ColumnBuilder.get(Funktion.class).add("Funktion").add(JComboBoxBuilder
+                        .get(Funktion.class, () -> asList(Funktion.values())).map(f -> f.getBezeichnung()).build())
+                        .desc().build());
     }
 
     public static JTableBuilder<Materialwart> materialwart(Lager lager, Loader<Materialwart> loader) {

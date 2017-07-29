@@ -76,9 +76,6 @@
 				<property name="essenDao">
 					<bean class="de.zlvp.dao.EssenDao" parent="abstractDao" />
 				</property>
-				<property name="funktionDao">
-					<bean class="de.zlvp.dao.FunktionDao" parent="abstractDao" />
-				</property>
 				<property name="gruppeDao">
 					<bean class="de.zlvp.dao.GruppeDao" parent="abstractDao" />
 				</property>

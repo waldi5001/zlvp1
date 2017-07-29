@@ -1,5 +1,6 @@
 package de.zlvp.controller;
 
+import static de.zlvp.entity.Funktion.REMOVE;
 import static java.lang.String.valueOf;
 
 import java.time.Year;
@@ -9,7 +10,6 @@ import java.util.List;
 
 import de.zlvp.dao.AnredeDao;
 import de.zlvp.dao.EssenDao;
-import de.zlvp.dao.FunktionDao;
 import de.zlvp.dao.GruppeDao;
 import de.zlvp.dao.JahrDao;
 import de.zlvp.dao.LagerDao;
@@ -58,7 +58,6 @@ public class ControllerImpl implements Controller {
     private JahrDao jahrDao;
     private PersonDao personDao;
     private AnredeDao anredeDao;
-    private FunktionDao funktionDao;
     private LagerinfoDao lagerinfoDao;
     private LagerDao lagerDao;
     private StabDao stabDao;
@@ -86,11 +85,6 @@ public class ControllerImpl implements Controller {
     @Override
     public List<Anrede> getAllAnrede() {
         return anredeDao.getAll();
-    }
-
-    @Override
-    public List<Funktion> getAllFunktion() {
-        return funktionDao.getAll();
     }
 
     @Override
@@ -133,11 +127,7 @@ public class ControllerImpl implements Controller {
 
     @Override
     public List<Stab> getAllStab(int lagerId) {
-        List<Stab> stab = stabDao.getAll(lagerId);
-        for (Stab s : stab) {
-            s.setFunktion(funktionDao.getFromStab(s.getId()));
-        }
-        return stab;
+        return stabDao.getAll(lagerId);
     }
 
     @Override
@@ -307,21 +297,19 @@ public class ControllerImpl implements Controller {
     @Override
     public void speichereStab(Integer id, int personId, Geschlecht geschlecht, String vorname, String nachname,
             String strasse, String plz, String ort, Date gebtag, String telnr, String email, String handy,
-            String nottel, Integer funktionId, int lagerId) {
+            String nottel, Funktion funktion, int lagerId) {
         personDao.speichern(personId, vorname, nachname, gebtag, strasse, plz, ort, telnr, email, geschlecht, handy,
                 nottel);
 
-        if (id == null) {
-            // Wenn ein Stab ohne Funktion ausgewählt wird.
-            if (funktionId != null) {
-                Stab stab = stabDao.speichern(lagerId, personId);
-                stabDao.speichereStaabFunktion(stab.getId(), funktionId);
-            }
+        // Wenn ein Stab ohne Funktion ausgewählt wird ignorieren.
+        if (id == null && funktion != REMOVE) {
+            // ansonsten anlegen
+            stabDao.speichern(id, lagerId, personId, funktion);
         } else {
-            if (funktionId == null) {
+            if (funktion == REMOVE) {
                 stabDao.loeschen(id);
             } else {
-                stabDao.speichereStaabFunktion(id, funktionId);
+                stabDao.speichern(id, lagerId, personId, funktion);
             }
         }
     }
@@ -550,10 +538,6 @@ public class ControllerImpl implements Controller {
 
     public void setAnredeDao(AnredeDao anredeDao) {
         this.anredeDao = anredeDao;
-    }
-
-    public void setFunktionDao(FunktionDao funktionDao) {
-        this.funktionDao = funktionDao;
     }
 
     public void setLagerinfoDao(LagerinfoDao lagerinfoDao) {
