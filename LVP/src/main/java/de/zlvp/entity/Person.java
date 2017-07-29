@@ -6,8 +6,8 @@ import java.util.Date;
 
 public class Person extends AbstractEntity {
 
-    public Person(Integer id, String vorname, String name, String strasse, String sPLZ, String ort, Date daGebDat,
-            String handy, String telNr, String email, String nottel) {
+    public Person(Integer id, Geschlecht geschlecht, String vorname, String name, String strasse, String sPLZ,
+            String ort, Date daGebDat, String handy, String telNr, String email, String nottel) {
         this.vorname = vorname;
         this.strasse = strasse;
         this.plz = sPLZ;
@@ -18,6 +18,7 @@ public class Person extends AbstractEntity {
         this.gebDat = daGebDat;
         this.handy = handy;
         this.nottel = nottel;
+        this.geschlecht = geschlecht;
         setId(id);
     }
 
@@ -105,10 +106,6 @@ public class Person extends AbstractEntity {
 
     public Geschlecht getGeschlecht() {
         return geschlecht;
-    }
-
-    public void setGeschlecht(Geschlecht geschlecht) {
-        this.geschlecht = geschlecht;
     }
 
     public String getHandy() {

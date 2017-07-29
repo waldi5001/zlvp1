@@ -59,20 +59,25 @@ public class JTreeTransferHandler extends TransferHandler {
                     .getLastPathComponent();
             DefaultMutableTreeNode targetModel = (DefaultMutableTreeNode) dl.getPath().getLastPathComponent();
 
-            // Drop auf sich selber
-            if (sourceModel.getParent().equals(targetModel)) {
-                return false;
-            }
-
             if (sourceModel.getUserObject() instanceof Gruppe && targetModel.getUserObject() instanceof Lager) {
                 return true;
             }
 
             if (sourceModel.getUserObject() instanceof Teilnehmer && targetModel.getUserObject().equals("Teilnehmer")) {
+                if (((DefaultMutableTreeNode) targetModel.getParent()).getUserObject()
+                        .equals(((DefaultMutableTreeNode) sourceModel.getParent().getParent()).getUserObject())) {
+                    // drop auf sich selber wenn gruppen gleich sind. Dann
+                    return false;
+                }
                 return true;
             }
 
-            if (sourceModel.getUserObject() instanceof Leiter && (targetModel.getUserObject().equals("Leiter"))) {
+            if (sourceModel.getUserObject() instanceof Leiter && targetModel.getUserObject().equals("Leiter")) {
+                if (((DefaultMutableTreeNode) targetModel.getParent()).getUserObject()
+                        .equals(((DefaultMutableTreeNode) sourceModel.getParent().getParent()).getUserObject())) {
+                    // drop auf sich selber wenn gruppen gleich sind. Dann
+                    return false;
+                }
                 return true;
             }
         } else if (support.isDataFlavorSupported(listFlavor)) {
@@ -175,12 +180,12 @@ public class JTreeTransferHandler extends TransferHandler {
                     Gruppe gruppe = (Gruppe) ((DefaultMutableTreeNode) dropNode.getParent()).getUserObject();
 
                     if ("Leiter".equals(dropUserObject)) {
-                        Client.get().speichereLeiter(null, person.getId(), person.getGeschlecht().getId(),
-                                person.getVorname(), person.getName(), person.getStrasse(), person.getPlz(),
-                                person.getOrt(), person.getGebDat(), person.getTelNr(), person.getEmail(),
-                                person.getHandy(), person.getNottel(), gruppe.getOriginalId());
+                        Client.get().speichereLeiter(null, person.getId(), person.getGeschlecht(), person.getVorname(),
+                                person.getName(), person.getStrasse(), person.getPlz(), person.getOrt(),
+                                person.getGebDat(), person.getTelNr(), person.getEmail(), person.getHandy(),
+                                person.getNottel(), gruppe.getOriginalId());
                     } else if ("Teilnehmer".equals(dropUserObject)) {
-                        Client.get().speichereTeilnehmer(null, person.getId(), person.getGeschlecht().getId(),
+                        Client.get().speichereTeilnehmer(null, person.getId(), person.getGeschlecht(),
                                 person.getVorname(), person.getName(), person.getStrasse(), person.getPlz(),
                                 person.getOrt(), person.getGebDat(), person.getTelNr(), person.getEmail(),
                                 person.getHandy(), person.getNottel(), gruppe.getOriginalId());

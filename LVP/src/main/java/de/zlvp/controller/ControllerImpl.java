@@ -1,5 +1,6 @@
 package de.zlvp.controller;
 
+import static de.zlvp.entity.Funktion.REMOVE;
 import static java.lang.String.valueOf;
 
 import java.time.Year;
@@ -9,8 +10,6 @@ import java.util.List;
 
 import de.zlvp.dao.AnredeDao;
 import de.zlvp.dao.EssenDao;
-import de.zlvp.dao.FunktionDao;
-import de.zlvp.dao.GeschlechtDao;
 import de.zlvp.dao.GruppeDao;
 import de.zlvp.dao.JahrDao;
 import de.zlvp.dao.LagerDao;
@@ -59,8 +58,6 @@ public class ControllerImpl implements Controller {
     private JahrDao jahrDao;
     private PersonDao personDao;
     private AnredeDao anredeDao;
-    private FunktionDao funktionDao;
-    private GeschlechtDao geschlechtDao;
     private LagerinfoDao lagerinfoDao;
     private LagerDao lagerDao;
     private StabDao stabDao;
@@ -91,22 +88,8 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public List<Funktion> getAllFunktion() {
-        return funktionDao.getAll();
-    }
-
-    @Override
-    public List<Geschlecht> getAllGeschlecht() {
-        return geschlechtDao.getAll();
-    }
-
-    @Override
     public List<Lagerinfo> getAllLagerinfo() {
-        List<Lagerinfo> alleLagerinfo = lagerinfoDao.getAll();
-        for (Lagerinfo lagerinfo : alleLagerinfo) {
-            lagerinfo.setGeschlecht(geschlechtDao.getFromPerson(lagerinfo.getOriginalId()));
-        }
-        return alleLagerinfo;
+        return lagerinfoDao.getAll();
     }
 
     @Override
@@ -132,14 +115,6 @@ public class ControllerImpl implements Controller {
             for (Gruppe g : lager.getGruppe()) {
                 g.getLeiter().addAll(leiterDao.getAll(g.getOriginalId()));
                 g.getTeilnehmer().addAll(teilnehmerDao.getAll(g.getOriginalId()));
-
-                for (Leiter leiter : g.getLeiter()) {
-                    leiter.setGeschlecht(geschlechtDao.getFromPerson(leiter.getOriginalId()));
-                }
-
-                for (Teilnehmer teilnehmer : g.getTeilnehmer()) {
-                    teilnehmer.setGeschlecht(geschlechtDao.getFromPerson(teilnehmer.getOriginalId()));
-                }
             }
         }
         return jahr;
@@ -152,12 +127,7 @@ public class ControllerImpl implements Controller {
 
     @Override
     public List<Stab> getAllStab(int lagerId) {
-        List<Stab> stab = stabDao.getAll(lagerId);
-        for (Stab s : stab) {
-            s.setGeschlecht(geschlechtDao.getFromPerson(s.getOriginalId()));
-            s.setFunktion(funktionDao.getFromStab(s.getId()));
-        }
-        return stab;
+        return stabDao.getAll(lagerId);
     }
 
     @Override
@@ -165,7 +135,6 @@ public class ControllerImpl implements Controller {
         List<Materialwart> all = materialwartDao.getAll(lagerId);
         Lager lager = lagerDao.get(lagerId);
         for (Materialwart mw : all) {
-            mw.setGeschlecht(geschlechtDao.getFromPerson(mw.getOriginalId()));
             mw.setLager(lager);
         }
         return all;
@@ -197,7 +166,6 @@ public class ControllerImpl implements Controller {
         List<Leiter> all = leiterDao.getAll(gruppeId);
         for (Leiter leiter : all) {
             leiter.setGruppe(gruppe);
-            leiter.setGeschlecht(geschlechtDao.getFromPerson(leiter.getOriginalId()));
         }
         return all;
     }
@@ -208,7 +176,6 @@ public class ControllerImpl implements Controller {
         List<Teilnehmer> all = teilnehmerDao.getAll(gruppeId);
         for (Teilnehmer teilnehmer : all) {
             teilnehmer.setGruppe(gruppe);
-            teilnehmer.setGeschlecht(geschlechtDao.getFromPerson(teilnehmer.getOriginalId()));
         }
         return all;
     }
@@ -322,30 +289,27 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void speicherePerson(Integer id, int geschlechtId, String vorname, String nachname, String strasse,
+    public void speicherePerson(Integer id, Geschlecht geschlecht, String vorname, String nachname, String strasse,
             String plz, String ort, Date gebtag, String telnr, String email, String handy, String nottel) {
-        personDao.speichern(id, vorname, nachname, gebtag, strasse, plz, ort, telnr, email, geschlechtId, handy,
-                nottel);
+        personDao.speichern(id, vorname, nachname, gebtag, strasse, plz, ort, telnr, email, geschlecht, handy, nottel);
     }
 
     @Override
-    public void speichereStab(Integer id, int personId, int geschlechtId, String vorname, String nachname,
+    public void speichereStab(Integer id, int personId, Geschlecht geschlecht, String vorname, String nachname,
             String strasse, String plz, String ort, Date gebtag, String telnr, String email, String handy,
-            String nottel, Integer funktionId, int lagerId) {
-        personDao.speichern(personId, vorname, nachname, gebtag, strasse, plz, ort, telnr, email, geschlechtId, handy,
+            String nottel, Funktion funktion, int lagerId) {
+        personDao.speichern(personId, vorname, nachname, gebtag, strasse, plz, ort, telnr, email, geschlecht, handy,
                 nottel);
 
-        if (id == null) {
-            // Wenn ein Stab ohne Funktion ausgewählt wird.
-            if (funktionId != null) {
-                Stab stab = stabDao.speichern(lagerId, personId);
-                stabDao.speichereStaabFunktion(stab.getId(), funktionId);
-            }
+        // Wenn ein Stab ohne Funktion ausgewählt wird ignorieren.
+        if (id == null && funktion != REMOVE) {
+            // ansonsten anlegen
+            stabDao.speichern(id, lagerId, personId, funktion);
         } else {
-            if (funktionId == null) {
+            if (funktion == REMOVE) {
                 stabDao.loeschen(id);
             } else {
-                stabDao.speichereStaabFunktion(id, funktionId);
+                stabDao.speichern(id, lagerId, personId, funktion);
             }
         }
     }
@@ -392,11 +356,11 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void speichereMaterialwart(Integer id, int personId, int geschlechtId, String vorname, String name,
+    public void speichereMaterialwart(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
             String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
             String nottel, Integer lagerId) {
 
-        personDao.speichern(personId, vorname, name, gebDat, strasse, plz, ort, telNr, email, geschlechtId, handy,
+        personDao.speichern(personId, vorname, name, gebDat, strasse, plz, ort, telNr, email, geschlecht, handy,
                 nottel);
 
         if (lagerId != null) {
@@ -441,10 +405,10 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void speichereLeiter(Integer id, int personId, Integer geschlechtId, String vorname, String name,
+    public void speichereLeiter(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
             String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
             String telNr2, Integer gruppeId) {
-        personDao.speichern(personId, vorname, name, gebDat, strasse, plz, ort, telNr, email, geschlechtId, handy,
+        personDao.speichern(personId, vorname, name, gebDat, strasse, plz, ort, telNr, email, geschlecht, handy,
                 telNr2);
         if (id == null && gruppeId != null) {
             leiterDao.speichere(gruppeId, personId);
@@ -454,10 +418,10 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void speichereTeilnehmer(Integer id, int personId, Integer geschlechtId, String vorname, String name,
+    public void speichereTeilnehmer(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
             String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
             String telNr2, Integer gruppeId) {
-        personDao.speichern(personId, vorname, name, gebDat, strasse, plz, ort, telNr, email, geschlechtId, handy,
+        personDao.speichern(personId, vorname, name, gebDat, strasse, plz, ort, telNr, email, geschlecht, handy,
                 telNr2);
         if (id == null && gruppeId != null) {
             teilnehmerDao.speichere(gruppeId, personId);
@@ -494,10 +458,10 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void speichereLagerinfo(Integer id, int personId, Integer geschlechtId, String vorname, String name,
+    public void speichereLagerinfo(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
             String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
             String telNr2, boolean checked) {
-        personDao.speichern(personId, vorname, name, gebDat, strasse, plz, ort, telNr, email, geschlechtId, handy,
+        personDao.speichern(personId, vorname, name, gebDat, strasse, plz, ort, telNr, email, geschlecht, handy,
                 telNr2);
         if (checked) {
             lagerinfoDao.speichereLagerinfo(personId);
@@ -574,14 +538,6 @@ public class ControllerImpl implements Controller {
 
     public void setAnredeDao(AnredeDao anredeDao) {
         this.anredeDao = anredeDao;
-    }
-
-    public void setFunktionDao(FunktionDao funktionDao) {
-        this.funktionDao = funktionDao;
-    }
-
-    public void setGeschlechtDao(GeschlechtDao geschlechtDao) {
-        this.geschlechtDao = geschlechtDao;
     }
 
     public void setLagerinfoDao(LagerinfoDao lagerinfoDao) {

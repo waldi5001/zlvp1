@@ -1,5 +1,8 @@
 package de.zlvp.controller;
 
+import static de.zlvp.entity.Geschlecht.Maennlich;
+import static de.zlvp.entity.Geschlecht.Weiblich;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
@@ -104,7 +107,8 @@ public class ExcelControllerImpl implements ExcelController, PropertyChangeListe
         }
     }
 
-    ProgressMonitor progressMonitor = new ProgressMonitor(DesktopPane.get(), "Personen importieren", "", 0, 100);
+    private final ProgressMonitor progressMonitor = new ProgressMonitor(DesktopPane.get(), "Personen importieren", "",
+            0, 100);
 
     @Override
     public void importieren(byte[] sheet) {
@@ -155,7 +159,7 @@ public class ExcelControllerImpl implements ExcelController, PropertyChangeListe
                         setProgress(r * 100 / s.getPhysicalNumberOfRows());
                         try {
                             personDao.speichern(null, vorname, nachname, gebdat, strasse, plz, ort, telefon, email,
-                                    "Herr".equals(anrede) ? 1 : 2, handy, nottel);
+                                    "Herr".equals(anrede) ? Maennlich : Weiblich, handy, nottel);
                             Thread.sleep(100L);
                         } catch (Throwable e) {
                             log.error(e.getMessage(), e);

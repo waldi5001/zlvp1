@@ -2,6 +2,7 @@ package de.zlvp.dao;
 
 import java.util.List;
 
+import de.zlvp.entity.Geschlecht;
 import de.zlvp.entity.Lagerinfo;
 
 public class LagerinfoDao extends AbstractDao<Lagerinfo> {
@@ -12,9 +13,10 @@ public class LagerinfoDao extends AbstractDao<Lagerinfo> {
 
     public List<Lagerinfo> getAll() {
         return select(findAll,
-                rs -> new Lagerinfo(rs.getInt("liid"), rs.getInt("peid"), rs.getString("vorname"),
-                        rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"), rs.getString("ort"),
-                        rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"), rs.getString("email")));
+                rs -> new Lagerinfo(rs.getInt("liid"), Geschlecht.fromDbId(rs.getInt("geschlecht")), rs.getInt("peid"),
+                        rs.getString("vorname"), rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"),
+                        rs.getString("ort"), rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"),
+                        rs.getString("email")));
     }
 
     public void speichereLagerinfo(int personId) {

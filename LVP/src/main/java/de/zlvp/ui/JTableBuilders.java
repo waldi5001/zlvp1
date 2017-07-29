@@ -1,8 +1,9 @@
 package de.zlvp.ui;
 
+import static java.util.Arrays.asList;
+
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import de.zlvp.Client;
@@ -28,9 +29,6 @@ import de.zlvp.ui.JTableBuilder.Loader;
 public class JTableBuilders {
 
     public static JTableBuilder<Stab> stab(Lager lager, Loader<Stab> loader) {
-        List<Funktion> allFunktion = Client.get().getAllFunktion();
-        allFunktion.add(0, new Funktion(null, null));
-
         return JTableBuilder.get(Stab.class, () -> loader.get())//
                 .set((person, val, index) -> {
                     if (index == 0) {
@@ -63,25 +61,22 @@ public class JTableBuilders {
                     } else if (index == 5) {
                         return person.getGebDat();
                     } else if (index == 6) {
-                        return person.getFunktion();
+                        return person.getFunktion() != null ? person.getFunktion().getBezeichnung() : null;
                     }
                     return null;
                 })
-                .save(s -> Client.get().speichereStab(s.getId(), s.getOriginalId(), s.getGeschlecht().getId(),
-                        s.getVorname(), s.getName(), s.getStrasse(), s.getPlz(), s.getOrt(), s.getGebDat(),
-                        s.getTelNr(), s.getEmail(), s.getHandy(), s.getTelNr(),
-                        s.getFunktion() != null ? s.getFunktion().getId() : null, lager.getId()))//
+                .save(s -> Client.get().speichereStab(s.getId(), s.getOriginalId(), s.getGeschlecht(), s.getVorname(),
+                        s.getName(), s.getStrasse(), s.getPlz(), s.getOrt(), s.getGebDat(), s.getTelNr(), s.getEmail(),
+                        s.getHandy(), s.getTelNr(), s.getFunktion(), lager.getId()))//
                 .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Vorname").build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Straße").build())//
                 .addColumn(ColumnBuilder.get(String.class).add("PLZ").build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Ort").build())//
                 .addColumn(ColumnBuilder.get(Date.class).add("Geburtsdatum").build())//
-                .addColumn(
-                        ColumnBuilder
-                                .get(Funktion.class).add("Funktion").add(JComboBoxBuilder
-                                        .get(Funktion.class, () -> allFunktion).map(f -> f.getBezeichnung()).build())
-                                .desc().build());
+                .addColumn(ColumnBuilder.get(Funktion.class).add("Funktion").add(JComboBoxBuilder
+                        .get(Funktion.class, () -> asList(Funktion.values())).map(f -> f.getBezeichnung()).build())
+                        .desc().build());
     }
 
     public static JTableBuilder<Materialwart> materialwart(Lager lager, Loader<Materialwart> loader) {
@@ -121,9 +116,9 @@ public class JTableBuilders {
                     }
                     return null;
                 })
-                .save(mw -> Client.get().speichereMaterialwart(mw.getId(), mw.getOriginalId(),
-                        mw.getGeschlecht().getId(), mw.getVorname(), mw.getName(), mw.getStrasse(), mw.getPlz(),
-                        mw.getOrt(), mw.getGebDat(), mw.getTelNr(), mw.getEmail(), mw.getHandy(), mw.getTelNr(),
+                .save(mw -> Client.get().speichereMaterialwart(mw.getId(), mw.getOriginalId(), mw.getGeschlecht(),
+                        mw.getVorname(), mw.getName(), mw.getStrasse(), mw.getPlz(), mw.getOrt(), mw.getGebDat(),
+                        mw.getTelNr(), mw.getEmail(), mw.getHandy(), mw.getTelNr(),
                         mw.getLager() != null ? mw.getLager().getId() : null))//
                 .addColumn(Columns.CHECK)//
                 .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
@@ -249,7 +244,7 @@ public class JTableBuilders {
                     }
                     return null;
                 })
-                .save(le -> Client.get().speichereLeiter(le.getId(), le.getOriginalId(), le.getGeschlecht().getId(),
+                .save(le -> Client.get().speichereLeiter(le.getId(), le.getOriginalId(), le.getGeschlecht(),
                         le.getVorname(), le.getName(), le.getStrasse(), le.getPlz(), le.getOrt(), le.getGebDat(),
                         le.getTelNr(), le.getEmail(), le.getHandy(), le.getTelNr(),
                         le.getGruppe() != null ? le.getGruppe().getOriginalId() : null))//
@@ -300,7 +295,7 @@ public class JTableBuilders {
                     }
                     return null;
                 })
-                .save(te -> Client.get().speichereTeilnehmer(te.getId(), te.getOriginalId(), te.getGeschlecht().getId(),
+                .save(te -> Client.get().speichereTeilnehmer(te.getId(), te.getOriginalId(), te.getGeschlecht(),
                         te.getVorname(), te.getName(), te.getStrasse(), te.getPlz(), te.getOrt(), te.getGebDat(),
                         te.getTelNr(), te.getEmail(), te.getHandy(), te.getTelNr(),
                         te.getGruppe() != null ? te.getGruppe().getOriginalId() : null))//
@@ -509,7 +504,7 @@ public class JTableBuilders {
                     }
                     return null;
                 })
-                .save(li -> Client.get().speichereLagerinfo(li.getId(), li.getOriginalId(), li.getGeschlecht().getId(),
+                .save(li -> Client.get().speichereLagerinfo(li.getId(), li.getOriginalId(), li.getGeschlecht(),
                         li.getVorname(), li.getName(), li.getStrasse(), li.getPlz(), li.getOrt(), li.getGebDat(),
                         li.getTelNr(), li.getEmail(), li.getHandy(), li.getTelNr(), li.isChecked()))
                 .addColumn(Columns.CHECK)//

@@ -5,12 +5,12 @@ import java.util.Date;
 public class Legenda extends Person {
 
     public Legenda() {
-        super(null, null, null, null, null, null, null, null, null, null, null);
+        super(null, null, null, null, null, null, null, null, null, null, null, null);
     }
 
     public Legenda(Integer id, String vorname, String name, String strasse, String sPLZ, String ort, Date daGebDat,
             String handy, String telNr, String email) {
-        super(id, vorname, name, strasse, sPLZ, ort, daGebDat, handy, telNr, email, null);
+        super(id, null, vorname, name, strasse, sPLZ, ort, daGebDat, handy, telNr, email, null);
     }
 
     private Legendatyp legendaTyp;
