@@ -1,5 +1,7 @@
 package de.zlvp.gui;
 
+import static java.util.Arrays.asList;
+
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -72,7 +74,7 @@ public class PersonAnlegen extends InternalFrame {
     private final JComboBoxBuilder<Geschlecht> comboboxBuilderGeschlecht;
 
     public PersonAnlegen() {
-        comboboxBuilderGeschlecht = JComboBoxBuilder.get(Geschlecht.class, () -> Client.get().getAllGeschlecht())
+        comboboxBuilderGeschlecht = JComboBoxBuilder.get(Geschlecht.class, () -> asList(Geschlecht.values()))
                 .map(g -> g.getBezeichnung());
         initialize();
         setUp();
@@ -415,8 +417,8 @@ public class PersonAnlegen extends InternalFrame {
         String handy = getJTextFieldHandy().getText().trim();
         String nottel = getJTextFieldNottel().getText().trim();
 
-        Client.get().speicherePerson(null, geschlecht.getId(), vorname, nachname, strasse, plz, ort, gebtag, telnr,
-                email, handy, nottel);
+        Client.get().speicherePerson(null, geschlecht, vorname, nachname, strasse, plz, ort, gebtag, telnr, email,
+                handy, nottel);
     }
 
     private void clearFields() {

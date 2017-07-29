@@ -2,6 +2,7 @@ package de.zlvp.dao;
 
 import java.util.List;
 
+import de.zlvp.entity.Geschlecht;
 import de.zlvp.entity.Stab;
 
 public class StabDao extends AbstractDao<Stab> {
@@ -15,9 +16,10 @@ public class StabDao extends AbstractDao<Stab> {
 
     public List<Stab> getAll(final int lagerId) {
         return select(allStabFromLager, ps -> ps.setInt(1, lagerId),
-                rs -> new Stab(rs.getInt("stlastid"), rs.getInt("peid"), rs.getString("vorname"),
-                        rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"), rs.getString("ort"),
-                        rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"), rs.getString("email")));
+                rs -> new Stab(rs.getInt("stlastid"), Geschlecht.fromDbId(rs.getInt("geschlecht")), rs.getInt("peid"),
+                        rs.getString("vorname"), rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"),
+                        rs.getString("ort"), rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"),
+                        rs.getString("email")));
     }
 
     public void speichereStaabFunktion(int laStID, int funktionId) {
@@ -34,9 +36,10 @@ public class StabDao extends AbstractDao<Stab> {
         }).get("stlastid");
 
         Stab s = selectOne(stabById, ps -> ps.setInt(1, id),
-                rs -> new Stab(rs.getInt("stlastid"), rs.getInt("peid"), rs.getString("vorname"),
-                        rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"), rs.getString("ort"),
-                        rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"), rs.getString("email")));
+                rs -> new Stab(rs.getInt("stlastid"), Geschlecht.fromDbId(rs.getInt("geschlecht")), rs.getInt("peid"),
+                        rs.getString("vorname"), rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"),
+                        rs.getString("ort"), rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"),
+                        rs.getString("email")));
 
         return s;
     }

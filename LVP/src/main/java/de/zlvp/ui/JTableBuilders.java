@@ -67,10 +67,10 @@ public class JTableBuilders {
                     }
                     return null;
                 })
-                .save(s -> Client.get().speichereStab(s.getId(), s.getOriginalId(), s.getGeschlecht().getId(),
-                        s.getVorname(), s.getName(), s.getStrasse(), s.getPlz(), s.getOrt(), s.getGebDat(),
-                        s.getTelNr(), s.getEmail(), s.getHandy(), s.getTelNr(),
-                        s.getFunktion() != null ? s.getFunktion().getId() : null, lager.getId()))//
+                .save(s -> Client.get().speichereStab(s.getId(), s.getOriginalId(), s.getGeschlecht(), s.getVorname(),
+                        s.getName(), s.getStrasse(), s.getPlz(), s.getOrt(), s.getGebDat(), s.getTelNr(), s.getEmail(),
+                        s.getHandy(), s.getTelNr(), s.getFunktion() != null ? s.getFunktion().getId() : null,
+                        lager.getId()))//
                 .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Vorname").build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Straße").build())//
@@ -121,9 +121,9 @@ public class JTableBuilders {
                     }
                     return null;
                 })
-                .save(mw -> Client.get().speichereMaterialwart(mw.getId(), mw.getOriginalId(),
-                        mw.getGeschlecht().getId(), mw.getVorname(), mw.getName(), mw.getStrasse(), mw.getPlz(),
-                        mw.getOrt(), mw.getGebDat(), mw.getTelNr(), mw.getEmail(), mw.getHandy(), mw.getTelNr(),
+                .save(mw -> Client.get().speichereMaterialwart(mw.getId(), mw.getOriginalId(), mw.getGeschlecht(),
+                        mw.getVorname(), mw.getName(), mw.getStrasse(), mw.getPlz(), mw.getOrt(), mw.getGebDat(),
+                        mw.getTelNr(), mw.getEmail(), mw.getHandy(), mw.getTelNr(),
                         mw.getLager() != null ? mw.getLager().getId() : null))//
                 .addColumn(Columns.CHECK)//
                 .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
@@ -249,7 +249,7 @@ public class JTableBuilders {
                     }
                     return null;
                 })
-                .save(le -> Client.get().speichereLeiter(le.getId(), le.getOriginalId(), le.getGeschlecht().getId(),
+                .save(le -> Client.get().speichereLeiter(le.getId(), le.getOriginalId(), le.getGeschlecht(),
                         le.getVorname(), le.getName(), le.getStrasse(), le.getPlz(), le.getOrt(), le.getGebDat(),
                         le.getTelNr(), le.getEmail(), le.getHandy(), le.getTelNr(),
                         le.getGruppe() != null ? le.getGruppe().getOriginalId() : null))//
@@ -300,7 +300,7 @@ public class JTableBuilders {
                     }
                     return null;
                 })
-                .save(te -> Client.get().speichereTeilnehmer(te.getId(), te.getOriginalId(), te.getGeschlecht().getId(),
+                .save(te -> Client.get().speichereTeilnehmer(te.getId(), te.getOriginalId(), te.getGeschlecht(),
                         te.getVorname(), te.getName(), te.getStrasse(), te.getPlz(), te.getOrt(), te.getGebDat(),
                         te.getTelNr(), te.getEmail(), te.getHandy(), te.getTelNr(),
                         te.getGruppe() != null ? te.getGruppe().getOriginalId() : null))//
@@ -509,7 +509,7 @@ public class JTableBuilders {
                     }
                     return null;
                 })
-                .save(li -> Client.get().speichereLagerinfo(li.getId(), li.getOriginalId(), li.getGeschlecht().getId(),
+                .save(li -> Client.get().speichereLagerinfo(li.getId(), li.getOriginalId(), li.getGeschlecht(),
                         li.getVorname(), li.getName(), li.getStrasse(), li.getPlz(), li.getOrt(), li.getGebDat(),
                         li.getTelNr(), li.getEmail(), li.getHandy(), li.getTelNr(), li.isChecked()))
                 .addColumn(Columns.CHECK)//

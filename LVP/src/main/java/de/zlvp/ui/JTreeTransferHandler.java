@@ -175,12 +175,12 @@ public class JTreeTransferHandler extends TransferHandler {
                     Gruppe gruppe = (Gruppe) ((DefaultMutableTreeNode) dropNode.getParent()).getUserObject();
 
                     if ("Leiter".equals(dropUserObject)) {
-                        Client.get().speichereLeiter(null, person.getId(), person.getGeschlecht().getId(),
-                                person.getVorname(), person.getName(), person.getStrasse(), person.getPlz(),
-                                person.getOrt(), person.getGebDat(), person.getTelNr(), person.getEmail(),
-                                person.getHandy(), person.getNottel(), gruppe.getOriginalId());
+                        Client.get().speichereLeiter(null, person.getId(), person.getGeschlecht(), person.getVorname(),
+                                person.getName(), person.getStrasse(), person.getPlz(), person.getOrt(),
+                                person.getGebDat(), person.getTelNr(), person.getEmail(), person.getHandy(),
+                                person.getNottel(), gruppe.getOriginalId());
                     } else if ("Teilnehmer".equals(dropUserObject)) {
-                        Client.get().speichereTeilnehmer(null, person.getId(), person.getGeschlecht().getId(),
+                        Client.get().speichereTeilnehmer(null, person.getId(), person.getGeschlecht(),
                                 person.getVorname(), person.getName(), person.getStrasse(), person.getPlz(),
                                 person.getOrt(), person.getGebDat(), person.getTelNr(), person.getEmail(),
                                 person.getHandy(), person.getNottel(), gruppe.getOriginalId());

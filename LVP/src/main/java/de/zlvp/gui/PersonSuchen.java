@@ -1,5 +1,7 @@
 package de.zlvp.gui;
 
+import static java.util.Arrays.asList;
+
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -98,7 +100,7 @@ public class PersonSuchen extends InternalFrame {
     private JListBuilder<Person> jListBuilder;
 
     public PersonSuchen() {
-        comboboxBuilderGeschlecht = JComboBoxBuilder.get(Geschlecht.class, () -> Client.get().getAllGeschlecht())
+        comboboxBuilderGeschlecht = JComboBoxBuilder.get(Geschlecht.class, () -> asList(Geschlecht.values()))
                 .map(g -> g.getBezeichnung());
 
         jListBuilder = JListBuilder.get(Person.class, () -> {
@@ -256,7 +258,7 @@ public class PersonSuchen extends InternalFrame {
             jButtonOK.setText("OK");
             jButtonOK.addActionListener(e -> {
                 Person selectedPerson = getJListPerson().getSelectedValue();
-                Geschlecht geschlecht = selectedPerson.getGeschlecht();
+                Geschlecht geschlecht = (Geschlecht) getJComboBoxGeschlecht().getSelectedItem();
 
                 String name = getJTextFieldAeName().getText();
                 String vorname = getJTextFieldAeVorname().getText();
@@ -269,8 +271,8 @@ public class PersonSuchen extends InternalFrame {
                 String handy = getJTextFieldHandy().getText();
                 String nottel = getJTextFieldNottel().getText();
 
-                Client.get().speicherePerson(selectedPerson.getId(), geschlecht.getId(), vorname, name, strasse, plz,
-                        ort, gebtag, telnr, email, handy, nottel);
+                Client.get().speicherePerson(selectedPerson.getId(), geschlecht, vorname, name, strasse, plz, ort,
+                        gebtag, telnr, email, handy, nottel);
 
                 suchen();
             });

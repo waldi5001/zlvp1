@@ -1,16 +1,30 @@
 package de.zlvp.entity;
 
-public class Geschlecht extends AbstractEntity {
-    private String bezeichnung;
+public enum Geschlecht {
+    Maennlich("Herr", 1), Weiblich("Frau", 2);
 
-    public Geschlecht(int id, String bezeichnung) {
-        setId(id);
-        this.bezeichnung = bezeichnung;
+    private final String display;
+    private final int dbId;
+
+    private Geschlecht(String display, int dbId) {
+        this.display = display;
+        this.dbId = dbId;
     }
 
-    @Override
     public String getBezeichnung() {
-        return bezeichnung;
+        return display;
     }
 
+    public int getDbId() {
+        return dbId;
+    }
+
+    public static Geschlecht fromDbId(int dbId) {
+        for (Geschlecht geschlecht : values()) {
+            if (geschlecht.dbId == dbId) {
+                return geschlecht;
+            }
+        }
+        throw new RuntimeException("Geschlecht ID unbekannt");
+    }
 }

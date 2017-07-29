@@ -79,9 +79,6 @@
 				<property name="funktionDao">
 					<bean class="de.zlvp.dao.FunktionDao" parent="abstractDao" />
 				</property>
-				<property name="geschlechtDao">
-					<bean class="de.zlvp.dao.GeschlechtDao" parent="abstractDao" />
-				</property>
 				<property name="gruppeDao">
 					<bean class="de.zlvp.dao.GruppeDao" parent="abstractDao" />
 				</property>

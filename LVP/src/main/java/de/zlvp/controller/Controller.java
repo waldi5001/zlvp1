@@ -37,8 +37,6 @@ public interface Controller {
 
     List<Funktion> getAllFunktion();
 
-    List<Geschlecht> getAllGeschlecht();
-
     List<Gruppe> getAllGruppen();
 
     List<Gruppe> getAllGruppenFromLager(int lagerId);
@@ -103,24 +101,24 @@ public interface Controller {
             String plz, String ort, Integer legendatypId, Integer anredeId, String tel, String fax, String handy,
             String email, String bemerkung);
 
-    void speichereLeiter(Integer id, int personId, Integer geschlechtId, String vorname, String name, String strasse,
+    void speichereLeiter(Integer id, int personId, Geschlecht geschlecht, String vorname, String name, String strasse,
             String plz, String ort, Date gebDat, String telNr, String email, String handy, String telNr2,
             Integer gruppeId);
 
-    void speichereMaterialwart(Integer id, int personId, int geschlechtId, String vorname, String name, String strasse,
+    void speichereMaterialwart(Integer id, int personId, Geschlecht geschlecht, String vorname, String name, String strasse,
             String plz, String ort, Date gebDat, String telNr, String email, String handy, String nottel,
             Integer lagerId);
 
-    void speicherePerson(Integer id, int geschlechtId, String vorname, String nachname, String strasse, String plz,
+    void speicherePerson(Integer id, Geschlecht geschlecht, String vorname, String nachname, String strasse, String plz,
             String ort, Date gebtag, String telnr, String email, String handy, String nottel);
 
     void speichereSchaden(Integer id, int zeltId, Date datum, String schaden);
 
-    void speichereStab(Integer id, int personId, int geschlechtId, String vorname, String nachname, String strasse,
+    void speichereStab(Integer id, int personId, Geschlecht geschlecht, String vorname, String nachname, String strasse,
             String plz, String ort, Date gebtag, String telnr, String email, String handy, String nottel,
             Integer funktionId, int lagerId);
 
-    void speichereTeilnehmer(Integer id, int personId, Integer geschlechtId, String vorname, String name,
+    void speichereTeilnehmer(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
             String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
             String telNr2, Integer gruppeId);
 
@@ -142,7 +140,7 @@ public interface Controller {
 
     void speichereEssen(Integer lagerId, Integer id, Date datum, String morgen, String mittag, String abend);
 
-    void speichereLagerinfo(Integer id, int personId, Integer geschlchtId, String vorname, String name, String strasse,
+    void speichereLagerinfo(Integer id, int personId, Geschlecht geschlecht, String vorname, String name, String strasse,
             String plz, String ort, Date gebDat, String telNr, String email, String handy, String telNr2,
             boolean delete);
 

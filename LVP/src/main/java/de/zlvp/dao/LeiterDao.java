@@ -2,6 +2,7 @@ package de.zlvp.dao;
 
 import java.util.List;
 
+import de.zlvp.entity.Geschlecht;
 import de.zlvp.entity.Leiter;
 
 public class LeiterDao extends AbstractDao<Leiter> {
@@ -14,16 +15,18 @@ public class LeiterDao extends AbstractDao<Leiter> {
 
     public List<Leiter> getAll(int gruppe) {
         return select(findAllLeiterFromGruppe, ps -> ps.setInt(1, gruppe),
-                rs -> new Leiter(rs.getInt("stGrLe"), rs.getInt("peid"), rs.getString("vorname"),
-                        rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"), rs.getString("ort"),
-                        rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"), rs.getString("email")));
+                rs -> new Leiter(rs.getInt("stGrLe"), Geschlecht.fromDbId(rs.getInt("geschlecht")), rs.getInt("peid"),
+                        rs.getString("vorname"), rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"),
+                        rs.getString("ort"), rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"),
+                        rs.getString("email")));
     }
 
     public Leiter get(int id) {
         return selectOne(findLeiterById, ps -> ps.setInt(1, id),
-                rs -> new Leiter(rs.getInt("stGrLe"), rs.getInt("peid"), rs.getString("vorname"),
-                        rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"), rs.getString("ort"),
-                        rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"), rs.getString("email")));
+                rs -> new Leiter(rs.getInt("stGrLe"), Geschlecht.fromDbId(rs.getInt("geschlecht")), rs.getInt("peid"),
+                        rs.getString("vorname"), rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"),
+                        rs.getString("ort"), rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"),
+                        rs.getString("email")));
     }
 
     public void speichere(int gruppeId, final int personId) {

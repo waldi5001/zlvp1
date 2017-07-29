@@ -2,6 +2,7 @@ package de.zlvp.dao;
 
 import java.util.List;
 
+import de.zlvp.entity.Geschlecht;
 import de.zlvp.entity.Teilnehmer;
 
 public class TeilnehmerDao extends AbstractDao<Teilnehmer> {
@@ -14,9 +15,10 @@ public class TeilnehmerDao extends AbstractDao<Teilnehmer> {
 
     public List<Teilnehmer> getAll(final int gruppe) {
         return select(findAllTeilnehmerFromGruppe, ps -> ps.setInt(1, gruppe),
-                rs -> new Teilnehmer(rs.getInt("sttegrid"), rs.getInt("peid"), rs.getString("vorname"),
-                        rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"), rs.getString("ort"),
-                        rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"), rs.getString("email")));
+                rs -> new Teilnehmer(rs.getInt("sttegrid"), Geschlecht.fromDbId(rs.getInt("geschlecht")), rs.getInt("peid"),
+                        rs.getString("vorname"), rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"),
+                        rs.getString("ort"), rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"),
+                        rs.getString("email")));
     }
 
     public void speichere(int gruppeId, int personId) {
@@ -32,9 +34,10 @@ public class TeilnehmerDao extends AbstractDao<Teilnehmer> {
 
     public Teilnehmer get(int id) {
         return selectOne(findTeilnehmer, ps -> ps.setInt(1, id),
-                rs -> new Teilnehmer(rs.getInt("sttegrid"), rs.getInt("peid"), rs.getString("vorname"),
-                        rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"), rs.getString("ort"),
-                        rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"), rs.getString("email")));
+                rs -> new Teilnehmer(rs.getInt("sttegrid"), Geschlecht.fromDbId(rs.getInt("geschlecht")), rs.getInt("peid"),
+                        rs.getString("vorname"), rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"),
+                        rs.getString("ort"), rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"),
+                        rs.getString("email")));
     }
 
 }
