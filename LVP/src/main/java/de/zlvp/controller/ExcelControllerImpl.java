@@ -44,6 +44,9 @@ public class ExcelControllerImpl implements ExcelController, PropertyChangeListe
 
     private PersonDao personDao;
 
+    private final ProgressMonitor progressMonitor = new ProgressMonitor(DesktopPane.get(), "Personen importieren", "",
+            0, 100);
+
     @Override
     public byte[] getVorlage() {
         try {
@@ -106,9 +109,6 @@ public class ExcelControllerImpl implements ExcelController, PropertyChangeListe
             throw new RuntimeException(e.getMessage(), e);
         }
     }
-
-    private final ProgressMonitor progressMonitor = new ProgressMonitor(DesktopPane.get(), "Personen importieren", "",
-            0, 100);
 
     @Override
     public void importieren(byte[] sheet) {
