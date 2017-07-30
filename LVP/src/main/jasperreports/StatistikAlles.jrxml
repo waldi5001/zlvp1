@@ -1,30 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"  ?>
-<!-- Created with iReport - A designer for JasperReports -->
-<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
-<jasperReport
-		 name="StatistikAlles"
-		 columnCount="1"
-		 printOrder="Vertical"
-		 orientation="Portrait"
-		 pageWidth="595"
-		 pageHeight="842"
-		 columnWidth="535"
-		 columnSpacing="0"
-		 leftMargin="30"
-		 rightMargin="30"
-		 topMargin="20"
-		 bottomMargin="20"
-		 whenNoDataType="NoPages"
-		 isTitleNewPage="false"
-		 isSummaryNewPage="false">
-	<property name="ireport.scriptlethandling" value="0" />
-	<property name="ireport.encoding" value="UTF-8" />
-	<import value="java.util.*" />
-	<import value="net.sf.jasperreports.engine.*" />
-	<import value="net.sf.jasperreports.engine.data.*" />
-
-	<parameter name="jaid" isForPrompting="true" class="java.lang.Integer"/>
-	<queryString><![CDATA[SELECT * FROM
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="StatistikAlles" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="153e7574-0c46-487e-aed3-6c1332259a78">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="jaid" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT * FROM
 (
 	SELECT COUNT(p.peid) AS teilnehmer
 	FROM Person p
@@ -52,7 +38,7 @@
 
 (
 	SELECT COUNT (p.peid) AS staab
-	FROM Person p 
+	FROM Person p
 	INNER JOIN stLaSt ON stLaSt.person = p.peid
 	INNER JOIN lager l ON stLaSt.lager = l.laid
 	INNER JOIN stLaJa ON stLaJa.lager = l.laid
@@ -85,7 +71,7 @@
 		UNION ALL
 
 		SELECT COUNT (p.peid) AS a
-		FROM Person p 
+		FROM Person p
 		INNER JOIN stLaSt ON stLaSt.person = p.peid
 		INNER JOIN lager l ON stLaSt.lager = l.laid
 		INNER JOIN stLaJa ON stLaJa.lager = l.laid
@@ -156,7 +142,7 @@
 
 (
 	SELECT COUNT (p.peid) AS "staabM"
-	FROM Person p 
+	FROM Person p
 	INNER JOIN stLaSt ON stLaSt.person = p.peid
 	INNER JOIN lager l ON stLaSt.lager = l.laid
 	INNER JOIN stLaJa ON stLaJa.lager = l.laid
@@ -166,7 +152,7 @@
 
 (
 	SELECT COUNT (p.peid) AS "staabW"
-	FROM Person p 
+	FROM Person p
 	INNER JOIN stLaSt ON stLaSt.person = p.peid
 	INNER JOIN lager l ON stLaSt.lager = l.laid
 	INNER JOIN stLaJa ON stLaJa.lager = l.laid
@@ -202,7 +188,7 @@
 		UNION ALL
 
 		SELECT COUNT (p.peid) AS a
-		FROM Person p 
+		FROM Person p
 		INNER JOIN stLaSt ON stLaSt.person = p.peid
 		INNER JOIN lager l ON stLaSt.lager = l.laid
 		INNER JOIN stLaJa ON stLaJa.lager = l.laid
@@ -239,15 +225,15 @@
 		UNION ALL
 
 		SELECT COUNT (p.peid) AS a
-		FROM Person p 
+		FROM Person p
 		INNER JOIN stLaSt ON stLaSt.person = p.peid
 		INNER JOIN lager l ON stLaSt.lager = l.laid
 		INNER JOIN stLaJa ON stLaJa.lager = l.laid
 		INNER JOIN jahr j ON stLaJa.jahr = j.jaid
 		WHERE p.geschlecht = 2
 	) x
-) nn]]></queryString>
-
+) nn]]>
+	</queryString>
 	<field name="teilnehmer" class="java.lang.Long"/>
 	<field name="leiter" class="java.lang.Long"/>
 	<field name="staab" class="java.lang.Long"/>
@@ -263,696 +249,597 @@
 	<field name="staabW" class="java.lang.Long"/>
 	<field name="gesamtM" class="java.math.BigDecimal"/>
 	<field name="gesamtW" class="java.math.BigDecimal"/>
-
-
-		<group  name="details2" >
-			<groupExpression><![CDATA[]]></groupExpression>
-			<groupHeader>
-			<band height="53"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="0"
-						y="-1"
-						width="67"
-						height="18"
-						key="textField-1"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+	<group name="details2">
+		<groupExpression><![CDATA[]]></groupExpression>
+		<groupHeader>
+			<band height="53" splitType="Stretch">
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField-1" x="0" y="-1" width="67" height="18" uuid="e5b606ba-13f4-491b-95fb-48f1c201e097"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
 						<font fontName="Times New Roman" size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{teilnehmer}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{teilnehmer}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="110"
-						y="-1"
-						width="35"
-						height="18"
-						key="textField-2"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField-2" x="110" y="-1" width="35" height="18" uuid="d7ac4f01-dfb3-4469-994f-23b70d9048a8"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
 						<font fontName="Times New Roman" size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{leiter}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{leiter}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="220"
-						y="-1"
-						width="33"
-						height="18"
-						key="textField-3"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField-3" x="220" y="-1" width="33" height="18" uuid="dc42dc85-8244-487a-a91f-383f150a1ae3"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
 						<font fontName="Times New Roman" size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{staab}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{staab}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="330"
-						y="-1"
-						width="43"
-						height="18"
-						key="textField-4"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField pattern="##0.00" isBlankWhenNull="false">
+					<reportElement key="textField-4" x="330" y="-1" width="43" height="18" uuid="626457d8-8664-4814-9a3c-5e12e2f1f2ca"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
 						<font fontName="Times New Roman" size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{gesamt}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{gesamt}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="435"
-						y="-1"
-						width="52"
-						height="18"
-						key="textField-5"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField-5" x="435" y="-1" width="52" height="18" uuid="314c0ede-c1ac-4533-be4d-a45dcb0596ea"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
 						<font fontName="Times New Roman" size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{gruppe}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{gruppe}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="0"
-						y="17"
-						width="67"
-						height="18"
-						key="textField-6"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField-6" x="0" y="17" width="67" height="18" uuid="6926e4ca-e021-4179-8993-8c02b6c4b7f4"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
 						<font fontName="Times New Roman" size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{TeilnehmerM}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{TeilnehmerM}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="0"
-						y="35"
-						width="67"
-						height="18"
-						key="textField-7"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField-7" x="0" y="35" width="67" height="18" uuid="6efdc7a2-cf40-4d1d-9a1e-d180f8447a44"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
 						<font fontName="Times New Roman" size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{TeilnehmerW}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{TeilnehmerW}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="110"
-						y="17"
-						width="35"
-						height="18"
-						key="textField-8"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField-8" x="110" y="17" width="35" height="18" uuid="dabce86a-36ca-44a2-a4b8-b673f4557fe3"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
 						<font fontName="Times New Roman" size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{leiterM}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{leiterM}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="110"
-						y="35"
-						width="35"
-						height="18"
-						key="textField-9"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField-9" x="110" y="35" width="35" height="18" uuid="e0715e75-8295-45d9-9a89-4525deeabce3"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
 						<font fontName="Times New Roman" size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{leiterW}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{leiterW}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="220"
-						y="17"
-						width="33"
-						height="18"
-						key="textField-10"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField-10" x="220" y="17" width="33" height="18" uuid="8bb8b7ec-5892-4606-a25d-3c97c98df741"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
 						<font fontName="Times New Roman" size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{staabM}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{staabM}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="220"
-						y="35"
-						width="33"
-						height="18"
-						key="textField-11"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField isBlankWhenNull="false">
+					<reportElement key="textField-11" x="220" y="35" width="33" height="18" uuid="d94def9c-b934-408f-b624-15f2973fb401"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
 						<font fontName="Times New Roman" size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{staabW}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{staabW}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="330"
-						y="17"
-						width="43"
-						height="18"
-						key="textField-12"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField pattern="##0.00" isBlankWhenNull="false">
+					<reportElement key="textField-12" x="330" y="17" width="43" height="18" uuid="259750e9-9a27-4147-bc60-7377c2827307"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
 						<font fontName="Times New Roman" size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{gesamtM}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{gesamtM}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="330"
-						y="35"
-						width="43"
-						height="18"
-						key="textField-13"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+				<textField pattern="##0.00" isBlankWhenNull="false">
+					<reportElement key="textField-13" x="330" y="35" width="43" height="18" uuid="b8ad90ce-fda0-404c-8c24-e330e4431351"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
 						<font fontName="Times New Roman" size="12"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{gesamtW}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{gesamtW}]]></textFieldExpression>
 				</textField>
 			</band>
-			</groupHeader>
-			<groupFooter>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-			</groupFooter>
-		</group>
-		<group  name="details3" >
-			<groupExpression><![CDATA[]]></groupExpression>
-			<groupHeader>
-			<band height="88"  isSplitAllowed="true" >
-				<subreport  isUsingCache="true">
-					<reportElement
-						x="0"
-						y="51"
-						width="535"
-						height="37"
-						key="subreport-1"/>
-					<subreportParameter  name="jaid">
+		</groupHeader>
+		<groupFooter>
+			<band splitType="Stretch"/>
+		</groupFooter>
+	</group>
+	<group name="details3">
+		<groupExpression><![CDATA[]]></groupExpression>
+		<groupHeader>
+			<band height="88" splitType="Stretch">
+				<subreport isUsingCache="true">
+					<reportElement key="subreport-1" x="0" y="51" width="535" height="37" uuid="43280ae6-a472-4157-acba-42e07319dfba"/>
+					<subreportParameter name="jaid">
 						<subreportParameterExpression><![CDATA[$F{jaid}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression  class="java.lang.String"><![CDATA["StatistikAllesLager.jasper"]]></subreportExpression>
+					<subreportExpression><![CDATA["StatistikAllesLager.jasper"]]></subreportExpression>
 				</subreport>
 				<staticText>
-					<reportElement
-						x="324"
-						y="0"
-						width="40"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-9"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<reportElement key="staticText-9" positionType="Float" x="324" y="0" width="40" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="4ddc7116-e204-4c7a-839a-1973b77fa1cd"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement>
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
+						<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
 					</textElement>
-				<text><![CDATA[Leiter]]></text>
+					<text><![CDATA[Leiter]]></text>
 				</staticText>
 				<staticText>
-					<reportElement
-						x="243"
-						y="0"
-						width="71"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-10"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<reportElement key="staticText-10" positionType="Float" x="243" y="0" width="71" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="c84cb910-71c2-4cb3-93f6-0263c13ddf20"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement>
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
+						<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
 					</textElement>
-				<text><![CDATA[Teilnehmer]]></text>
+					<text><![CDATA[Teilnehmer]]></text>
 				</staticText>
 				<staticText>
-					<reportElement
-						x="374"
-						y="0"
-						width="36"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-11"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<reportElement key="staticText-11" positionType="Float" x="374" y="0" width="36" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="34927832-2f81-4b4c-adfb-f27080d3de5e"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement>
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
+						<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
 					</textElement>
-				<text><![CDATA[Staab]]></text>
+					<text><![CDATA[Staab]]></text>
 				</staticText>
 				<staticText>
-					<reportElement
-						x="420"
-						y="0"
-						width="47"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-12"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<reportElement key="staticText-12" positionType="Float" x="420" y="0" width="47" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="c978e838-c628-4d58-a376-e4af055851e7"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement>
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
+						<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
 					</textElement>
-				<text><![CDATA[Gesamt]]></text>
+					<text><![CDATA[Gesamt]]></text>
 				</staticText>
 				<staticText>
-					<reportElement
-						x="477"
-						y="0"
-						width="52"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-13"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<reportElement key="staticText-13" positionType="Float" x="477" y="0" width="52" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="bf96d380-9df3-419a-bf4d-7e12f06441a1"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement>
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
+						<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
 					</textElement>
-				<text><![CDATA[Gruppen]]></text>
+					<text><![CDATA[Gruppen]]></text>
 				</staticText>
 				<staticText>
-					<reportElement
-						x="-1"
-						y="0"
-						width="71"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-14"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<reportElement key="staticText-14" positionType="Float" x="-1" y="0" width="71" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="26250714-a96a-4f7c-96dc-a40620cfc375"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement>
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
+						<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
 					</textElement>
-				<text><![CDATA[Lager]]></text>
+					<text><![CDATA[Lager]]></text>
 				</staticText>
 				<staticText>
-					<reportElement
-						x="243"
-						y="17"
-						width="71"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-15"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<reportElement key="staticText-15" positionType="Float" x="243" y="17" width="71" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="105964b5-8b0f-4bb1-a13f-b932b4ceea4c"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
+						<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
 					</textElement>
-				<text><![CDATA[M]]></text>
+					<text><![CDATA[M]]></text>
 				</staticText>
 				<staticText>
-					<reportElement
-						x="243"
-						y="34"
-						width="71"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-16"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<reportElement key="staticText-16" positionType="Float" x="243" y="34" width="71" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="60ba055e-a6d6-4318-984e-fc31d531a029"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
+						<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
 					</textElement>
-				<text><![CDATA[W]]></text>
+					<text><![CDATA[W]]></text>
 				</staticText>
 				<staticText>
-					<reportElement
-						x="324"
-						y="17"
-						width="40"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-17"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<reportElement key="staticText-17" positionType="Float" x="324" y="17" width="40" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="ac71d315-924d-48f7-b851-c41e03d58ac5"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
+						<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
 					</textElement>
-				<text><![CDATA[M]]></text>
+					<text><![CDATA[M]]></text>
 				</staticText>
 				<staticText>
-					<reportElement
-						x="324"
-						y="34"
-						width="40"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-18"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<reportElement key="staticText-18" positionType="Float" x="324" y="34" width="40" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="5497c21f-f905-47e6-a470-f9c9c24f30e5"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
+						<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
 					</textElement>
-				<text><![CDATA[W]]></text>
+					<text><![CDATA[W]]></text>
 				</staticText>
 				<staticText>
-					<reportElement
-						x="374"
-						y="17"
-						width="36"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-19"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<reportElement key="staticText-19" positionType="Float" x="374" y="17" width="36" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="15cb3732-7e41-496a-88bc-3e7f6c1544d9"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
+						<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
 					</textElement>
-				<text><![CDATA[M]]></text>
+					<text><![CDATA[M]]></text>
 				</staticText>
 				<staticText>
-					<reportElement
-						x="374"
-						y="34"
-						width="36"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-20"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<reportElement key="staticText-20" positionType="Float" x="374" y="34" width="36" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="c3b56b20-94bc-4608-8388-ca49bc7d36b3"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
+						<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
 					</textElement>
-				<text><![CDATA[W]]></text>
+					<text><![CDATA[W]]></text>
 				</staticText>
 				<staticText>
-					<reportElement
-						x="420"
-						y="17"
-						width="46"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-21"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<reportElement key="staticText-21" positionType="Float" x="420" y="17" width="46" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="f77d2d07-ac38-4e62-8506-672e4ec16952"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
+						<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
 					</textElement>
-				<text><![CDATA[M]]></text>
+					<text><![CDATA[M]]></text>
 				</staticText>
 				<staticText>
-					<reportElement
-						x="420"
-						y="34"
-						width="46"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-22"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
+					<reportElement key="staticText-22" positionType="Float" x="420" y="34" width="46" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="9838d6f0-e776-4ad4-bb95-a10e9320639c"/>
+					<box>
+						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
 					<textElement textAlignment="Center">
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
+						<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
 					</textElement>
-				<text><![CDATA[W]]></text>
+					<text><![CDATA[W]]></text>
 				</staticText>
 			</band>
-			</groupHeader>
-			<groupFooter>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-			</groupFooter>
-		</group>
-		<background>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</background>
-		<title>
-			<band height="46"  isSplitAllowed="true" >
-				<staticText>
-					<reportElement
-						x="0"
-						y="1"
-						width="535"
-						height="38"
-						key="staticText-8"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Center">
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="24" isBold="true" isItalic="true"/>
-					</textElement>
+		</groupHeader>
+		<groupFooter>
+			<band splitType="Stretch"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="46" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-8" x="0" y="1" width="535" height="38" uuid="680e3053-fd63-4c7c-a3f0-0ea40b27cbd6"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="24" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+				</textElement>
 				<text><![CDATA[Komplettstatistik]]></text>
-				</staticText>
-			</band>
-		</title>
-		<pageHeader>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</pageHeader>
-		<columnHeader>
-			<band height="52"  isSplitAllowed="true" >
-				<line direction="TopDown">
-					<reportElement
-						x="0"
-						y="51"
-						width="531"
-						height="0"
-						key="line-1"/>
-					<graphicElement stretchType="NoStretch" pen="2Point"/>
-				</line>
-				<staticText>
-					<reportElement
-						x="110"
-						y="0"
-						width="77"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-23"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement>
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
-					</textElement>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="52" splitType="Stretch">
+			<line>
+				<reportElement key="line-1" x="0" y="51" width="531" height="1" uuid="c1f11fb1-9cbe-4450-ac90-fe6d16587da7"/>
+				<graphicElement>
+					<pen lineWidth="2.0" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement key="staticText-23" positionType="Float" x="110" y="0" width="77" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="1dc7a6f5-10d5-4fe5-9e31-e48af36eae52"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+				</textElement>
 				<text><![CDATA[Leiter]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="0"
-						y="0"
-						width="77"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-24"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement>
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
-					</textElement>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-24" positionType="Float" x="0" y="0" width="77" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="d83e7647-240a-4fb3-9a30-d0a1b13dc45c"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+				</textElement>
 				<text><![CDATA[Teilnehmer]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="220"
-						y="0"
-						width="77"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-25"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement>
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
-					</textElement>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-25" positionType="Float" x="220" y="0" width="77" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="09f48001-061a-43e8-8f5f-bcd6b3177939"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+				</textElement>
 				<text><![CDATA[Staab]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="330"
-						y="0"
-						width="77"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-26"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement>
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
-					</textElement>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-26" positionType="Float" x="330" y="0" width="77" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="1923b40d-f705-44a2-82ae-b7ed65eb9d6e"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+				</textElement>
 				<text><![CDATA[Gesamt]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="435"
-						y="0"
-						width="77"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-27"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement>
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
-					</textElement>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-27" positionType="Float" x="435" y="0" width="77" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="76d307a6-4ecc-4e46-bf72-85e0b72f0d14"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+				</textElement>
 				<text><![CDATA[Gruppen]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="0"
-						y="17"
-						width="71"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-28"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Center">
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
-					</textElement>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-28" positionType="Float" x="0" y="17" width="71" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="3ed50ee4-4470-4f71-a09c-068d074d0c16"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+				</textElement>
 				<text><![CDATA[M]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="0"
-						y="34"
-						width="71"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-29"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Center">
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
-					</textElement>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-29" positionType="Float" x="0" y="34" width="71" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="b2679ac8-460a-4fa2-976c-51321a6e6eb9"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+				</textElement>
 				<text><![CDATA[W]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="110"
-						y="17"
-						width="40"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-30"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Center">
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
-					</textElement>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-30" positionType="Float" x="110" y="17" width="40" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="246ce2ac-53d4-4e78-9414-53eace07985a"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+				</textElement>
 				<text><![CDATA[M]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="110"
-						y="34"
-						width="40"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-31"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Center">
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
-					</textElement>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-31" positionType="Float" x="110" y="34" width="40" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="faca4299-cb33-4700-87ba-72cd64648779"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+				</textElement>
 				<text><![CDATA[W]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="220"
-						y="17"
-						width="36"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-32"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Center">
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
-					</textElement>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-32" positionType="Float" x="220" y="17" width="36" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="1676e0c0-33ef-4e19-94d4-52c5a94fcf6e"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+				</textElement>
 				<text><![CDATA[M]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="220"
-						y="34"
-						width="36"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-33"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Center">
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
-					</textElement>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-33" positionType="Float" x="220" y="34" width="36" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="23646e38-0330-49bc-a87b-096b5fb131d4"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+				</textElement>
 				<text><![CDATA[W]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="330"
-						y="17"
-						width="46"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-34"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Center">
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
-					</textElement>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-34" positionType="Float" x="330" y="17" width="46" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="cbf8b568-cd49-46f9-adaa-b8e261b84543"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+				</textElement>
 				<text><![CDATA[M]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="330"
-						y="34"
-						width="46"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-35"
-						positionType="Float"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Center">
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
-					</textElement>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-35" positionType="Float" x="330" y="34" width="46" height="17" forecolor="#000000" backcolor="#FFFFFF" uuid="3711a669-8dee-4891-8440-f8553e7fd6e3"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+				</textElement>
 				<text><![CDATA[W]]></text>
-				</staticText>
-			</band>
-		</columnHeader>
-		<detail>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</detail>
-		<columnFooter>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</columnFooter>
-		<pageFooter>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</pageFooter>
-		<summary>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</summary>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
 </jasperReport>

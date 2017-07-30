@@ -1,179 +1,153 @@
-<?xml version="1.0" encoding="UTF-8"  ?>
-<!-- Created with iReport - A designer for JasperReports -->
-<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
-<jasperReport
-		 name="ZeltDetailliste"
-		 columnCount="1"
-		 printOrder="Vertical"
-		 orientation="Portrait"
-		 pageWidth="595"
-		 pageHeight="842"
-		 columnWidth="535"
-		 columnSpacing="0"
-		 leftMargin="30"
-		 rightMargin="30"
-		 topMargin="20"
-		 bottomMargin="20"
-		 whenNoDataType="NoPages"
-		 isTitleNewPage="false"
-		 isSummaryNewPage="false">
-	<property name="ireport.scriptlethandling" value="0" />
-	<property name="ireport.encoding" value="UTF-8" />
-	<import value="java.util.*" />
-	<import value="net.sf.jasperreports.engine.*" />
-	<import value="net.sf.jasperreports.engine.data.*" />
-
-	<parameter name="zeID" isForPrompting="false" class="java.lang.Integer"/>
-	<queryString><![CDATA[SELECT Zelt.Bezeichnung AS ZeltName, zeltdetail.zelt, zeltdetail.schlüssel, zdbez.bezeichnung, zeltdetail.anzahl
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ZeltDetailliste" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="dce508ca-b8d7-4b0f-b782-f51fceab7b3e">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="zeID" class="java.lang.Integer" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[SELECT Zelt.Bezeichnung AS ZeltName, zeltdetail.zelt, zeltdetail.schlüssel, zdbez.bezeichnung, zeltdetail.anzahl
 FROM Zelt INNER JOIN (zdbez INNER JOIN zeltdetail ON zdbez.zdbid = zeltdetail.bezeichnung) ON Zelt.ZeID = zeltdetail.zelt
 WHERE (((zeltdetail.zelt)= $P{zeID}))
-ORDER BY zdbez.bezeichnung;]]></queryString>
-
+ORDER BY zdbez.bezeichnung;]]>
+	</queryString>
 	<field name="zeltname" class="java.lang.String"/>
 	<field name="zelt" class="java.lang.Integer"/>
 	<field name="schlüssel" class="java.lang.String"/>
 	<field name="bezeichnung" class="java.lang.String"/>
 	<field name="anzahl" class="java.lang.Integer"/>
-
-		<background>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</background>
-		<title>
-			<band height="37"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="0"
-						y="0"
-						width="535"
-						height="30"
-						key="textField"/>
-					<box topBorder="1Point" topBorderColor="#000000" leftBorder="1Point" leftBorderColor="#000000" rightBorder="1Point" rightBorderColor="#000000" bottomBorder="1Point" bottomBorderColor="#000000"/>
-					<textElement textAlignment="Center">
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="24" isBold="true" isItalic="true" isUnderline="false"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["Detailliste für: " + $F{zeltname}]]></textFieldExpression>
-				</textField>
-			</band>
-		</title>
-		<pageHeader>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</pageHeader>
-		<columnHeader>
-			<band height="18"  isSplitAllowed="true" >
-				<staticText>
-					<reportElement
-						x="0"
-						y="0"
-						width="72"
-						height="17"
-						key="staticText-1"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement>
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
-					</textElement>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="37" splitType="Stretch">
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="0" y="0" width="535" height="30" uuid="f938ef67-172c-4485-a7d9-270f03c8dccd"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="24" isBold="true" isItalic="true" isUnderline="false" pdfFontName="Helvetica-BoldOblique"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Detailliste für: " + $F{zeltname}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="18" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-1" x="0" y="0" width="72" height="17" uuid="286b424e-0ae7-4094-a0e3-a4366dcf9390"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+				</textElement>
 				<text><![CDATA[Schlüssel:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="97"
-						y="0"
-						width="56"
-						height="17"
-						key="staticText-2"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement>
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
-					</textElement>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-2" x="97" y="0" width="56" height="17" uuid="bb1318b2-4b68-4929-8d62-edf038ded61d"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+				</textElement>
 				<text><![CDATA[Anzahl:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						x="187"
-						y="0"
-						width="84"
-						height="17"
-						key="staticText-3"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement>
-						<font fontName="Times New Roman" pdfFontName="Helvetica-BoldOblique" size="14" isBold="true" isItalic="true"/>
-					</textElement>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-3" x="187" y="0" width="84" height="17" uuid="c2b23f98-634a-450b-853f-9cfafa9f9abc"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="14" isBold="true" isItalic="true" pdfFontName="Helvetica-BoldOblique"/>
+				</textElement>
 				<text><![CDATA[Bezeichnung:]]></text>
-				</staticText>
-				<line direction="TopDown">
-					<reportElement
-						x="0"
-						y="15"
-						width="533"
-						height="0"
-						key="line-2"/>
-					<graphicElement stretchType="NoStretch" pen="2Point"/>
-				</line>
-			</band>
-		</columnHeader>
-		<detail>
-			<band height="13"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="97"
-						y="0"
-						width="49"
-						height="12"
-						key="textField"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{anzahl}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="187"
-						y="0"
-						width="100"
-						height="12"
-						key="textField"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{bezeichnung}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="0"
-						y="0"
-						width="61"
-						height="12"
-						key="textField"/>
-					<box topBorder="None" topBorderColor="#000000" leftBorder="None" leftBorderColor="#000000" rightBorder="None" rightBorderColor="#000000" bottomBorder="None" bottomBorderColor="#000000"/>
-					<textElement>
-						<font fontName="Times New Roman"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{schlüssel}]]></textFieldExpression>
-				</textField>
-				<line direction="TopDown">
-					<reportElement
-						x="0"
-						y="12"
-						width="534"
-						height="0"
-						key="line-1"/>
-					<graphicElement stretchType="NoStretch" pen="1Point"/>
-				</line>
-			</band>
-		</detail>
-		<columnFooter>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</columnFooter>
-		<pageFooter>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</pageFooter>
-		<summary>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</summary>
+			</staticText>
+			<line>
+				<reportElement key="line-2" x="0" y="15" width="533" height="1" uuid="3638d6e9-0e73-469f-a324-84466c8d3bef"/>
+				<graphicElement>
+					<pen lineWidth="2.0" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="97" y="0" width="49" height="12" uuid="97d7fe1d-3a90-4d88-8795-2484bccf34d8"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{anzahl}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="187" y="0" width="100" height="12" uuid="ae202ef0-43e3-46e7-84eb-d5b62b3c8d31"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bezeichnung}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="0" y="0" width="61" height="12" uuid="7f2c3c15-2dc1-4ed7-ba79-9a76af44f1d9"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{schlüssel}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line-1" x="0" y="12" width="534" height="1" uuid="6bf45a14-efd8-4dd1-991b-42a8d4dda1fe"/>
+				<graphicElement>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
 </jasperReport>
