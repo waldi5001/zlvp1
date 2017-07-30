@@ -6,19 +6,35 @@ import java.io.InputStreamReader;
 
 import javax.swing.JOptionPane;
 
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.FactoryBean;
 
 import ch.ethz.ssh2.Connection;
 
-public class PublicKeyAuthentication implements InitializingBean {
+public class SSHConnection implements FactoryBean<Connection> {
 
     private String hostname;
     private String sshUsername;
     private String keyfilePassword;
     private int sshLocalport;
 
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
+
+    public void setSshUsername(String sshUsername) {
+        this.sshUsername = sshUsername;
+    }
+
+    public void setKeyfilePassword(String keyfilePassword) {
+        this.keyfilePassword = keyfilePassword;
+    }
+
+    public void setSshLocalport(int sshLocalport) {
+        this.sshLocalport = sshLocalport;
+    }
+
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public Connection getObject() throws Exception {
         try {
             InputStreamReader ir = new InputStreamReader(getClass().getResource("/id_rsa").openStream());
             CharArrayWriter cw = new CharArrayWriter();
@@ -43,26 +59,22 @@ public class PublicKeyAuthentication implements InitializingBean {
             }
 
             conn.createLocalPortForwarder(sshLocalport, "127.0.0.1", 5432);
+            return conn;
         } catch (IOException e) {
             e.printStackTrace(System.err);
             JOptionPane.showMessageDialog(null, e.getMessage());
             System.exit(2);
         }
+        return null;
     }
 
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
+    @Override
+    public Class<?> getObjectType() {
+        return Connection.class;
     }
 
-    public void setSshUsername(String sshUsername) {
-        this.sshUsername = sshUsername;
-    }
-
-    public void setKeyfilePassword(String keyfilePassword) {
-        this.keyfilePassword = keyfilePassword;
-    }
-
-    public void setSshLocalport(int sshLocalport) {
-        this.sshLocalport = sshLocalport;
+    @Override
+    public boolean isSingleton() {
+        return true;
     }
 }

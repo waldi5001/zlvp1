@@ -14,7 +14,7 @@
 		<property name="syntheticaAddonKey" value="${zlvp.syntheticaAddons.license.key}" />
 	</bean>
 
-	<bean id="fensterKlasse"  class="de.zlvp.gui.FensterKlasse" depends-on="syntheticaInitializer" />
+	<bean id="fensterKlasse" class="de.zlvp.gui.FensterKlasse" depends-on="syntheticaInitializer" />
 
 	<bean class="de.zlvp.reports.ReportsImpl">
 		<property name="dataSource" ref="dataSource" />
@@ -45,11 +45,15 @@
 
 	<bean class="de.zlvp.Client" />
 
-	<bean class="de.zlvp.PublicKeyAuthentication">
+	<bean id="sshConnection" class="de.zlvp.SSHConnection">
 		<property name="hostname" value="${zlvp.server.hostname}" />
 		<property name="keyfilePassword" value="${zlvp.ssh.keyfilePassword}" />
 		<property name="sshLocalport" value="${zlvp.ssh.localport}" />
 		<property name="sshUsername" value="${zlvp.ssh.username}" />
+	</bean>
+
+	<bean class="de.zlvp.Updater" >
+		<property name="sshConnection" ref="sshConnection" />
 	</bean>
 
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.SingleConnectionDataSource">
