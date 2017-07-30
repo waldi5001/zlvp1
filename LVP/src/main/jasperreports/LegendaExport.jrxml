@@ -5,6 +5,7 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -37,9 +38,6 @@ WHERE j.jaid = $P{jaid}]]>
 	<field name="anrede" class="java.lang.Integer"/>
 	<field name="firma" class="java.lang.String"/>
 	<field name="bemerkung" class="java.lang.String"/>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
 	<title>
 		<band height="15" splitType="Stretch">
 			<staticText>
@@ -128,92 +126,86 @@ WHERE j.jaid = $P{jaid}]]>
 			</staticText>
 		</band>
 	</title>
-	<pageHeader>
-		<band splitType="Stretch"/>
-	</pageHeader>
-	<columnHeader>
-		<band splitType="Stretch"/>
-	</columnHeader>
 	<detail>
 		<band height="13" splitType="Stretch">
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField isBlankWhenNull="false">
 				<reportElement key="textField" x="0" y="0" width="50" height="9" uuid="2d44ace4-df67-4c5f-9a42-34244285ba1c"/>
 				<textElement>
 					<font size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{anredebez}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField isBlankWhenNull="false">
 				<reportElement key="textField" x="50" y="0" width="50" height="9" uuid="6e07611f-cd29-4f76-95be-b7bc3c1266bc"/>
 				<textElement>
 					<font size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{typbez}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField isBlankWhenNull="false">
 				<reportElement key="textField" x="100" y="0" width="50" height="9" uuid="101c04b6-b3fb-488f-8503-6584ba260472"/>
 				<textElement>
 					<font size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField isBlankWhenNull="false">
 				<reportElement key="textField" x="150" y="0" width="50" height="9" uuid="b557fecc-46bb-4041-bd0d-4ef63a247118"/>
 				<textElement>
 					<font size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{vorname}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField isBlankWhenNull="false">
 				<reportElement key="textField" x="200" y="0" width="50" height="9" uuid="59587e9f-674d-469d-977e-aba3e6fcdc90"/>
 				<textElement>
 					<font size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{strasse}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField isBlankWhenNull="false">
 				<reportElement key="textField" x="250" y="0" width="50" height="9" uuid="49fb0060-87f1-4244-b7dc-9955c0109878"/>
 				<textElement>
 					<font size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{plz}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField isBlankWhenNull="false">
 				<reportElement key="textField" x="300" y="0" width="50" height="9" uuid="0630a9a3-fd0c-414c-aa05-201f43708d6b"/>
 				<textElement>
 					<font size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ort}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField isBlankWhenNull="false">
 				<reportElement key="textField" x="350" y="0" width="50" height="9" uuid="3deb1426-ef44-4a26-a8f1-f967f1f8ad14"/>
 				<textElement>
 					<font size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tel}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField isBlankWhenNull="false">
 				<reportElement key="textField" x="400" y="0" width="50" height="9" uuid="d6d6cb78-898a-4f65-87bb-6fe5a709c1b3"/>
 				<textElement>
 					<font size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{handy}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField isBlankWhenNull="false">
 				<reportElement key="textField" x="450" y="0" width="50" height="9" uuid="d2a0a16f-19b7-42c2-b6e1-21355073fc13"/>
 				<textElement>
 					<font size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{fax}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField isBlankWhenNull="false">
 				<reportElement key="textField" x="500" y="0" width="50" height="9" uuid="e369ebe1-505f-49f3-8548-c47853926441"/>
 				<textElement>
 					<font size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+			<textField isBlankWhenNull="false">
 				<reportElement key="textField" x="550" y="0" width="45" height="9" uuid="2a1604c4-e2d9-4a70-a680-b75090dc8a70"/>
 				<textElement>
 					<font size="5"/>
@@ -222,13 +214,4 @@ WHERE j.jaid = $P{jaid}]]>
 			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band splitType="Stretch"/>
-	</columnFooter>
-	<pageFooter>
-		<band splitType="Stretch"/>
-	</pageFooter>
-	<summary>
-		<band splitType="Stretch"/>
-	</summary>
 </jasperReport>

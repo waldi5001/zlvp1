@@ -5,6 +5,7 @@
 	<property name="ireport.zoom" value="1.7715610000000013"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 	<import value="net.sf.jasperreports.engine.*"/>
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
@@ -180,7 +181,7 @@
 	</title>
 	<detail>
 		<band height="13" splitType="Stretch">
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField" x="51" y="0" width="40" height="13" uuid="d449f410-57df-4dfb-bc2d-78f07c19d7e4"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -193,7 +194,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{vorname}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField" x="0" y="0" width="40" height="13" uuid="79013990-4e67-4f7b-b246-3669d4bf7a77"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -206,7 +207,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nachname}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField" x="101" y="0" width="40" height="13" uuid="9be221a1-2a2c-49d5-bdbf-79dd6ee97ece"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -219,7 +220,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{strasse}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField" x="151" y="0" width="40" height="13" uuid="c1883c02-d5b7-4df9-8d7c-d728de498ab5"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -232,7 +233,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{plz}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField" x="199" y="0" width="40" height="13" uuid="538750c7-adaa-495a-b270-3b71ff083a0b"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -245,7 +246,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ort}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField isBlankWhenNull="true">
 				<reportElement key="textField" x="250" y="0" width="40" height="13" uuid="f6db0386-2563-42b7-b438-3da7721300e3"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -258,21 +259,21 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField isBlankWhenNull="true">
 				<reportElement x="306" y="0" width="89" height="13" uuid="a0a0dd84-9c9a-4fc6-b64d-ddc1b30242da"/>
 				<textElement>
 					<font fontName="Times New Roman" size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{telnr}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField isBlankWhenNull="true">
 				<reportElement x="395" y="0" width="40" height="13" uuid="2aea68ae-947e-4d4f-924e-91189b72fb64"/>
 				<textElement>
 					<font fontName="Times New Roman" size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{handy}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField isBlankWhenNull="true">
 				<reportElement x="448" y="0" width="40" height="13" uuid="31ce1c6b-5fd4-4ed8-a244-b8c68f0ee2ef"/>
 				<textElement>
 					<font fontName="Times New Roman" size="7"/>
