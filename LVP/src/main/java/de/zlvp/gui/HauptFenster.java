@@ -129,7 +129,6 @@ public class HauptFenster extends InternalFrame {
             jSplitPane = new JSplitPane();
             jSplitPane.setLeftComponent(getJScrollPane());
             jSplitPane.setRightComponent(getJPanel4());
-            jSplitPane.setDividerLocation(0.15);
         }
         return jSplitPane;
     }
@@ -152,7 +151,7 @@ public class HauptFenster extends InternalFrame {
     private JTree getJTree() {
         if (jTree == null) {
             jTree = new JTree();
-            jTree.setModel(new DefaultTreeModel(new TreeData().getTreeModel(Client.get().getJahr(jahrId))));
+            jTree.setModel(new DefaultTreeModel(null));
             jTree.getSelectionModel().setSelectionMode(SINGLE_TREE_SELECTION);
             jTree.setComponentPopupMenu(new TreePopup());
             jTree.setCellRenderer(new DefaultTreeCellRenderer() {
@@ -243,8 +242,9 @@ public class HauptFenster extends InternalFrame {
             jTree.setDragEnabled(true);
             jTree.setDropMode(ON);
             jTree.setTransferHandler(new JTreeTransferHandler());
+            aktualisieren();
         }
-        expandNodes(jTree, 2);
+
         ToolTipManager.sharedInstance().registerComponent(jTree);
         return jTree;
     }
@@ -276,7 +276,10 @@ public class HauptFenster extends InternalFrame {
                     getJTree().setModel(new DefaultTreeModel(new TreeData().getTreeModel(get())));
                     TreePath newSelectionPath = findNewSelectionPath(selectionPath);
                     getJTree().setSelectionPath(newSelectionPath);
-                    // expandAllNodes(getJTree(), 0, getJTree().getRowCount());
+                    if (selectionPath == null) {
+                        expandNodes(getJTree(), 2);
+                    }
+                    getJSplitPane().setDividerLocation(0.15);
                 } catch (InterruptedException | ExecutionException e) {
                     throw new RuntimeException(e.getMessage(), e);
                 }
