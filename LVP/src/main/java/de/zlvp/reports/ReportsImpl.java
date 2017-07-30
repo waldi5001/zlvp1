@@ -161,23 +161,13 @@ public class ReportsImpl implements Reports {
     }
 
     @Override
-    public void exportOutlook(int lagerId) {
-        export("Outlook export", map("LID", lagerId));
+    public void personenVonLagerCSV(int lagerId) {
+        export("personenVonLagerCSV", map("LID", lagerId));
     }
 
     @Override
     public void exportLegendaCSVJahr(int jahrId) {
         export("LegendaExport", map("jaid", jahrId));
-    }
-
-    @Override
-    public void exportEmailCSVJahr(int jahrId) {
-        export("EMail exportJahr", map("JaID", jahrId));
-    }
-
-    @Override
-    public void exportEmailCSVLager(int lagerId) {
-        export("EMail export", map("LID", lagerId));
     }
 
     private Map<String, Object> map(String key, Object value) {

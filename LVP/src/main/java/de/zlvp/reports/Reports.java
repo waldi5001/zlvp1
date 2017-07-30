@@ -54,11 +54,8 @@ public interface Reports {
 
     public void gesamtstatistik();
 
-    public void exportOutlook(int lagerId);
+    public void personenVonLagerCSV(int lagerId);
 
     public void exportLegendaCSVJahr(int jahrId);
 
-    public void exportEmailCSVJahr(int jahrId);
-
-    public void exportEmailCSVLager(int lagerId);
 }

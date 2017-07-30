@@ -150,15 +150,12 @@ public class FensterKlasse extends JFrame {
 
     private JMenuItem jMenuItemEtikettenLI;
 
-    private JMenuItem jMenuItemEMailLager;
-
     private JMenu jMenuExport;
 
     private JMenuItem jMenuItemBenutzerWechseln;
 
     private JMenuItem jMenuItemEtikettenLI1;
 
-    private JMenuItem jMenuItemEMailJahr;
     private JMenuItem jMenuItemLegendaJahr;
 
     private JMenu jMenuLager;
@@ -706,13 +703,11 @@ public class FensterKlasse extends JFrame {
         getJMenuLeLa().setEnabled(false);
         getJMenuTeLa().setEnabled(false);
         getJMenuItemEtiketten().setEnabled(false);
-        getJMenuItemEMailLager().setEnabled(false);
-        getJMenuItemEMailJahr().setEnabled(false);
         getJMenuItemProgramm().setEnabled(false);
         getJMenuItemEssen().setEnabled(false);
         getJMenuItemNachtWache().setEnabled(false);
         getJMenuItemNachtWacheGruppe().setEnabled(false);
-        getJMenuItemOutlookLager().setEnabled(false);
+        getJMenuItemPersonenVonLager().setEnabled(false);
         getJMenuItemLegendaListen().setEnabled(false);
         getJMenuItemLegendaJahr().setEnabled(false);
 
@@ -883,24 +878,11 @@ public class FensterKlasse extends JFrame {
         return jMenuItemEtikettenLI;
     }
 
-    private JMenuItem getJMenuItemEMailLager() {
-        if (jMenuItemEMailLager == null) {
-            jMenuItemEMailLager = new JMenuItem();
-            jMenuItemEMailLager.setText("EMail Adressen / Lager");
-            jMenuItemEMailLager.setEnabled(false);
-            jMenuItemEMailLager.addActionListener(
-                    e -> Client.getReports().exportEmailCSVLager(SelectionContext.get().getLager().getId()));
-        }
-        return jMenuItemEMailLager;
-    }
-
     private JMenu getJMenuExport() {
         if (jMenuExport == null) {
             jMenuExport = new JMenu();
             jMenuExport.setText("Export");
-            jMenuExport.add(getJMenuItemEMailLager());
-            jMenuExport.add(getJMenuItemEMailJahr());
-            jMenuExport.add(getJMenuItemOutlookLager());
+            jMenuExport.add(getJMenuItemPersonenVonLager());
             jMenuExport.add(getJMenuItemLegendaJahr());
         }
         return jMenuExport;
@@ -924,17 +906,6 @@ public class FensterKlasse extends JFrame {
             jMenuItemEtikettenLI1.addActionListener(e -> Client.getReports().etikettenLagerinfo());
         }
         return jMenuItemEtikettenLI1;
-    }
-
-    private JMenuItem getJMenuItemEMailJahr() {
-        if (jMenuItemEMailJahr == null) {
-            jMenuItemEMailJahr = new JMenuItem();
-            jMenuItemEMailJahr.setEnabled(false);
-            jMenuItemEMailJahr.setText("EMail Adressen / Jahr");
-            jMenuItemEMailJahr.addActionListener(
-                    e -> Client.getReports().exportEmailCSVJahr(SelectionContext.get().getJahr().getId()));
-        }
-        return jMenuItemEMailJahr;
     }
 
     private JMenuItem getJMenuItemLegendaJahr() {
@@ -1018,13 +989,13 @@ public class FensterKlasse extends JFrame {
         return jMenuItemLagerOrt;
     }
 
-    private JMenuItem getJMenuItemOutlookLager() {
+    private JMenuItem getJMenuItemPersonenVonLager() {
         if (jMenuItemOutlookLager == null) {
             jMenuItemOutlookLager = new JMenuItem();
-            jMenuItemOutlookLager.setText("Outlook / Lager");
+            jMenuItemOutlookLager.setText("Alle Personen von Lager");
             jMenuItemOutlookLager.setEnabled(false);
             jMenuItemOutlookLager.addActionListener(
-                    e -> Client.getReports().exportOutlook(SelectionContext.get().getLager().getId()));
+                    e -> Client.getReports().personenVonLagerCSV(SelectionContext.get().getLager().getId()));
         }
         return jMenuItemOutlookLager;
     }
@@ -1044,7 +1015,6 @@ public class FensterKlasse extends JFrame {
         getJMenuItemJaAlg().setEnabled(true);
         getJMenuItemJaStatistik().setEnabled(true);
         getJMenuListen().setEnabled(true);
-        getJMenuItemEMailJahr().setEnabled(true);
         getJMenuItemLegendaJahr().setEnabled(true);
 
         SelectionContext.get().setJahr(event.get());
@@ -1058,11 +1028,10 @@ public class FensterKlasse extends JFrame {
         getJMenuItemZeLager().setEnabled(true);
         getJMenuLeLa().setEnabled(true);
         getJMenuTeLa().setEnabled(true);
-        getJMenuItemEMailLager().setEnabled(true);
         getJMenuItemProgramm().setEnabled(true);
         getJMenuItemEssen().setEnabled(true);
         getJMenuItemNachtWache().setEnabled(true);
-        getJMenuItemOutlookLager().setEnabled(true);
+        getJMenuItemPersonenVonLager().setEnabled(true);
         getJMenuItemNachtWacheGruppe().setEnabled(true);
         getJMenuItemLegendaListen().setEnabled(true);
 
