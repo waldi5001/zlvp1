@@ -5,5 +5,5 @@ target
 .project
 /zlvp.properties
 /.springBeans
-/lib/
 id_rsa
+release.sh
