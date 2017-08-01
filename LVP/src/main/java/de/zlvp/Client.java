@@ -9,7 +9,8 @@ import javax.swing.JOptionPane;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
+
+import com.zaxxer.hikari.HikariDataSource;
 
 import de.zlvp.controller.Controller;
 import de.zlvp.controller.ExcelController;
@@ -23,7 +24,7 @@ public class Client implements ApplicationContextAware {
     }
 
     public static boolean login(String user, char[] passwort) {
-        SingleConnectionDataSource datasource = applicationContext.getBean(SingleConnectionDataSource.class);
+        HikariDataSource datasource = applicationContext.getBean(HikariDataSource.class);
         datasource.setUsername(user);
         datasource.setPassword(copyValueOf(passwort));
         try {
