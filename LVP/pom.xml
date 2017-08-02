@@ -257,6 +257,9 @@
 								</transformer>
 								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<mainClass>de.zlvp.StartKlasse</mainClass>
+									<manifestEntries>
+										<SplashScreen-Image>logo.jpg</SplashScreen-Image>
+									</manifestEntries>
 								</transformer>
 							</transformers>
 						</configuration>
