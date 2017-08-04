@@ -20,6 +20,8 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
+	<bean id="trimInterceptor" class="de.zlvp.TrimInterceptor" />
+
 	<bean id="asyncAndErrorInterceptor" class="de.zlvp.AsyncAndErrorInterceptor" />
 
 	<bean id="methodLogInterceptor" class="org.springframework.aop.interceptor.CustomizableTraceInterceptor">
@@ -50,7 +52,7 @@
 		<property name="sshUsername" value="${zlvp.ssh.username}" />
 	</bean>
 
-	<bean class="de.zlvp.Updater" >
+	<bean class="de.zlvp.Updater">
 		<property name="sshConnection" ref="sshConnection" />
 	</bean>
 
@@ -141,6 +143,7 @@
 				<value>asyncAndErrorInterceptor</value>
 				<value>methodLogInterceptor</value>
 				<value>transactionInterceptor</value>
+				<value>trimInterceptor</value>
 			</list>
 		</property>
 	</bean>
