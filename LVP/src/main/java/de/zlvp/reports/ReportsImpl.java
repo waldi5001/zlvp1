@@ -107,7 +107,7 @@ public class ReportsImpl implements Reports {
 
     @Override
     public void teilnehmerVonGruppe(int lagerId) {
-        showReport("LagerGruppeTeilnehmer2", map("LaId", lagerId));
+        showReport("LagerGruppeTeilnehmer2", map("LaID", lagerId));
     }
 
     @Override

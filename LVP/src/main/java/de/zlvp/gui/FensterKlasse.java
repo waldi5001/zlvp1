@@ -755,7 +755,7 @@ public class FensterKlasse extends JFrame {
             jMenuItemTeGruppe = new JMenuItem();
             jMenuItemTeGruppe.setText("Gruppe");
             jMenuItemTeGruppe.addActionListener(
-                    e -> Client.getReports().teilnehmerVonGruppe(SelectionContext.get().getGruppe().getId()));
+                    e -> Client.getReports().teilnehmerVonGruppe(SelectionContext.get().getLager().getId()));
         }
         return jMenuItemTeGruppe;
     }
