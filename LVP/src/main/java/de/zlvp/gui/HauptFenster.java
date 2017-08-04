@@ -29,12 +29,12 @@ import de.zlvp.entity.Gruppe;
 import de.zlvp.entity.Jahr;
 import de.zlvp.entity.Lager;
 import de.zlvp.entity.Person;
-import de.zlvp.ui.InternalFrame;
+import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JTreeTransferHandler;
 import de.zlvp.ui.TreeData;
 import de.zlvp.ui.TreePopup;
 
-public class HauptFenster extends InternalFrame {
+public class HauptFenster extends AbstractJInternalFrame {
 
     private static final long serialVersionUID = 1L;
 

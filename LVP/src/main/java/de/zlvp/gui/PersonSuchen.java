@@ -25,12 +25,12 @@ import javax.swing.text.DateFormatter;
 import de.zlvp.Client;
 import de.zlvp.entity.Geschlecht;
 import de.zlvp.entity.Person;
-import de.zlvp.ui.InternalFrame;
+import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JComboBoxBuilder;
 import de.zlvp.ui.JListBuilder;
 import de.zlvp.ui.JListTransferHandler;
 
-public class PersonSuchen extends InternalFrame {
+public class PersonSuchen extends AbstractJInternalFrame {
 
     private static final long serialVersionUID = 5510798374241439356L;
 

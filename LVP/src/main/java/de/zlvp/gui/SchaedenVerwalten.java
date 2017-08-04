@@ -20,11 +20,11 @@ import javax.swing.text.DateFormatter;
 
 import de.zlvp.entity.Schaden;
 import de.zlvp.entity.Zelt;
-import de.zlvp.ui.InternalFrame;
+import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JTableBuilder;
 import de.zlvp.ui.JTableBuilder.ColumnBuilder;
 
-public class SchaedenVerwalten extends InternalFrame {
+public class SchaedenVerwalten extends AbstractJInternalFrame {
 
     private static final long serialVersionUID = 3140216101445215956L;
 

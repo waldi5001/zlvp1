@@ -14,10 +14,10 @@ import javax.swing.JSplitPane;
 
 import de.zlvp.Client;
 import de.zlvp.entity.Zelt;
-import de.zlvp.ui.InternalFrame;
+import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JListBuilder;
 
-public class ZeltDetailListen extends InternalFrame {
+public class ZeltDetailListen extends AbstractJInternalFrame {
 
     private static final long serialVersionUID = 2547154648280401084L;
 

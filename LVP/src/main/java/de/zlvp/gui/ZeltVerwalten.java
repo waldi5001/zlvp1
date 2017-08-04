@@ -20,10 +20,10 @@ import javax.swing.JTextField;
 import javax.swing.text.DateFormatter;
 
 import de.zlvp.entity.Zelt;
-import de.zlvp.ui.InternalFrame;
+import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JListBuilder;
 
-public class ZeltVerwalten extends InternalFrame {
+public class ZeltVerwalten extends AbstractJInternalFrame {
 
     private static final long serialVersionUID = 2547154648280401084L;
 

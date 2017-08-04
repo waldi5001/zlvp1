@@ -25,11 +25,11 @@ import javax.swing.text.DateFormatter;
 import de.javasoft.swing.JYTableScrollPane;
 import de.zlvp.entity.Zelt;
 import de.zlvp.entity.Zeltverleih;
-import de.zlvp.ui.InternalFrame;
+import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JTableBuilder;
 import de.zlvp.ui.JTableBuilder.ColumnBuilder;
 
-public class ZeltverleihVerwalten extends InternalFrame {
+public class ZeltverleihVerwalten extends AbstractJInternalFrame {
 
     private static final long serialVersionUID = -8229650640088466174L;
     private JPanel jContentPane;

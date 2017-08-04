@@ -19,10 +19,10 @@ import javax.swing.JTextField;
 import javax.swing.text.DateFormatter;
 
 import de.zlvp.entity.Lagerort;
-import de.zlvp.ui.InternalFrame;
+import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JComboBoxBuilder;
 
-public class LagerAnlegen extends InternalFrame {
+public class LagerAnlegen extends AbstractJInternalFrame {
 
     private static final long serialVersionUID = -6991827451131673965L;
 

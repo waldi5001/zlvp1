@@ -11,9 +11,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import de.zlvp.Client;
-import de.zlvp.ui.InternalFrame;
+import de.zlvp.ui.AbstractJInternalFrame;
 
-public class PasswortAendern extends InternalFrame {
+public class PasswortAendern extends AbstractJInternalFrame {
 
     private static final long serialVersionUID = 1456325056875416840L;
 

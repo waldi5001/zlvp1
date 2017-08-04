@@ -7,13 +7,13 @@ import java.awt.Insets;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 
-public class InternalFrame extends JInternalFrame {
+public class AbstractJInternalFrame extends JInternalFrame {
 
     protected final JDesktopPane desktopPane;
 
     protected Dimension sizeDesktopPane;
 
-    public InternalFrame() {
+    public AbstractJInternalFrame() {
         this.desktopPane = DesktopPane.get();
     }
 

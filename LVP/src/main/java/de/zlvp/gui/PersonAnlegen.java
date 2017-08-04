@@ -20,10 +20,10 @@ import javax.swing.JTextField;
 import javax.swing.text.DateFormatter;
 
 import de.zlvp.entity.Geschlecht;
-import de.zlvp.ui.InternalFrame;
+import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JComboBoxBuilder;
 
-public class PersonAnlegen extends InternalFrame {
+public class PersonAnlegen extends AbstractJInternalFrame {
 
     private static final long serialVersionUID = -6991827451131673965L;
 

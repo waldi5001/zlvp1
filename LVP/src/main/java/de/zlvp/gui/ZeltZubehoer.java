@@ -20,12 +20,12 @@ import de.javasoft.swing.JYTableScrollPane;
 import de.zlvp.entity.Zelt;
 import de.zlvp.entity.Zeltdetail;
 import de.zlvp.entity.ZeltdetailBezeichnung;
-import de.zlvp.ui.InternalFrame;
+import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JComboBoxBuilder;
 import de.zlvp.ui.JTableBuilder;
 import de.zlvp.ui.JTableBuilder.ColumnBuilder;
 
-public class ZeltZubehoer extends InternalFrame {
+public class ZeltZubehoer extends AbstractJInternalFrame {
 
     private static final long serialVersionUID = 7743223447839598598L;
 

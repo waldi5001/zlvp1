@@ -13,9 +13,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.DateFormatter;
 
-import de.zlvp.ui.InternalFrame;
+import de.zlvp.ui.AbstractJInternalFrame;
 
-public class ZeltAnlegen extends InternalFrame {
+public class ZeltAnlegen extends AbstractJInternalFrame {
 
     private static final long serialVersionUID = -3235038169942542628L;
 

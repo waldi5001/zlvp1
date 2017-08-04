@@ -22,10 +22,10 @@ import de.zlvp.entity.User;
 import de.zlvp.ui.DualListField;
 import de.zlvp.ui.DualListField.ElementAddedCallback;
 import de.zlvp.ui.DualListField.ElementRemovedCallback;
-import de.zlvp.ui.InternalFrame;
+import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JListBuilder;
 
-public class Benutzerverwaltung extends InternalFrame {
+public class Benutzerverwaltung extends AbstractJInternalFrame {
     private static final long serialVersionUID = 1L;
 
     private JButton jButtonOK;

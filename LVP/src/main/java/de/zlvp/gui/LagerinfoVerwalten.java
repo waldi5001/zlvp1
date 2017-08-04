@@ -12,11 +12,11 @@ import javax.swing.JTable;
 
 import de.javasoft.swing.JYTableScrollPane;
 import de.zlvp.entity.Lagerinfo;
-import de.zlvp.ui.InternalFrame;
+import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JTableBuilder;
 import de.zlvp.ui.JTableBuilders;
 
-public class LagerinfoVerwalten extends InternalFrame {
+public class LagerinfoVerwalten extends AbstractJInternalFrame {
 
     private static final long serialVersionUID = 1L;
 

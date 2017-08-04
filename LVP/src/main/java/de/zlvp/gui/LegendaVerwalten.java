@@ -6,9 +6,9 @@ import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 
 import de.zlvp.entity.Lagerort;
-import de.zlvp.ui.InternalFrame;
+import de.zlvp.ui.AbstractJInternalFrame;
 
-public class LegendaVerwalten extends InternalFrame {
+public class LegendaVerwalten extends AbstractJInternalFrame {
 
     private static final long serialVersionUID = -1L;
 
