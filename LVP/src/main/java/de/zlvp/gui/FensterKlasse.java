@@ -1,5 +1,7 @@
 package de.zlvp.gui;
 
+import static de.zlvp.Client.get;
+
 import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Toolkit;
@@ -8,7 +10,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -382,13 +383,15 @@ public class FensterKlasse extends JFrame {
             jMenuItemOeffnen.setText("Öffnen");
             jMenuItemOeffnen.setEnabled(false);
             jMenuItemOeffnen.addActionListener(e -> {
-                List<Jahr> allJahre = Client.get().getAllJahr();
-                Jahr[] jahre = allJahre.toArray(new Jahr[allJahre.size()]);
-                Jahr jahr = (Jahr) JOptionPane.showInputDialog(this, null, "Jahr wählen:", JOptionPane.PLAIN_MESSAGE,
-                        null, jahre, null);
-                if (jahr != null) {
-                    new HauptFenster(jahr.getId());
-                }
+                Client.get().getAllJahr(allJahre -> {
+                    Jahr[] jahre = allJahre.toArray(new Jahr[allJahre.size()]);
+                    Jahr jahr = (Jahr) JOptionPane.showInputDialog(this, null, "Jahr wählen:",
+                            JOptionPane.PLAIN_MESSAGE, null, jahre, null);
+                    if (jahr != null) {
+                        new HauptFenster(jahr.getId());
+                    }
+                });
+
             });
         }
         return jMenuItemOeffnen;
@@ -762,16 +765,17 @@ public class FensterKlasse extends JFrame {
             jMenuItemBezLöschen = new JMenuItem();
             jMenuItemBezLöschen.setText("Bezeichnungen Löschen");
             jMenuItemBezLöschen.addActionListener(e -> {
+                get().getAllZeltdetailBezeichnung(allZeltdetailBezeichnung -> {
+                    ZeltdetailBezeichnung[] zdbs = allZeltdetailBezeichnung
+                            .toArray(new ZeltdetailBezeichnung[allZeltdetailBezeichnung.size()]);
+                    ZeltdetailBezeichnung zdb = (ZeltdetailBezeichnung) JOptionPane.showInputDialog(this, null,
+                            "Zeltdetail Bezeichnung löschen:", JOptionPane.PLAIN_MESSAGE, null, zdbs, null);
 
-                List<ZeltdetailBezeichnung> allZeltdetailBezeichnung = Client.get().getAllZeltdetailBezeichnung();
-                ZeltdetailBezeichnung[] zdbs = allZeltdetailBezeichnung
-                        .toArray(new ZeltdetailBezeichnung[allZeltdetailBezeichnung.size()]);
-                ZeltdetailBezeichnung zdb = (ZeltdetailBezeichnung) JOptionPane.showInputDialog(this, null,
-                        "Zeltdetail Bezeichnung löschen:", JOptionPane.PLAIN_MESSAGE, null, zdbs, null);
-
-                if (zdb != null) {
-                    Client.get().loescheZeltdetailBezeichnung(zdb.getId());
-                }
+                    if (zdb != null) {
+                        Client.get().loescheZeltdetailBezeichnung(zdb.getId(), cb -> {
+                        });
+                    }
+                });
             });
         }
         return jMenuItemBezLöschen;
@@ -961,15 +965,17 @@ public class FensterKlasse extends JFrame {
             jMenuItemLegendaAendern = new JMenuItem();
             jMenuItemLegendaAendern.setText("Legenda");
             jMenuItemLegendaAendern.addActionListener(e -> {
-                List<Lagerort> allLagerort = Client.get().getAllLagerort();
-                Lagerort[] los = allLagerort.toArray(new Lagerort[allLagerort.size()]);
+                get().getAllLagerort(allLagerort -> {
+                    Lagerort[] los = allLagerort.toArray(new Lagerort[allLagerort.size()]);
 
-                Lagerort lo = (Lagerort) JOptionPane.showInputDialog(this, null, "Legenda öffnen für:",
-                        JOptionPane.PLAIN_MESSAGE, null, los, null);
+                    Lagerort lo = (Lagerort) JOptionPane.showInputDialog(null, null, "Legenda öffnen für:",
+                            JOptionPane.PLAIN_MESSAGE, null, los, null);
 
-                if (lo != null) {
-                    new LegendaVerwalten(lo);
-                }
+                    if (lo != null) {
+                        new LegendaVerwalten(lo);
+                    }
+                });
+
             });
         }
         return jMenuItemLegendaAendern;
@@ -982,7 +988,8 @@ public class FensterKlasse extends JFrame {
             jMenuItemLagerOrt.addActionListener(e -> {
                 String lagerort = JOptionPane.showInputDialog("Neuen Lagerort eingeben");
                 if (lagerort != null && !lagerort.isEmpty()) {
-                    Client.get().speichereLagerort(lagerort);
+                    get().speichereLagerort(lagerort, cb -> {
+                    });
                 }
             });
         }

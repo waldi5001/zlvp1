@@ -1,12 +1,16 @@
 package de.zlvp.ui;
 
+import static de.zlvp.Client.get;
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
-import de.zlvp.Client;
+import de.zlvp.Events;
 import de.zlvp.entity.Anrede;
 import de.zlvp.entity.Essen;
 import de.zlvp.entity.Funktion;
@@ -18,6 +22,7 @@ import de.zlvp.entity.Legenda;
 import de.zlvp.entity.Legendatyp;
 import de.zlvp.entity.Leiter;
 import de.zlvp.entity.Materialwart;
+import de.zlvp.entity.Person;
 import de.zlvp.entity.Programm;
 import de.zlvp.entity.Stab;
 import de.zlvp.entity.Teilnehmer;
@@ -28,159 +33,177 @@ import de.zlvp.ui.JTableBuilder.Loader;
 
 public class JTableBuilders {
 
-    public static JTableBuilder<Stab> stab(Lager lager, Loader<Stab> loader) {
-        return JTableBuilder.get(Stab.class, () -> loader.get())//
-                .set((person, val, index) -> {
-                    if (index == 0) {
-                        person.setName((String) val);
-                    } else if (index == 1) {
-                        person.setVorname((String) val);
-                    } else if (index == 2) {
-                        person.setStrasse((String) val);
-                    } else if (index == 3) {
-                        person.setPlz((String) val);
-                    } else if (index == 4) {
-                        person.setOrt((String) val);
-                    } else if (index == 5) {
-                        person.setGebDat((Date) val);
-                    } else if (index == 6) {
-                        person.setFunktion((Funktion) val);
-                    }
-                })//
-                .get((person, index) -> {
-                    if (index == 0) {
-                        return person.getName();
-                    } else if (index == 1) {
-                        return person.getVorname();
-                    } else if (index == 2) {
-                        return person.getStrasse();
-                    } else if (index == 3) {
-                        return person.getPlz();
-                    } else if (index == 4) {
-                        return person.getOrt();
-                    } else if (index == 5) {
-                        return person.getGebDat();
-                    } else if (index == 6) {
-                        return person.getFunktion() != null ? person.getFunktion().getBezeichnung() : null;
-                    }
-                    return null;
-                })
-                .save(s -> Client.get().speichereStab(s.getId(), s.getOriginalId(), s.getGeschlecht(), s.getVorname(),
-                        s.getName(), s.getStrasse(), s.getPlz(), s.getOrt(), s.getGebDat(), s.getTelNr(), s.getEmail(),
-                        s.getHandy(), s.getTelNr(), s.getFunktion(), lager.getId()))//
-                .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Vorname").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Straße").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("PLZ").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Ort").build())//
-                .addColumn(ColumnBuilder.get(Date.class).add("Geburtsdatum").build())//
-                .addColumn(ColumnBuilder.get(Funktion.class).add("Funktion").add(JComboBoxBuilder
-                        .get(Funktion.class, () -> asList(Funktion.values())).map(f -> f.getBezeichnung()).build())
-                        .desc().build());
+    @FunctionalInterface
+    public static interface SelectionCallback {
+        boolean isSelected();
     }
 
-    public static JTableBuilder<Materialwart> materialwart(Lager lager, Loader<Materialwart> loader) {
-        return JTableBuilder.get(Materialwart.class, () -> loader.get())//
-                .set((person, val, index) -> {
-                    if (index == 0) {
-                        person.setLager((boolean) val == true ? lager : null);
-                    } else if (index == 1) {
-                        person.setName((String) val);
-                    } else if (index == 2) {
-                        person.setVorname((String) val);
-                    } else if (index == 3) {
-                        person.setStrasse((String) val);
-                    } else if (index == 4) {
-                        person.setPlz((String) val);
-                    } else if (index == 5) {
-                        person.setOrt((String) val);
-                    } else if (index == 6) {
-                        person.setGebDat((Date) val);
-                    }
-                })//
-                .get((person, index) -> {
-                    if (index == 0) {
-                        return person.getLager() != null;
-                    } else if (index == 1) {
-                        return person.getName();
-                    } else if (index == 2) {
-                        return person.getVorname();
-                    } else if (index == 3) {
-                        return person.getStrasse();
-                    } else if (index == 4) {
-                        return person.getPlz();
-                    } else if (index == 5) {
-                        return person.getOrt();
-                    } else if (index == 6) {
-                        return person.getGebDat();
-                    }
-                    return null;
-                })
-                .save(mw -> Client.get().speichereMaterialwart(mw.getId(), mw.getOriginalId(), mw.getGeschlecht(),
-                        mw.getVorname(), mw.getName(), mw.getStrasse(), mw.getPlz(), mw.getOrt(), mw.getGebDat(),
-                        mw.getTelNr(), mw.getEmail(), mw.getHandy(), mw.getTelNr(),
-                        mw.getLager() != null ? mw.getLager().getId() : null))//
-                .addColumn(Columns.CHECK)//
-                .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Vorname").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Straße").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("PLZ").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Ort").build())//
-                .addColumn(ColumnBuilder.get(Date.class).add("Geburtsdatum").build());//
+    public static JTableBuilder<Stab> stab(Lager lager, Loader<Person> loaderPerson, Loader<Stab> loaderStab) {
+        return getWithCopy(Person.class, Stab.class, loaderPerson, loaderStab,
+                (s, t) -> s.getId().equals(t.getOriginalId()))//
+                        .set((person, val, index) -> {
+                            if (index == 0) {
+                                person.setName((String) val);
+                            } else if (index == 1) {
+                                person.setVorname((String) val);
+                            } else if (index == 2) {
+                                person.setStrasse((String) val);
+                            } else if (index == 3) {
+                                person.setPlz((String) val);
+                            } else if (index == 4) {
+                                person.setOrt((String) val);
+                            } else if (index == 5) {
+                                person.setGebDat((Date) val);
+                            } else if (index == 6) {
+                                person.setFunktion((Funktion) val);
+                            }
+                        })//
+                        .get((person, index) -> {
+                            if (index == 0) {
+                                return person.getName();
+                            } else if (index == 1) {
+                                return person.getVorname();
+                            } else if (index == 2) {
+                                return person.getStrasse();
+                            } else if (index == 3) {
+                                return person.getPlz();
+                            } else if (index == 4) {
+                                return person.getOrt();
+                            } else if (index == 5) {
+                                return person.getGebDat();
+                            } else if (index == 6) {
+                                return person.getFunktion() != null ? person.getFunktion().getBezeichnung() : null;
+                            }
+                            return null;
+                        })
+                        .save((s, cb) -> get().speichereStab(s.getId(), s.getOriginalId(), s.getGeschlecht(),
+                                s.getVorname(), s.getName(), s.getStrasse(), s.getPlz(), s.getOrt(), s.getGebDat(),
+                                s.getTelNr(), s.getEmail(), s.getHandy(), s.getTelNr(), s.getFunktion(), lager.getId(),
+                                cb))//
+                        .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("Vorname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("Straße").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("PLZ").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("Ort").build())//
+                        .addColumn(ColumnBuilder.get(Date.class).add("Geburtsdatum").build())//
+                        .addColumn(ColumnBuilder.get(Funktion.class).add("Funktion")
+                                .add(JComboBoxBuilder.get(Funktion.class, allFunktion -> {
+                                    allFunktion.get(asList(Funktion.values()));
+                                }).map(f -> f.getBezeichnung()).build()).desc().build());
     }
 
-    public static JTableBuilder<Zelt> zelt(Lager lager, Loader<Zelt> loader) {
-        return JTableBuilder.get(Zelt.class, () -> loader.get())//
-                .set((zelt, val, index) -> {
-                    if (index == 0) {
-                        if ((boolean) val) {
-                            zelt.getLager().add(lager);
-                        } else {
-                            zelt.getLager().clear();
-                        }
-                    }
-                })//
-                .get((zelt, index) -> {
-                    if (index == 0) {
-                        return !zelt.getLager().isEmpty();
-                    } else if (index == 1) {
-                        return zelt.getBezeichnung();
-                    }
-                    return null;
-                })
-                .save(zelt -> Client.get().speichereZeltZuLager(zelt.getId(), zelt.getOriginalId(),
-                        zelt.getLager().isEmpty() ? null : lager.getId()))//
-                .addColumn(Columns.CHECK)//
-                .addColumn(ColumnBuilder.get(String.class).editable(false).add("Bezeichnung").build());//
+    public static JTableBuilder<Materialwart> materialwart(Lager lager, Loader<Person> loaderPerson,
+            Loader<Materialwart> allMateriealwart) {
+        return getWithCopy(Person.class, Materialwart.class, loaderPerson, allMateriealwart,
+                (s, t) -> s.getId().equals(t.getOriginalId()))//
+                        .set((person, val, index) -> {
+                            if (index == 0) {
+                                person.setLager((boolean) val == true ? lager : null);
+                            } else if (index == 1) {
+                                person.setName((String) val);
+                            } else if (index == 2) {
+                                person.setVorname((String) val);
+                            } else if (index == 3) {
+                                person.setStrasse((String) val);
+                            } else if (index == 4) {
+                                person.setPlz((String) val);
+                            } else if (index == 5) {
+                                person.setOrt((String) val);
+                            } else if (index == 6) {
+                                person.setGebDat((Date) val);
+                            }
+                        })//
+                        .get((person, index) -> {
+                            if (index == 0) {
+                                return person.getLager() != null;
+                            } else if (index == 1) {
+                                return person.getName();
+                            } else if (index == 2) {
+                                return person.getVorname();
+                            } else if (index == 3) {
+                                return person.getStrasse();
+                            } else if (index == 4) {
+                                return person.getPlz();
+                            } else if (index == 5) {
+                                return person.getOrt();
+                            } else if (index == 6) {
+                                return person.getGebDat();
+                            }
+                            return null;
+                        })
+                        .save((mw, cb) -> get().speichereMaterialwart(mw.getId(), mw.getOriginalId(),
+                                mw.getGeschlecht(), mw.getVorname(), mw.getName(), mw.getStrasse(), mw.getPlz(),
+                                mw.getOrt(), mw.getGebDat(), mw.getTelNr(), mw.getEmail(), mw.getHandy(), mw.getTelNr(),
+                                mw.getLager() != null ? mw.getLager().getId() : null, cb))//
+                        .addColumn(Columns.CHECK)//
+                        .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("Vorname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("Straße").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("PLZ").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("Ort").build())//
+                        .addColumn(ColumnBuilder.get(Date.class).add("Geburtsdatum").build());//
     }
 
-    public static JTableBuilder<Zelt> zelt(Gruppe gruppe, Loader<Zelt> loader) {
-        return JTableBuilder.get(Zelt.class, () -> loader.get())//
-                .set((zelt, val, index) -> {
-                    if (index == 0) {
-                        if ((boolean) val) {
-                            zelt.getGruppe().add(gruppe);
-                        } else {
-                            zelt.getGruppe().clear();
-                        }
-                    }
-                })//
-                .get((zelt, index) -> {
-                    if (index == 0) {
-                        return !zelt.getGruppe().isEmpty();
-                    } else if (index == 1) {
-                        return zelt.getBezeichnung();
-                    }
-                    return null;
-                })
-                .save(zelt -> Client.get().speichereZeltZuGruppe(zelt.getId(), zelt.getOriginalId(),
-                        zelt.getGruppe().isEmpty() ? null : gruppe.getOriginalId()))//
-                .addColumn(Columns.CHECK)//
-                .addColumn(ColumnBuilder.get(String.class).editable(false).add("Bezeichnung").build());//
+    public static JTableBuilder<Zelt> zelt(Lager lager, Loader<Zelt> allZelt, Loader<Zelt> allZeltFromLager) {
+        return getWithCopy(Zelt.class, Zelt.class, allZelt, allZeltFromLager,
+                (s, t) -> s.getBezeichnung().equals(t.getBezeichnung()))//
+                        .set((zelt, val, index) -> {
+                            if (index == 0) {
+                                if ((boolean) val) {
+                                    zelt.getLager().add(lager);
+                                } else {
+                                    zelt.getLager().clear();
+                                }
+                            }
+                        })//
+                        .get((zelt, index) -> {
+                            if (index == 0) {
+                                return !zelt.getLager().isEmpty();
+                            } else if (index == 1) {
+                                return zelt.getBezeichnung();
+                            }
+                            return null;
+                        })
+                        .save((zelt, cb) -> get().speichereZeltZuLager(zelt.getId(), zelt.getOriginalId(),
+                                zelt.getLager().isEmpty() ? null : lager.getId(), cb))//
+                        .addColumn(Columns.CHECK)//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Bezeichnung").build());//
     }
 
-    public static JTableBuilder<Gruppe> gruppe(Lager lager, Loader<Gruppe> loader) {
-        return JTableBuilder.get(Gruppe.class, () -> loader.get())//
+    public static JTableBuilder<Zelt> zelt(Gruppe gruppe, Loader<Zelt> allZeltFromLager, Loader<Zelt> allFromGruppe) {
+        return getWithCopy(Zelt.class, Zelt.class, allZeltFromLager, allFromGruppe,
+                (s, t) -> s.getBezeichnung().equals(t.getBezeichnung()))//
+                        .set((zelt, val, index) -> {
+                            if (index == 0) {
+                                if ((boolean) val) {
+                                    zelt.getGruppe().add(gruppe);
+                                } else {
+                                    zelt.getGruppe().clear();
+                                }
+                            }
+                        })//
+                        .get((zelt, index) -> {
+                            if (index == 0) {
+                                return !zelt.getGruppe().isEmpty();
+                            } else if (index == 1) {
+                                return zelt.getBezeichnung();
+                            }
+                            return null;
+                        })
+                        .save((zelt, cb) -> get().speichereZeltZuGruppe(zelt.getId(), zelt.getOriginalId(),
+                                zelt.getGruppe().isEmpty() ? null : gruppe.getOriginalId(), cb))//
+                        .addColumn(Columns.CHECK)//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Bezeichnung").build());//
+    }
+
+    public static JTableBuilder<Gruppe> gruppe(Lager lager, SelectionCallback selectionCallback) {
+        return getWithCopy(Gruppe.class, Gruppe.class, cb -> {
+            if (selectionCallback.isSelected()) {
+                get().getAllGruppen(cb);
+            } else {
+                get().getAllUnassignedGruppen(cb);
+            }
+        }, cb -> get().getAllGruppenFromLager(lager.getId(), cb), (s, t) -> s.getOriginalId().equals(t.getOriginalId()))//
                 .set((gruppe, val, index) -> {
                     if (index == 0) {
                         if ((boolean) val) {
@@ -200,116 +223,121 @@ public class JTableBuilders {
                     }
                     return null;
                 })
-                .save(gruppe -> Client.get().speichereGruppe(gruppe.getId(), gruppe.getOriginalId(),
+                .save((gruppe, cb) -> get().speichereGruppe(gruppe.getId(), gruppe.getOriginalId(),
                         gruppe.getLager() != null ? gruppe.getLager().getId() : null, gruppe.getName(),
-                        gruppe.getSchlachtruf()))//
+                        gruppe.getSchlachtruf(), cb))//
                 .addColumn(Columns.CHECK)//
                 .addColumn(ColumnBuilder.get(String.class).add("Bezeichnung").build());//
     }
 
-    public static JTableBuilder<Leiter> leiter(Gruppe gruppe, Loader<Leiter> loader) {
-        return JTableBuilder.get(Leiter.class, () -> loader.get())//
-                .set((person, val, index) -> {
-                    if (index == 0) {
-                        person.setGruppe((boolean) val == true ? gruppe : null);
-                    } else if (index == 1) {
-                        person.setName((String) val);
-                    } else if (index == 2) {
-                        person.setVorname((String) val);
-                    } else if (index == 3) {
-                        person.setStrasse((String) val);
-                    } else if (index == 4) {
-                        person.setPlz((String) val);
-                    } else if (index == 5) {
-                        person.setOrt((String) val);
-                    } else if (index == 6) {
-                        person.setGebDat((Date) val);
-                    }
-                })//
-                .get((person, index) -> {
-                    if (index == 0) {
-                        return person.getGruppe() != null;
-                    } else if (index == 1) {
-                        return person.getName();
-                    } else if (index == 2) {
-                        return person.getVorname();
-                    } else if (index == 3) {
-                        return person.getStrasse();
-                    } else if (index == 4) {
-                        return person.getPlz();
-                    } else if (index == 5) {
-                        return person.getOrt();
-                    } else if (index == 6) {
-                        return person.getGebDat();
-                    }
-                    return null;
-                })
-                .save(le -> Client.get().speichereLeiter(le.getId(), le.getOriginalId(), le.getGeschlecht(),
-                        le.getVorname(), le.getName(), le.getStrasse(), le.getPlz(), le.getOrt(), le.getGebDat(),
-                        le.getTelNr(), le.getEmail(), le.getHandy(), le.getTelNr(),
-                        le.getGruppe() != null ? le.getGruppe().getOriginalId() : null))//
-                .addColumn(Columns.CHECK)//
-                .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Vorname").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Straße").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("PLZ").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Ort").build())//
-                .addColumn(ColumnBuilder.get(Date.class).add("Geburtsdatum").build());//
+    public static JTableBuilder<Leiter> leiter(Gruppe gruppe, Loader<Person> loaderPerson, Loader<Leiter> allLeiter) {
+        return getWithCopy(Person.class, Leiter.class, loaderPerson, allLeiter,
+                (s, t) -> s.getId().equals(t.getOriginalId()))//
+                        .set((person, val, index) -> {
+                            if (index == 0) {
+                                person.setGruppe((boolean) val == true ? gruppe : null);
+                            } else if (index == 1) {
+                                person.setName((String) val);
+                            } else if (index == 2) {
+                                person.setVorname((String) val);
+                            } else if (index == 3) {
+                                person.setStrasse((String) val);
+                            } else if (index == 4) {
+                                person.setPlz((String) val);
+                            } else if (index == 5) {
+                                person.setOrt((String) val);
+                            } else if (index == 6) {
+                                person.setGebDat((Date) val);
+                            }
+                        })//
+                        .get((person, index) -> {
+                            if (index == 0) {
+                                return person.getGruppe() != null;
+                            } else if (index == 1) {
+                                return person.getName();
+                            } else if (index == 2) {
+                                return person.getVorname();
+                            } else if (index == 3) {
+                                return person.getStrasse();
+                            } else if (index == 4) {
+                                return person.getPlz();
+                            } else if (index == 5) {
+                                return person.getOrt();
+                            } else if (index == 6) {
+                                return person.getGebDat();
+                            }
+                            return null;
+                        })
+                        .save((le, cb) -> get().speichereLeiter(le.getId(), le.getOriginalId(), le.getGeschlecht(),
+                                le.getVorname(), le.getName(), le.getStrasse(), le.getPlz(), le.getOrt(),
+                                le.getGebDat(), le.getTelNr(), le.getEmail(), le.getHandy(), le.getTelNr(),
+                                le.getGruppe() != null ? le.getGruppe().getOriginalId() : null,
+                                gespeichertCallback -> Events.get().fireAktualisieren()))//
+                        .addColumn(Columns.CHECK)//
+                        .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("Vorname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("Straße").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("PLZ").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("Ort").build())//
+                        .addColumn(ColumnBuilder.get(Date.class).add("Geburtsdatum").build());//
 
     }
 
-    public static JTableBuilder<Teilnehmer> teilnehmer(Gruppe gruppe, Loader<Teilnehmer> loader) {
-        return JTableBuilder.get(Teilnehmer.class, () -> loader.get())//
-                .set((person, val, index) -> {
-                    if (index == 0) {
-                        person.setGruppe((boolean) val == true ? gruppe : null);
-                    } else if (index == 1) {
-                        person.setName((String) val);
-                    } else if (index == 2) {
-                        person.setVorname((String) val);
-                    } else if (index == 3) {
-                        person.setStrasse((String) val);
-                    } else if (index == 4) {
-                        person.setPlz((String) val);
-                    } else if (index == 5) {
-                        person.setOrt((String) val);
-                    } else if (index == 6) {
-                        person.setGebDat((Date) val);
-                    }
-                })//
-                .get((person, index) -> {
-                    if (index == 0) {
-                        return person.getGruppe() != null;
-                    } else if (index == 1) {
-                        return person.getName();
-                    } else if (index == 2) {
-                        return person.getVorname();
-                    } else if (index == 3) {
-                        return person.getStrasse();
-                    } else if (index == 4) {
-                        return person.getPlz();
-                    } else if (index == 5) {
-                        return person.getOrt();
-                    } else if (index == 6) {
-                        return person.getGebDat();
-                    }
-                    return null;
-                })
-                .save(te -> Client.get().speichereTeilnehmer(te.getId(), te.getOriginalId(), te.getGeschlecht(),
-                        te.getVorname(), te.getName(), te.getStrasse(), te.getPlz(), te.getOrt(), te.getGebDat(),
-                        te.getTelNr(), te.getEmail(), te.getHandy(), te.getTelNr(),
-                        te.getGruppe() != null ? te.getGruppe().getOriginalId() : null))//
-                .addColumn(Columns.CHECK)//
-                .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Vorname").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Straße").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("PLZ").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Ort").build())//
-                .addColumn(ColumnBuilder.get(Date.class).add("Geburtsdatum").build());//
+    public static JTableBuilder<Teilnehmer> teilnehmer(Gruppe gruppe, Loader<Person> loaderPerson,
+            Loader<Teilnehmer> allTeilnehmer) {
+        return getWithCopy(Person.class, Teilnehmer.class, loaderPerson, allTeilnehmer,
+                (s, t) -> s.getId().equals(t.getOriginalId()))//
+                        .set((person, val, index) -> {
+                            if (index == 0) {
+                                person.setGruppe((boolean) val == true ? gruppe : null);
+                            } else if (index == 1) {
+                                person.setName((String) val);
+                            } else if (index == 2) {
+                                person.setVorname((String) val);
+                            } else if (index == 3) {
+                                person.setStrasse((String) val);
+                            } else if (index == 4) {
+                                person.setPlz((String) val);
+                            } else if (index == 5) {
+                                person.setOrt((String) val);
+                            } else if (index == 6) {
+                                person.setGebDat((Date) val);
+                            }
+                        })//
+                        .get((person, index) -> {
+                            if (index == 0) {
+                                return person.getGruppe() != null;
+                            } else if (index == 1) {
+                                return person.getName();
+                            } else if (index == 2) {
+                                return person.getVorname();
+                            } else if (index == 3) {
+                                return person.getStrasse();
+                            } else if (index == 4) {
+                                return person.getPlz();
+                            } else if (index == 5) {
+                                return person.getOrt();
+                            } else if (index == 6) {
+                                return person.getGebDat();
+                            }
+                            return null;
+                        })
+                        .save((te, cb) -> get().speichereTeilnehmer(te.getId(), te.getOriginalId(), te.getGeschlecht(),
+                                te.getVorname(), te.getName(), te.getStrasse(), te.getPlz(), te.getOrt(),
+                                te.getGebDat(), te.getTelNr(), te.getEmail(), te.getHandy(), te.getTelNr(),
+                                te.getGruppe() != null ? te.getGruppe().getOriginalId() : null,
+                                gespeichertCallback -> Events.get().fireAktualisieren()))//
+                        .addColumn(Columns.CHECK)//
+                        .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("Vorname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("Straße").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("PLZ").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("Ort").build())//
+                        .addColumn(ColumnBuilder.get(Date.class).add("Geburtsdatum").build());//
     }
 
-    public static JTableBuilder<Programm> programm(Lager lager, Loader<Programm> loader) {
-        return JTableBuilder.get(Programm.class, () -> loader.get())//
+    public static JTableBuilder<Programm> programm(Lager lager) {
+        return JTableBuilder.get(Programm.class, asyncCallback -> get().getAllProgramm(lager.getId(), asyncCallback))//
                 .set((programm, val, index) -> {
                     if (index == 0) {
                         programm.setDatum((Date) val);
@@ -335,9 +363,10 @@ public class JTableBuilders {
                     }
                     return null;
                 })
-                .save(p -> Client.get().speichereProgramm(lager.getId(), p.getId(), p.getDatum(), p.getMorgen(),
-                        p.getMittag(), p.getAbend()))//
-                .delete(p -> Client.get().speichereProgramm(null, p.getId(), null, null, null, null))//
+                .save((p, cb) -> get().speichereProgramm(lager.getId(), p.getId(), p.getDatum(), p.getMorgen(),
+                        p.getMittag(), p.getAbend(), cb))//
+                // .delete((ps, cb) -> get().speichereProgramm(null, p.getId(),
+                // null, null, null, null))//
                 .addColumn(ColumnBuilder.get(Date.class).add("Datum").width(100).build())//
                 .addColumn(Columns.WOCHENTAG)//
                 .addColumn(ColumnBuilder.get(String.class).add("Morgen").multiline().build())//
@@ -345,8 +374,8 @@ public class JTableBuilders {
                 .addColumn(ColumnBuilder.get(String.class).add("Abend").multiline().build());//
     }
 
-    public static JTableBuilder<Essen> essen(Lager lager, Loader<Essen> loader) {
-        return JTableBuilder.get(Essen.class, () -> loader.get())//
+    public static JTableBuilder<Essen> essen(Lager lager) {
+        return JTableBuilder.get(Essen.class, asyncCallback -> get().getAllEssen(lager.getId(), asyncCallback))//
                 .set((essen, val, index) -> {
                     if (index == 0) {
                         essen.setDatum((Date) val);
@@ -372,9 +401,10 @@ public class JTableBuilders {
                     }
                     return null;
                 })
-                .save(e -> Client.get().speichereEssen(lager.getId(), e.getId(), e.getDatum(), e.getMorgen(),
-                        e.getMittag(), e.getAbend()))//
-                .delete(e -> Client.get().speichereEssen(null, e.getId(), null, null, null, null))//
+                .save((e, cb) -> get().speichereEssen(lager.getId(), e.getId(), e.getDatum(), e.getMorgen(),
+                        e.getMittag(), e.getAbend(), cb))//
+                // .delete(e -> get().speichereEssen(null, e.getId(), null,
+                // null, null, null))//
                 .addColumn(ColumnBuilder.get(Date.class).add("Datum").width(100).build())//
                 .addColumn(Columns.WOCHENTAG)//
                 .addColumn(ColumnBuilder.get(String.class).add("Morgen").multiline().build())//
@@ -388,8 +418,10 @@ public class JTableBuilders {
         return calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.GERMAN);
     }
 
-    public static JTableBuilder<Legenda> legenda(Lagerort lagerort, Loader<Legenda> loader) {
-        return JTableBuilder.get(Legenda.class, () -> loader.get())//
+    public static JTableBuilder<Legenda> legenda(Lagerort lagerort) {
+        return JTableBuilder
+                .get(Legenda.class,
+                        asyncCallback -> get().getAllLegendaFromLagerort(lagerort.getOriginalId(), asyncCallback))//
                 .set((person, val, index) -> {
                     if (index == 0) {
                         person.setLegendaTyp((Legendatyp) val);
@@ -445,16 +477,15 @@ public class JTableBuilders {
                     }
                     return null;
                 })
-                .save(lg -> Client.get().speichereLegenda(lg.getId(), lagerort.getId(), lg.getName(), lg.getVorname(),
+                .save((lg, cb) -> get().speichereLegenda(lg.getId(), lagerort.getId(), lg.getName(), lg.getVorname(),
                         lg.getFirma(), lg.getStrasse(), lg.getPlz(), lg.getOrt(), lg.getLegendaTyp().getId(),
                         lg.getAnrede().getId(), lg.getStrasse(), lg.getFax(), lg.getHandy(), lg.getEmail(),
-                        lg.getBemerkung()))//
+                        lg.getBemerkung(), cb))//
                 .addColumn(ColumnBuilder.get(Legendatyp.class)
-                        .add(JComboBoxBuilder.get(Legendatyp.class, () -> Client.get().getAllLegendatyp()).build())
-                        .add("Typ").desc().build())//
+                        .add(JComboBoxBuilder.get(Legendatyp.class, get()::getAllLegendatyp).build()).add("Typ").desc()
+                        .build())//
                 .addColumn(ColumnBuilder.get(Anrede.class)
-                        .add(JComboBoxBuilder.get(Anrede.class, () -> Client.get().getAllAnrede()).build())
-                        .add("Anrede").build())//
+                        .add(JComboBoxBuilder.get(Anrede.class, get()::getAllAnrede).build()).add("Anrede").build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Firma").build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Vorname").build())//
@@ -467,52 +498,81 @@ public class JTableBuilders {
                 .addColumn(ColumnBuilder.get(String.class).multiline().add("Bemerkung").build());//
     }
 
-    public static JTableBuilder<Lagerinfo> lagerinfo(Loader<Lagerinfo> loader) {
-        return JTableBuilder.get(Lagerinfo.class, () -> loader.get())//
-                .set((li, val, index) -> {
-                    if (index == 0) {
-                        li.setChecked((boolean) val);
-                    } else if (index == 1) {
-                        li.setName((String) val);
-                    } else if (index == 2) {
-                        li.setVorname((String) val);
-                    } else if (index == 3) {
-                        li.setStrasse((String) val);
-                    } else if (index == 4) {
-                        li.setPlz((String) val);
-                    } else if (index == 5) {
-                        li.setOrt((String) val);
-                    } else if (index == 6) {
-                        li.setGebDat((Date) val);
+    public static JTableBuilder<Lagerinfo> lagerinfo(Loader<Person> loaderPerson, Loader<Lagerinfo> allLagerinfo) {
+        return getWithCopy(Person.class, Lagerinfo.class, loaderPerson, allLagerinfo,
+                (s, t) -> s.getId().equals(t.getOriginalId()))//
+                        .set((li, val, index) -> {
+                            if (index == 0) {
+                                li.setChecked((boolean) val);
+                            } else if (index == 1) {
+                                li.setName((String) val);
+                            } else if (index == 2) {
+                                li.setVorname((String) val);
+                            } else if (index == 3) {
+                                li.setStrasse((String) val);
+                            } else if (index == 4) {
+                                li.setPlz((String) val);
+                            } else if (index == 5) {
+                                li.setOrt((String) val);
+                            } else if (index == 6) {
+                                li.setGebDat((Date) val);
+                            }
+                        })//
+                        .get((li, index) -> {
+                            if (index == 0) {
+                                return li.isChecked();
+                            } else if (index == 1) {
+                                return li.getName();
+                            } else if (index == 2) {
+                                return li.getVorname();
+                            } else if (index == 3) {
+                                return li.getStrasse();
+                            } else if (index == 4) {
+                                return li.getPlz();
+                            } else if (index == 5) {
+                                return li.getOrt();
+                            } else if (index == 6) {
+                                return li.getGebDat();
+                            }
+                            return null;
+                        })
+                        .save((li, cb) -> get().speichereLagerinfo(li.getId(), li.getOriginalId(), li.getGeschlecht(),
+                                li.getVorname(), li.getName(), li.getStrasse(), li.getPlz(), li.getOrt(),
+                                li.getGebDat(), li.getTelNr(), li.getEmail(), li.getHandy(), li.getTelNr(),
+                                li.isChecked(), cb))
+                        .addColumn(Columns.CHECK)//
+                        .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("Vorname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("Straße").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("PLZ").build())//
+                        .addColumn(ColumnBuilder.get(String.class).add("Ort").build())//
+                        .addColumn(ColumnBuilder.get(Date.class).add("Geburtsdatum").build());// ;
+    }
+
+    @FunctionalInterface
+    private static interface Comparator<S, T> {
+        boolean isEqual(S s, T t);
+    }
+
+    private static <S, T> JTableBuilder<T> getWithCopy(Class<S> sClass, Class<T> tClass, Loader<S> sourceLoader,
+            Loader<T> targetLoader, Comparator<S, T> comparator) {
+        return JTableBuilder.get(tClass, asyncCallback -> {
+            sourceLoader.get(allSource -> targetLoader.get(allTarget -> {
+                List<T> result = allSource.stream().map(s -> {
+                    for (T t : allTarget) {
+                        if (comparator.isEqual(s, t)) {
+                            return t;
+                        }
                     }
-                })//
-                .get((li, index) -> {
-                    if (index == 0) {
-                        return li.isChecked();
-                    } else if (index == 1) {
-                        return li.getName();
-                    } else if (index == 2) {
-                        return li.getVorname();
-                    } else if (index == 3) {
-                        return li.getStrasse();
-                    } else if (index == 4) {
-                        return li.getPlz();
-                    } else if (index == 5) {
-                        return li.getOrt();
-                    } else if (index == 6) {
-                        return li.getGebDat();
+                    try {
+                        return tClass.getDeclaredConstructor(sClass).newInstance(s);
+                    } catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+                            | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+                        throw new RuntimeException(e.getMessage(), e);
                     }
-                    return null;
-                })
-                .save(li -> Client.get().speichereLagerinfo(li.getId(), li.getOriginalId(), li.getGeschlecht(),
-                        li.getVorname(), li.getName(), li.getStrasse(), li.getPlz(), li.getOrt(), li.getGebDat(),
-                        li.getTelNr(), li.getEmail(), li.getHandy(), li.getTelNr(), li.isChecked()))
-                .addColumn(Columns.CHECK)//
-                .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Vorname").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Straße").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("PLZ").build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Ort").build())//
-                .addColumn(ColumnBuilder.get(Date.class).add("Geburtsdatum").build());// ;
+                }).collect(toList());
+                asyncCallback.get(result);
+            }));
+        });
     }
 }

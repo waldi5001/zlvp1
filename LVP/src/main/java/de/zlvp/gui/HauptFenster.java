@@ -7,15 +7,12 @@ import static javax.swing.tree.TreeSelectionModel.SINGLE_TREE_SELECTION;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.beans.PropertyVetoException;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
-import javax.swing.SwingWorker;
 import javax.swing.ToolTipManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -66,6 +63,8 @@ public class HauptFenster extends InternalFrame {
 
         initialize();
         setUp();
+        // wird erst nach dem aktualisieren sichtbar
+        setVisible(false);
         setResizable(true);
         setIconifiable(true);
         setMaximizable(true);
@@ -151,7 +150,6 @@ public class HauptFenster extends InternalFrame {
     private JTree getJTree() {
         if (jTree == null) {
             jTree = new JTree();
-            jTree.setModel(new DefaultTreeModel(null));
             jTree.getSelectionModel().setSelectionMode(SINGLE_TREE_SELECTION);
             jTree.setComponentPopupMenu(new TreePopup());
             jTree.setCellRenderer(new DefaultTreeCellRenderer() {
@@ -196,24 +194,7 @@ public class HauptFenster extends InternalFrame {
 
                     if (anzahlElemente == 2) {
                         Events.get().fireLagerSelected((Lager) userObject);
-
-                        SwingWorker<TPLager, Void> sw = new SwingWorker<TPLager, Void>() {
-                            @Override
-                            protected TPLager doInBackground() throws Exception {
-                                return new TPLager((Lager) userObject);
-                            }
-
-                            @Override
-                            protected void done() {
-                                try {
-                                    getJSplitPane().setRightComponent(get());
-                                } catch (InterruptedException | ExecutionException e) {
-                                    throw new RuntimeException(e.getMessage(), e);
-                                }
-                            }
-                        };
-                        sw.execute();
-
+                        getJSplitPane().setRightComponent(new TPLager((Lager) userObject));
                     }
 
                     if (anzahlElemente == 3) {
@@ -249,6 +230,18 @@ public class HauptFenster extends InternalFrame {
         return jTree;
     }
 
+    private void aktualisieren() {
+        Client.get().getJahr(jahrId, result -> {
+            TreePath selectionPath = getJTree().getSelectionModel().getSelectionPath();
+            getJTree().setModel(new DefaultTreeModel(new TreeData().getTreeModel(result)));
+            expandNodes(getJTree(), 2);
+            TreePath newSelectionPath = findNewSelectionPath(selectionPath);
+            getJTree().setSelectionPath(newSelectionPath);
+            getJSplitPane().setDividerLocation(0.15);
+            setVisible(true);
+        });
+    }
+
     private void expandNodes(JTree tree, int level) {
         DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
@@ -260,33 +253,6 @@ public class HauptFenster extends InternalFrame {
             }
             currentNode = currentNode.getNextNode();
         } while (currentNode != null);
-    }
-
-    private void aktualisieren() {
-        SwingWorker<Jahr, List<Jahr>> worker = new SwingWorker<Jahr, List<Jahr>>() {
-            @Override
-            protected Jahr doInBackground() throws Exception {
-                return Client.get().getJahr(jahrId);
-            }
-
-            @Override
-            protected void done() {
-                try {
-                    TreePath selectionPath = getJTree().getSelectionModel().getSelectionPath();
-                    getJTree().setModel(new DefaultTreeModel(new TreeData().getTreeModel(get())));
-                    TreePath newSelectionPath = findNewSelectionPath(selectionPath);
-                    getJTree().setSelectionPath(newSelectionPath);
-                    if (selectionPath == null) {
-                        expandNodes(getJTree(), 2);
-                    }
-                    getJSplitPane().setDividerLocation(0.15);
-                } catch (InterruptedException | ExecutionException e) {
-                    throw new RuntimeException(e.getMessage(), e);
-                }
-            }
-
-        };
-        worker.execute();
     }
 
     private TreePath findNewSelectionPath(TreePath oldSelectionPath) {

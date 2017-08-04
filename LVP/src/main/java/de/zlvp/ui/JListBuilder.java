@@ -8,6 +8,8 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 
+import de.zlvp.controller.AsyncCallback;
+
 public class JListBuilder<E> {
 
     private JList<E> jlist;
@@ -57,7 +59,7 @@ public class JListBuilder<E> {
 
     @FunctionalInterface
     public static interface Loader<T> {
-        List<T> get();
+        void get(AsyncCallback<List<T>> asyncCallback);
     }
 
     @FunctionalInterface
@@ -68,8 +70,10 @@ public class JListBuilder<E> {
     public void refresh() {
         DefaultListModel<E> listModel = (DefaultListModel<E>) jlist.getModel();
         listModel.clear();
-        for (E e : loader.get()) {
-            listModel.addElement(e);
-        }
+        loader.get(asyncCallback -> {
+            for (E e : asyncCallback) {
+                listModel.addElement(e);
+            }
+        });
     }
 }

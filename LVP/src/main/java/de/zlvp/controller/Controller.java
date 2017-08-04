@@ -29,135 +29,143 @@ import de.zlvp.entity.Zeltverleih;
 
 public interface Controller {
 
-    List<Person> findPerson(String vorname, String nachname);
+    List<Person> findPerson(String vorname, String nachname, AsyncCallback<List<Person>> callback);
 
-    List<Anrede> getAllAnrede();
+    List<Anrede> getAllAnrede(AsyncCallback<List<Anrede>> callback);
 
-    List<Essen> getAllEssen(int lagerId);
+    List<Essen> getAllEssen(int lagerId, AsyncCallback<List<Essen>> callback);
 
-    List<Gruppe> getAllGruppen();
+    List<Gruppe> getAllGruppen(AsyncCallback<List<Gruppe>> callback);
 
-    List<Gruppe> getAllGruppenFromLager(int lagerId);
+    List<Gruppe> getAllGruppenFromLager(int lagerId, AsyncCallback<List<Gruppe>> callback);
 
-    List<Jahr> getAllJahr();
+    List<Jahr> getAllJahr(AsyncCallback<List<Jahr>> callback);
 
-    List<Lager> getAllLager(int jahrId);
+    List<Lager> getAllLager(int jahrId, AsyncCallback<List<Lager>> callback);
 
-    List<Lagerinfo> getAllLagerinfo();
+    List<Lagerinfo> getAllLagerinfo(AsyncCallback<List<Lagerinfo>> callback);
 
-    List<Lagerort> getAllLagerort();
+    List<Lagerort> getAllLagerort(AsyncCallback<List<Lagerort>> callback);
 
-    List<Legenda> getAllLegendaFromLagerort(int lagerortId);
+    List<Legenda> getAllLegendaFromLagerort(int lagerortId, AsyncCallback<List<Legenda>> callback);
 
-    List<Legendatyp> getAllLegendatyp();
+    List<Legendatyp> getAllLegendatyp(AsyncCallback<List<Legendatyp>> callback);
 
-    List<Leiter> getAllLeiter(int gruppeId);
+    List<Leiter> getAllLeiter(int gruppeId, AsyncCallback<List<Leiter>> callback);
 
-    List<Materialwart> getAllMaterialwart(int lagerId);
+    List<Materialwart> getAllMaterialwart(int lagerId, AsyncCallback<List<Materialwart>> callback);
 
-    List<Person> getAllPerson();
+    List<Person> getAllPersons(AsyncCallback<List<Person>> callback);
 
-    List<Programm> getAllProgramm(int lagerId);
+    List<Programm> getAllProgramm(int lagerId, AsyncCallback<List<Programm>> callback);
 
-    List<Schaden> getAllSchaeden(Integer id);
+    List<Schaden> getAllSchaeden(Integer id, AsyncCallback<List<Schaden>> callback);
 
-    List<Stab> getAllStab(int lagerId);
+    List<Stab> getAllStab(int lagerId, AsyncCallback<List<Stab>> callback);
 
-    List<Teilnehmer> getAllTeilnehmer(int gruppeId);
+    List<Teilnehmer> getAllTeilnehmer(int gruppeId, AsyncCallback<List<Teilnehmer>> callback);
 
-    List<Gruppe> getAllUnassignedGruppen();
+    List<Gruppe> getAllUnassignedGruppen(AsyncCallback<List<Gruppe>> callback);
 
-    List<Zelt> getAllZelt();
+    List<Zelt> getAllZelt(AsyncCallback<List<Zelt>> callback);
 
-    List<Zeltdetail> getAllZeltdetail(int zeltId);
+    List<Zeltdetail> getAllZeltdetail(int zeltId, AsyncCallback<List<Zeltdetail>> callback);
 
-    List<ZeltdetailBezeichnung> getAllZeltdetailBezeichnung();
+    List<ZeltdetailBezeichnung> getAllZeltdetailBezeichnung(AsyncCallback<List<ZeltdetailBezeichnung>> callback);
 
-    List<Zelt> getAllZeltFromGruppe(int gruppeId);
+    List<Zelt> getAllZeltFromGruppe(int gruppeId, AsyncCallback<List<Zelt>> callback);
 
-    List<Zelt> getAllZeltFromLager(int lagerId);
+    List<Zelt> getAllZeltFromLager(int lagerId, AsyncCallback<List<Zelt>> callback);
 
-    List<Zeltverleih> getAllZeltverleih(Integer id);
+    List<Zeltverleih> getAllZeltverleih(Integer id, AsyncCallback<List<Zeltverleih>> callback);
 
-    Jahr getJahr(int jahrId);
+    Jahr getJahr(int jahrId, AsyncCallback<Jahr> callback);
 
-    void loescheSchaden(Integer id);
+    void loescheSchaden(Integer id, AsyncCallback<Void> callback);
 
-    void loescheZeltdetail(int id);
+    void loescheZeltdetail(int id, AsyncCallback<Void> callback);
 
-    void loescheZeltdetailBezeichnung(int id);
+    void loescheZeltdetailBezeichnung(int id, AsyncCallback<Void> callback);
 
-    void loescheZeltverleih(int id);
+    void loescheZeltverleih(int id, AsyncCallback<Void> callback);
 
-    void speichereGruppe(Integer id, Integer gruppeId, Integer lagerId, String name, String schlachtruf);
+    void speichereGruppe(Integer id, Integer gruppeId, Integer lagerId, String name, String schlachtruf,
+            AsyncCallback<Void> callback);
 
-    void speichereLager(Integer id, String name, String thema, Date start, Date stop, int jahrId, int lagerortId);
+    void speichereLager(Integer id, String name, String thema, Date start, Date stop, int jahrId, int lagerortId,
+            AsyncCallback<Void> callback);
 
-    void speichereLagerort(String lagerort);
+    void speichereLagerort(String lagerort, AsyncCallback<Void> callback);
 
     void speichereLegenda(Integer id, int lagerortId, String nachname, String vorname, String firma, String strasse,
             String plz, String ort, Integer legendatypId, Integer anredeId, String tel, String fax, String handy,
-            String email, String bemerkung);
+            String email, String bemerkung, AsyncCallback<Void> callback);
 
     void speichereLeiter(Integer id, int personId, Geschlecht geschlecht, String vorname, String name, String strasse,
             String plz, String ort, Date gebDat, String telNr, String email, String handy, String telNr2,
-            Integer gruppeId);
+            Integer gruppeId, AsyncCallback<Void> callback);
 
     void speichereMaterialwart(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
             String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
-            String nottel, Integer lagerId);
+            String nottel, Integer lagerId, AsyncCallback<Void> callback);
 
     void speicherePerson(Integer id, Geschlecht geschlecht, String vorname, String nachname, String strasse, String plz,
-            String ort, Date gebtag, String telnr, String email, String handy, String nottel);
+            String ort, Date gebtag, String telnr, String email, String handy, String nottel,
+            AsyncCallback<Void> callback);
 
-    void speichereSchaden(Integer id, int zeltId, Date datum, String schaden);
+    void speichereSchaden(Integer id, int zeltId, Date datum, String schaden, AsyncCallback<Void> callback);
 
     void speichereStab(Integer id, int personId, Geschlecht geschlecht, String vorname, String nachname, String strasse,
             String plz, String ort, Date gebtag, String telnr, String email, String handy, String nottel,
-            Funktion funktion, int lagerId);
+            Funktion funktion, int lagerId, AsyncCallback<Void> callback);
 
     void speichereTeilnehmer(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
             String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
-            String telNr2, Integer gruppeId);
+            String telNr2, Integer gruppeId, AsyncCallback<Void> callback);
 
-    void speichereZelt(Integer zeltId, String bezeichnung, Date angeschafft, double preis);
+    void speichereZelt(Integer zeltId, String bezeichnung, Date angeschafft, double preis,
+            AsyncCallback<Void> callback);
 
-    void speichereZeltdetail(Integer id, int zeltId, int anzahl, int bezeichnung, String schluessel);
+    void speichereZeltdetail(Integer id, int zeltId, int anzahl, int bezeichnung, String schluessel,
+            AsyncCallback<Void> callback);
 
-    void speichereZeltDetailBezeichnung(String detailBezeichnung);
+    void speichereZeltDetailBezeichnung(String detailBezeichnung, AsyncCallback<Void> callback);
 
-    void speichereZeltverleih(Integer id, int zeltId, Date datum, String person, String bemerkung);
+    void speichereZeltverleih(Integer id, int zeltId, Date datum, String person, String bemerkung,
+            AsyncCallback<Void> callback);
 
-    void speichereZeltZuGruppe(Integer id, int zeltId, Integer gruppeId);
+    void speichereZeltZuGruppe(Integer id, int zeltId, Integer gruppeId, AsyncCallback<Void> callback);
 
-    void speichereZeltZuLager(Integer id, int zeltId, Integer lagerId);
+    void speichereZeltZuLager(Integer id, int zeltId, Integer lagerId, AsyncCallback<Void> callback);
 
-    void aenderePasswort(String user, char[] neuesPasswort);
+    void aenderePasswort(String user, char[] neuesPasswort, AsyncCallback<Void> callback);
 
-    void speichereProgramm(Integer lagerId, Integer id, Date datum, String morgen, String mittag, String abend);
+    void speichereProgramm(Integer lagerId, Integer id, Date datum, String morgen, String mittag, String abend,
+            AsyncCallback<Void> callback);
 
-    void speichereEssen(Integer lagerId, Integer id, Date datum, String morgen, String mittag, String abend);
+    void speichereEssen(Integer lagerId, Integer id, Date datum, String morgen, String mittag, String abend,
+            AsyncCallback<Void> callback);
 
     void speichereLagerinfo(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
             String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
-            String telNr2, boolean delete);
+            String telNr2, boolean delete, AsyncCallback<Void> callback);
 
-    void verschiebeGruppe(int gruppenId, int lagerId);
+    void verschiebeGruppe(int gruppenId, int lagerId, AsyncCallback<Void> callback);
 
-    void verschiebeLeiter(int id, int gruppeId);
+    void verschiebeLeiter(int id, int gruppeId, AsyncCallback<Void> callback);
 
-    void verschiebeTeilnehmer(int id, int gruppeId);
+    void verschiebeTeilnehmer(int id, int gruppeId, AsyncCallback<Void> callback);
 
-    List<User> getAllUsers();
+    List<User> getAllUsers(AsyncCallback<List<User>> callback);
 
-    List<String> getAllGroups();
+    List<String> getAllGroups(AsyncCallback<List<String>> callback);
 
-    void createUser(String username, char[] cs);
+    void createUser(String username, char[] cs, AsyncCallback<Void> callback);
 
-    void grantUser(String user, String group);
+    void grantUser(String user, String group, AsyncCallback<Void> callback);
 
-    void revokeUser(String user, String group);
+    void revokeUser(String user, String group, AsyncCallback<Void> callback);
 
-    void dropUser(String username);
+    void dropUser(String username, AsyncCallback<Void> callback);
 
 }

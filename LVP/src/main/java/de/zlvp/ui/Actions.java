@@ -1,11 +1,12 @@
 package de.zlvp.ui;
 
+import static de.zlvp.Client.get;
+
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
-import de.zlvp.Client;
 import de.zlvp.Events;
 import de.zlvp.entity.Jahr;
 import de.zlvp.entity.Lager;
@@ -68,8 +69,8 @@ public class Actions {
         public void actionPerformed(ActionEvent e) {
             String gruppenname = JOptionPane.showInputDialog("Neuen Gruppenname eingeben");
             if (gruppenname != null && !gruppenname.isEmpty()) {
-                Client.get().speichereGruppe(null, null, lager.getId(), gruppenname, null);
-                Events.get().fireAktualisieren();
+                get().speichereGruppe(null, null, lager.getId(), gruppenname, null,
+                        asyncCallback -> Events.get().fireAktualisieren());
             }
         }
 

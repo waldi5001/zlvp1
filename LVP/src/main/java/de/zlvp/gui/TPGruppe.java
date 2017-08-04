@@ -1,16 +1,14 @@
 package de.zlvp.gui;
 
-import static java.util.stream.Collectors.toList;
+import static de.zlvp.Client.get;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -19,12 +17,10 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import de.javasoft.swing.JYTableScrollPane;
-import de.zlvp.Client;
 import de.zlvp.Events;
 import de.zlvp.entity.Gruppe;
 import de.zlvp.entity.Lager;
 import de.zlvp.entity.Leiter;
-import de.zlvp.entity.Person;
 import de.zlvp.entity.Teilnehmer;
 import de.zlvp.entity.Zelt;
 import de.zlvp.ui.JTableBuilder;
@@ -76,63 +72,30 @@ public class TPGruppe extends JTabbedPane {
 
     private final Gruppe gruppe;
 
-    private final JTableBuilder<Leiter> tableBuilderLeiter;
-    private final JTableBuilder<Teilnehmer> tableBuilderTeilnehmer;
-    private final JTableBuilder<Zelt> tableBuilderZelt;
+    private JTableBuilder<Leiter> tableBuilderLeiter;
+    private JTableBuilder<Teilnehmer> tableBuilderTeilnehmer;
+    private JTableBuilder<Zelt> tableBuilderZelt;
 
     public TPGruppe(Lager lager, Gruppe gruppe) {
         super();
         this.gruppe = gruppe;
         this.gruppe.setLager(lager);
-
-        List<Person> allPerson = Client.get().getAllPerson();
-        List<Zelt> allZelt = Client.get().getAllZeltFromLager(lager.getId());
-
-        tableBuilderTeilnehmer = JTableBuilders.teilnehmer(gruppe, () -> {
-            List<Teilnehmer> allFromGruppe = Client.get().getAllTeilnehmer(gruppe.getOriginalId());
-            return allPerson.stream().map(p -> {
-                for (Teilnehmer s : allFromGruppe) {
-                    if (s.getOriginalId().equals(p.getId())) {
-                        return s;
-                    }
-                }
-                return new Teilnehmer(p);
-            }).collect(toList());
-        });
-
-        tableBuilderLeiter = JTableBuilders.leiter(gruppe, () -> {
-            List<Leiter> allFromGruppe = Client.get().getAllLeiter(gruppe.getOriginalId());
-            return allPerson.stream().map(p -> {
-                for (Leiter l : allFromGruppe) {
-                    if (l.getOriginalId().equals(p.getId())) {
-                        return l;
-                    }
-                }
-                return new Leiter(p);
-            }).collect(toList());
-        });
-
-        tableBuilderZelt = JTableBuilders.zelt(gruppe, () -> {
-            List<Zelt> allFromGruppe = Client.get().getAllZeltFromGruppe(gruppe.getOriginalId());
-            return allZelt.stream().map(z -> {
-                for (Zelt zeltFromGruppe : allFromGruppe) {
-                    if (zeltFromGruppe.getBezeichnung().equals(z.getBezeichnung())) {
-                        return zeltFromGruppe;
-                    }
-                }
-                return new Zelt(z);
-            }).collect(toList());
-        });
-
+        tableBuilderTeilnehmer = JTableBuilders.teilnehmer(gruppe, get()::getAllPersons,
+                allTeilnehmer -> get().getAllTeilnehmer(gruppe.getOriginalId(), allTeilnehmer));
+        tableBuilderLeiter = JTableBuilders.leiter(gruppe, get()::getAllPersons,
+                allLeiter -> get().getAllLeiter(gruppe.getOriginalId(), allLeiter));
+        tableBuilderZelt = JTableBuilders.zelt(gruppe,
+                allZelt -> get().getAllZeltFromLager(gruppe.getLager().getId(), allZelt),
+                allZeltFromGruppe -> get().getAllZeltFromGruppe(gruppe.getOriginalId(), allZeltFromGruppe));
         initialize();
     }
 
     private void initialize() {
         this.setSize(562, 378);
-        this.addTab("Daten", null, getJPanelDaten());
-        this.addTab("Leiter", null, getJPanelLeiter());
-        this.addTab("Teilnehmer", null, getJPanelTeilnehmer());
-        this.addTab("Zelt(e) wählen", null, getJPanelZelt());
+        this.addTab("Daten", getJPanelDaten());
+        this.addTab("Leiter", getJPanelLeiter());
+        this.addTab("Teilnehmer", getJPanelTeilnehmer());
+        this.addTab("Zelt(e) wählen", getJPanelZelt());
     }
 
     private JPanel getJPanelLeiter() {
@@ -210,9 +173,9 @@ public class TPGruppe extends JTabbedPane {
             jButtonOKDaten = new JButton();
             jButtonOKDaten.setText("OK");
             jButtonOKDaten.addActionListener(e -> {
-                Client.get().speichereGruppe(gruppe.getId(), gruppe.getOriginalId(), gruppe.getLager().getId(),
-                        getJTextFieldName().getText(), getJTextAreaSchlachtruf().getText());
-                Events.get().fireAktualisieren();
+                get().speichereGruppe(gruppe.getId(), gruppe.getOriginalId(), gruppe.getLager().getId(),
+                        getJTextFieldName().getText(), getJTextAreaSchlachtruf().getText(),
+                        asyncCallback -> Events.get().fireAktualisieren());
             });
         }
         return jButtonOKDaten;
@@ -224,7 +187,6 @@ public class TPGruppe extends JTabbedPane {
             jButtonOKLeiter.setText("OK");
             jButtonOKLeiter.addActionListener(e -> {
                 tableBuilderLeiter.save();
-                Events.get().fireAktualisieren();
             });
         }
         return jButtonOKLeiter;
@@ -234,17 +196,6 @@ public class TPGruppe extends JTabbedPane {
         if (jTextFieldName == null) {
             jTextFieldName = new JTextField();
             jTextFieldName.setText(gruppe.getName());
-            jTextFieldName.addFocusListener(new java.awt.event.FocusAdapter() {
-                @Override
-                public void focusLost(java.awt.event.FocusEvent e) {
-                    if (getJTextFieldName().getText().contains(",")) {
-                        JOptionPane.showMessageDialog(null, "Keine Kommas im Gruppenname");
-                        getJButtonOKDaten().setEnabled(false);
-                    } else {
-                        getJButtonOKDaten().setEnabled(true);
-                    }
-                }
-            });
         }
         return jTextFieldName;
     }
@@ -293,10 +244,7 @@ public class TPGruppe extends JTabbedPane {
         if (jButtonOKTeilnehmer == null) {
             jButtonOKTeilnehmer = new JButton();
             jButtonOKTeilnehmer.setText("OK");
-            jButtonOKTeilnehmer.addActionListener(e -> {
-                tableBuilderTeilnehmer.save();
-                Events.get().fireAktualisieren();
-            });
+            jButtonOKTeilnehmer.addActionListener(e -> tableBuilderTeilnehmer.save());
         }
         return jButtonOKTeilnehmer;
     }

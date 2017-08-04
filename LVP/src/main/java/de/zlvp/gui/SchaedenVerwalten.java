@@ -1,5 +1,7 @@
 package de.zlvp.gui;
 
+import static de.zlvp.Client.get;
+
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -16,7 +18,6 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.text.DateFormatter;
 
-import de.zlvp.Client;
 import de.zlvp.entity.Schaden;
 import de.zlvp.entity.Zelt;
 import de.zlvp.ui.InternalFrame;
@@ -61,7 +62,8 @@ public class SchaedenVerwalten extends InternalFrame {
 
     public SchaedenVerwalten(Zelt zelt) {
         this.zelt = zelt;
-        tableBuilder = JTableBuilder.get(Schaden.class, () -> Client.get().getAllSchaeden(zelt.getId()));
+        tableBuilder = JTableBuilder.get(Schaden.class,
+                asyncCallback -> get().getAllSchaeden(zelt.getId(), asyncCallback));
         initialize();
         setUp();
         getJButtonLoeschen().setEnabled(false);
@@ -132,10 +134,8 @@ public class SchaedenVerwalten extends InternalFrame {
                 String text = getJTextAreaSchaden().getText();
                 Date value = (Date) getJFormattedTextFieldDatum().getValue();
 
-                Client.get().speichereSchaden(null, zelt.getId(), value != null ? value : new Date(),
-                        text != null && !text.isEmpty() ? text : "Neuer Schaden");
-
-                load();
+                get().speichereSchaden(null, zelt.getId(), value != null ? value : new Date(),
+                        text != null && !text.isEmpty() ? text : "Neuer Schaden", asyncCallback -> load());
             });
         }
         return jButtonHinzufuegen;
@@ -149,12 +149,12 @@ public class SchaedenVerwalten extends InternalFrame {
                 Date datum = (Date) getJFormattedTextFieldDatum().getValue();
                 String schaden = getJTextAreaSchaden().getText();
 
-                Client.get().speichereSchaden(selectedSchaden.getId(), zelt.getId(), datum, schaden);
+                get().speichereSchaden(selectedSchaden.getId(), zelt.getId(), datum, schaden, asyncCallback -> {
+                    getJButtonLoeschen().setEnabled(false);
+                    getJButtonAendern().setEnabled(false);
+                    load();
+                });
 
-                getJButtonLoeschen().setEnabled(false);
-                getJButtonAendern().setEnabled(false);
-
-                load();
             });
         }
         return jButtonAendern;
@@ -268,12 +268,13 @@ public class SchaedenVerwalten extends InternalFrame {
             jButtonLoeschen = new JButton();
             jButtonLoeschen.setText("Löschen");
             jButtonLoeschen.addActionListener(e -> {
-                Client.get().loescheSchaden(selectedSchaden.getId());
-                getJTextAreaSchaden().setText(null);
-                getJFormattedTextFieldDatum().setValue(null);
-                getJButtonLoeschen().setEnabled(false);
-                getJButtonAendern().setEnabled(false);
-                load();
+                get().loescheSchaden(selectedSchaden.getId(), asyncCallback -> {
+                    getJTextAreaSchaden().setText(null);
+                    getJFormattedTextFieldDatum().setValue(null);
+                    getJButtonLoeschen().setEnabled(false);
+                    getJButtonAendern().setEnabled(false);
+                    load();
+                });
             });
         }
         return jButtonLoeschen;

@@ -1,5 +1,6 @@
 package de.zlvp.gui;
 
+import static de.zlvp.Client.get;
 import static java.util.Arrays.asList;
 
 import java.awt.BorderLayout;
@@ -18,7 +19,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.DateFormatter;
 
-import de.zlvp.Client;
 import de.zlvp.entity.Geschlecht;
 import de.zlvp.ui.InternalFrame;
 import de.zlvp.ui.JComboBoxBuilder;
@@ -74,8 +74,8 @@ public class PersonAnlegen extends InternalFrame {
     private final JComboBoxBuilder<Geschlecht> comboboxBuilderGeschlecht;
 
     public PersonAnlegen() {
-        comboboxBuilderGeschlecht = JComboBoxBuilder.get(Geschlecht.class, () -> asList(Geschlecht.values()))
-                .map(g -> g.getBezeichnung());
+        comboboxBuilderGeschlecht = JComboBoxBuilder.get(Geschlecht.class,
+                allGeschlecht -> allGeschlecht.get(asList(Geschlecht.values())));
         initialize();
         setUp();
     }
@@ -417,8 +417,9 @@ public class PersonAnlegen extends InternalFrame {
         String handy = getJTextFieldHandy().getText().trim();
         String nottel = getJTextFieldNottel().getText().trim();
 
-        Client.get().speicherePerson(null, geschlecht, vorname, nachname, strasse, plz, ort, gebtag, telnr, email,
-                handy, nottel);
+        get().speicherePerson(null, geschlecht, vorname, nachname, strasse, plz, ort, gebtag, telnr, email, handy,
+                nottel, cb -> {
+                });
     }
 
     private void clearFields() {

@@ -1,5 +1,7 @@
 package de.zlvp.gui;
 
+import static de.zlvp.Client.get;
+
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -16,7 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.DateFormatter;
 
-import de.zlvp.Client;
 import de.zlvp.entity.Lagerort;
 import de.zlvp.ui.InternalFrame;
 import de.zlvp.ui.JComboBoxBuilder;
@@ -58,8 +59,7 @@ public class LagerAnlegen extends InternalFrame {
 
     public LagerAnlegen(int jahrId) {
         this.jahrId = jahrId;
-        comboboxBuilderLagerort = JComboBoxBuilder.get(Lagerort.class, () -> Client.get().getAllLagerort())
-                .map(lo -> lo.getName());
+        comboboxBuilderLagerort = JComboBoxBuilder.get(Lagerort.class, get()::getAllLagerort);
         initialize();
         setUp();
     }
@@ -283,7 +283,8 @@ public class LagerAnlegen extends InternalFrame {
         String sThema = getJTextFieldMotto().getText().toString().trim();
         Lagerort lagerort = (Lagerort) getJComboBoxLagerort().getSelectedItem();
 
-        Client.get().speichereLager(null, sName, sThema, start, stop, jahrId, lagerort.getId());
+        get().speichereLager(null, sName, sThema, start, stop, jahrId, lagerort.getId(), cb -> {
+        });
     }
 
 }

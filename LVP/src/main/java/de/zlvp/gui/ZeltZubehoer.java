@@ -1,5 +1,7 @@
 package de.zlvp.gui;
 
+import static de.zlvp.Client.get;
+
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -15,7 +17,6 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 import de.javasoft.swing.JYTableScrollPane;
-import de.zlvp.Client;
 import de.zlvp.entity.Zelt;
 import de.zlvp.entity.Zeltdetail;
 import de.zlvp.entity.ZeltdetailBezeichnung;
@@ -68,15 +69,14 @@ public class ZeltZubehoer extends InternalFrame {
     public ZeltZubehoer(Zelt zelt) {
         this.zelt = zelt;
 
-        jComboBoxBezeichnungBuilder = JComboBoxBuilder
-                .get(ZeltdetailBezeichnung.class, () -> Client.get().getAllZeltdetailBezeichnung())//
-                .map(zdb -> zdb.getBezeichnung());
+        jComboBoxBezeichnungBuilder = JComboBoxBuilder.get(ZeltdetailBezeichnung.class,
+                get()::getAllZeltdetailBezeichnung);
 
-        jComboBoxBezeichnungTabelleBuilder = JComboBoxBuilder
-                .get(ZeltdetailBezeichnung.class, () -> Client.get().getAllZeltdetailBezeichnung())//
-                .map(zdb -> zdb.getBezeichnung());
+        jComboBoxBezeichnungTabelleBuilder = JComboBoxBuilder.get(ZeltdetailBezeichnung.class,
+                get()::getAllZeltdetailBezeichnung);
 
-        tableBuilder = JTableBuilder.get(Zeltdetail.class, () -> Client.get().getAllZeltdetail(zelt.getId()))
+        tableBuilder = JTableBuilder
+                .get(Zeltdetail.class, asyncCallback -> get().getAllZeltdetail(zelt.getId(), asyncCallback))
                 .set((zd, val, index) -> {
                     if (index == 0) {
                         zd.setBrzNummer((String) val);
@@ -96,8 +96,8 @@ public class ZeltZubehoer extends InternalFrame {
                     }
                     return null;
                 })
-                .save(zd -> Client.get().speichereZeltdetail(zd.getId(), zelt.getId(), zd.getAnzahl(),
-                        zd.getZeltdetailbezeichnung().getId(), zd.getBrzNummer()))//
+                .save((zd, cb) -> get().speichereZeltdetail(zd.getId(), zelt.getId(), zd.getAnzahl(),
+                        zd.getZeltdetailbezeichnung().getId(), zd.getBrzNummer(), cb))//
                 .addColumn(ColumnBuilder.get(String.class).add("Schlüssel").preferredWidth(80).build())
                 .addColumn(ColumnBuilder.get(Integer.class).add("Anzahl").preferredWidth(50).build())//
                 .addColumn(ColumnBuilder.get(ZeltdetailBezeichnung.class).add("Bezeichnung").preferredWidth(140)
@@ -195,9 +195,10 @@ public class ZeltZubehoer extends InternalFrame {
             jButtonBezHinz.addActionListener(e -> {
                 String detailBezeichnung = JOptionPane.showInputDialog(desktopPane, "Bezeichnung eingeben");
                 if (detailBezeichnung != null && !detailBezeichnung.isEmpty()) {
-                    Client.get().speichereZeltDetailBezeichnung(detailBezeichnung);
-                    jComboBoxBezeichnungBuilder.refresh();
-                    jComboBoxBezeichnungTabelleBuilder.refresh();
+                    get().speichereZeltDetailBezeichnung(detailBezeichnung, asyncCallback -> {
+                        jComboBoxBezeichnungBuilder.refresh();
+                        jComboBoxBezeichnungTabelleBuilder.refresh();
+                    });
                 }
             });
         }
@@ -295,8 +296,8 @@ public class ZeltZubehoer extends InternalFrame {
             jButtonLoeschen = new JButton();
             jButtonLoeschen.setText("Löschen");
             jButtonLoeschen.addActionListener(e -> {
-                Client.get().loescheZeltdetail(tableBuilder.getSelectedValue().getId());
-                tableBuilder.refresh();
+                get().loescheZeltdetail(tableBuilder.getSelectedValue().getId(),
+                        asyncCallback -> tableBuilder.refresh());
             });
         }
         return jButtonLoeschen;
@@ -312,8 +313,8 @@ public class ZeltZubehoer extends InternalFrame {
                         ? Integer.valueOf(getJTextFieldAnzahl().getText()) : 0;
                 ZeltdetailBezeichnung selectedItem = (ZeltdetailBezeichnung) getJComboBoxBezeichnung()
                         .getSelectedItem();
-                Client.get().speichereZeltdetail(null, zelt.getId(), anzahl, selectedItem.getId(), schluessel);
-                tableBuilder.refresh();
+                get().speichereZeltdetail(null, zelt.getId(), anzahl, selectedItem.getId(), schluessel,
+                        asyncCallback -> tableBuilder.refresh());
             });
         }
         return jButtonHinzufuegen;

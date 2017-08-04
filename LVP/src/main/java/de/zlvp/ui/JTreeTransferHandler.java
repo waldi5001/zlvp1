@@ -1,5 +1,6 @@
 package de.zlvp.ui;
 
+import static de.zlvp.Client.get;
 import static java.lang.String.format;
 import static javax.swing.JOptionPane.YES_OPTION;
 
@@ -15,7 +16,6 @@ import javax.swing.TransferHandler;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import de.zlvp.Client;
 import de.zlvp.Events;
 import de.zlvp.entity.Gruppe;
 import de.zlvp.entity.Lager;
@@ -118,13 +118,6 @@ public class JTreeTransferHandler extends TransferHandler {
     }
 
     @Override
-    protected void exportDone(JComponent source, Transferable data, int action) {
-        if (action == MOVE) {
-            Events.get().fireAktualisieren();
-        }
-    }
-
-    @Override
     public boolean importData(TransferHandler.TransferSupport support) {
         if (!canImport(support)) {
             return false;
@@ -149,7 +142,8 @@ public class JTreeTransferHandler extends TransferHandler {
                                     "Gruppe verschieben", JOptionPane.YES_NO_OPTION);
 
                     if (selectedOption == YES_OPTION) {
-                        Client.get().verschiebeGruppe(gruppe.getId(), ((Lager) dropUserObject).getId());
+                        get().verschiebeGruppe(gruppe.getId(), ((Lager) dropUserObject).getId(),
+                                c -> Events.get().fireAktualisieren());
                     }
                 } else if ((dropUserObject instanceof String
                         && ("Leiter".equals(dropUserObject) || "Teilnehmer".equals(dropUserObject)))
@@ -167,9 +161,11 @@ public class JTreeTransferHandler extends TransferHandler {
 
                     if (selectedOption == YES_OPTION) {
                         if ("Leiter".equals(dropUserObject) && person instanceof Leiter) {
-                            Client.get().verschiebeLeiter(person.getId(), gruppe.getOriginalId());
+                            get().verschiebeLeiter(person.getId(), gruppe.getOriginalId(),
+                                    c -> Events.get().fireAktualisieren());
                         } else if ("Teilnehmer".equals(dropUserObject) && person instanceof Teilnehmer) {
-                            Client.get().verschiebeTeilnehmer(person.getId(), gruppe.getOriginalId());
+                            get().verschiebeTeilnehmer(person.getId(), gruppe.getOriginalId(),
+                                    c -> Events.get().fireAktualisieren());
                         }
                     }
                 }
@@ -180,15 +176,15 @@ public class JTreeTransferHandler extends TransferHandler {
                     Gruppe gruppe = (Gruppe) ((DefaultMutableTreeNode) dropNode.getParent()).getUserObject();
 
                     if ("Leiter".equals(dropUserObject)) {
-                        Client.get().speichereLeiter(null, person.getId(), person.getGeschlecht(), person.getVorname(),
+                        get().speichereLeiter(null, person.getId(), person.getGeschlecht(), person.getVorname(),
                                 person.getName(), person.getStrasse(), person.getPlz(), person.getOrt(),
                                 person.getGebDat(), person.getTelNr(), person.getEmail(), person.getHandy(),
-                                person.getNottel(), gruppe.getOriginalId());
+                                person.getNottel(), gruppe.getOriginalId(), c -> Events.get().fireAktualisieren());
                     } else if ("Teilnehmer".equals(dropUserObject)) {
-                        Client.get().speichereTeilnehmer(null, person.getId(), person.getGeschlecht(),
-                                person.getVorname(), person.getName(), person.getStrasse(), person.getPlz(),
-                                person.getOrt(), person.getGebDat(), person.getTelNr(), person.getEmail(),
-                                person.getHandy(), person.getNottel(), gruppe.getOriginalId());
+                        get().speichereTeilnehmer(null, person.getId(), person.getGeschlecht(), person.getVorname(),
+                                person.getName(), person.getStrasse(), person.getPlz(), person.getOrt(),
+                                person.getGebDat(), person.getTelNr(), person.getEmail(), person.getHandy(),
+                                person.getNottel(), gruppe.getOriginalId(), c -> Events.get().fireAktualisieren());
                     }
                 }
             }

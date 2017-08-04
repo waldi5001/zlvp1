@@ -1,5 +1,6 @@
 package de.zlvp.gui;
 
+import static de.zlvp.Client.get;
 import static java.util.Arrays.asList;
 
 import java.awt.BorderLayout;
@@ -100,12 +101,12 @@ public class PersonSuchen extends InternalFrame {
     private JListBuilder<Person> jListBuilder;
 
     public PersonSuchen() {
-        comboboxBuilderGeschlecht = JComboBoxBuilder.get(Geschlecht.class, () -> asList(Geschlecht.values()))
+        comboboxBuilderGeschlecht = JComboBoxBuilder
+                .get(Geschlecht.class, allGeschlecht -> allGeschlecht.get(asList(Geschlecht.values())))
                 .map(g -> g.getBezeichnung());
 
-        jListBuilder = JListBuilder.get(Person.class, () -> {
-            return Client.get().findPerson(getJTextFieldVorname().getText(), getJTextFieldName().getText());
-        });
+        jListBuilder = JListBuilder.get(Person.class, asyncCallback -> get()
+                .findPerson(getJTextFieldVorname().getText(), getJTextFieldName().getText(), asyncCallback));
 
         initialize();
         setUp();
@@ -271,10 +272,9 @@ public class PersonSuchen extends InternalFrame {
                 String handy = getJTextFieldHandy().getText();
                 String nottel = getJTextFieldNottel().getText();
 
-                Client.get().speicherePerson(selectedPerson.getId(), geschlecht, vorname, name, strasse, plz, ort,
-                        gebtag, telnr, email, handy, nottel);
+                get().speicherePerson(selectedPerson.getId(), geschlecht, vorname, name, strasse, plz, ort, gebtag,
+                        telnr, email, handy, nottel, asyncCallback -> suchen());
 
-                suchen();
             });
         }
         return jButtonOK;

@@ -1,5 +1,7 @@
 package de.zlvp.gui;
 
+import static de.zlvp.Client.get;
+
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -129,8 +131,7 @@ public class ZeltDetailListen extends InternalFrame {
 
     private JList<Zelt> getJListZelt() {
         if (jListZelt == null) {
-            jListZelt = JListBuilder.get(Zelt.class, () -> Client.get().getAllZelt()).map(z -> z.getBezeichnung())
-                    .build();
+            jListZelt = JListBuilder.get(Zelt.class, get()::getAllZelt).build();
         }
         return jListZelt;
     }

@@ -161,7 +161,8 @@ public class PasswortAendern extends InternalFrame {
 
                 if (neu.equals(wdhlg)) {
                     Client.login(name, getJPasswordFieldPasswortAlt().getPassword());
-                    Client.get().aenderePasswort(name, getJPasswordFieldPasswortNeu().getPassword());
+                    Client.get().aenderePasswort(name, getJPasswordFieldPasswortNeu().getPassword(), cb -> {
+                    });
                 }
 
                 setVisible(false);

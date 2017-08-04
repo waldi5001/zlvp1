@@ -36,7 +36,7 @@ public class TreeData {
         return root;
     }
 
-    public static class UserObjectEqualMutableTreeNode extends DefaultMutableTreeNode {
+    private static class UserObjectEqualMutableTreeNode extends DefaultMutableTreeNode {
 
         private static final long serialVersionUID = 1L;
 

@@ -1,6 +1,6 @@
 package de.zlvp.gui;
 
-import static java.util.stream.Collectors.toList;
+import static de.zlvp.Client.get;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -12,7 +12,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import javax.swing.JButton;
@@ -35,7 +34,6 @@ import de.zlvp.entity.Gruppe;
 import de.zlvp.entity.Lager;
 import de.zlvp.entity.Lagerort;
 import de.zlvp.entity.Materialwart;
-import de.zlvp.entity.Person;
 import de.zlvp.entity.Programm;
 import de.zlvp.entity.Stab;
 import de.zlvp.entity.Zelt;
@@ -78,7 +76,6 @@ public class TPLager extends JTabbedPane {
     private JLabel jLabel6;
     private JLabel jLabel7;
     private JLabel jLabel8;
-    private HauptFenster hauptFenster;
     private JPanel jPanelMaterialwart;
     private JButton jButtonOKMaterialwart;
     private JScrollPane jScrollPaneMW;
@@ -93,14 +90,14 @@ public class TPLager extends JTabbedPane {
     private JPanel jPanelLegenda;
     private Lager lager;
 
-    private final JComboBoxBuilder<Lagerort> comboboxBuilderLagerort;
+    private JComboBoxBuilder<Lagerort> comboboxBuilderLagerort;
 
-    private final JTableBuilder<Stab> tableBuilderStab;
-    private final JTableBuilder<Materialwart> tableBuilderMaterialwart;
-    private final JTableBuilder<Zelt> tableBuilderZelt;
-    private final JTableBuilder<Gruppe> tableBuilderGruppe;
-    private final JTableBuilder<Programm> tableBuilderProgramm;
-    private final JTableBuilder<Essen> tableBuilderEssen;
+    private JTableBuilder<Stab> tableBuilderStab;
+    private JTableBuilder<Materialwart> tableBuilderMaterialwart;
+    private JTableBuilder<Zelt> tableBuilderZelt;
+    private JTableBuilder<Gruppe> tableBuilderGruppe;
+    private JTableBuilder<Programm> tableBuilderProgramm;
+    private JTableBuilder<Essen> tableBuilderEssen;
 
     private JCheckBox jCheckBoxAlleGruppenAnzeigen;
 
@@ -108,87 +105,17 @@ public class TPLager extends JTabbedPane {
     private JButton jButtonLoeschenEssen;
 
     public TPLager(Lager lager) {
-        super();
         this.lager = lager;
-
-        comboboxBuilderLagerort = JComboBoxBuilder.get(Lagerort.class, () -> Client.get().getAllLagerort())
-                .map(g -> g.getBezeichnung());
-
-        List<Person> allPersons = Client.get().getAllPerson();
-        List<Zelt> allZelt = Client.get().getAllZelt();
-
-        tableBuilderStab = JTableBuilders.stab(lager, () -> {
-            List<Stab> allFromLager = Client.get().getAllStab(lager.getId());
-            return allPersons.stream().map(p -> {
-                for (Stab s : allFromLager) {
-                    if (s.getOriginalId().equals(p.getId())) {
-                        return s;
-                    }
-                }
-                return new Stab(p);
-            }).collect(toList());
-        });
-
-        tableBuilderMaterialwart = JTableBuilders.materialwart(lager, () -> {
-            List<Materialwart> allFromLager = Client.get().getAllMaterialwart(lager.getId());
-            return allPersons.stream().map(p -> {
-                for (Materialwart mw : allFromLager) {
-                    if (mw.getOriginalId().equals(p.getId())) {
-                        return mw;
-                    }
-                }
-                return new Materialwart(p);
-            }).collect(toList());
-        });
-
-        tableBuilderZelt = JTableBuilders.zelt(lager, () -> {
-            List<Zelt> allFromLager = Client.get().getAllZeltFromLager(lager.getId());
-            return allZelt.stream().map(z -> {
-                for (Zelt zeltFromLager : allFromLager) {
-                    if (zeltFromLager.getOriginalId().equals(z.getOriginalId())) {
-                        return zeltFromLager;
-                    }
-                }
-                // Hier wird kopiert um nicht das Original Zelt aus der Liste zu
-                // Modifizieren
-                return new Zelt(z);
-            }).collect(toList());
-        });
-
-        tableBuilderGruppe = JTableBuilders.gruppe(lager, () -> {
-            boolean selected = getJCheckBoxAlleGruppenAnzeigen().isSelected();
-            List<Gruppe> allFromLager = Client.get().getAllGruppenFromLager(lager.getId());
-            if (selected) {
-                return Client.get().getAllGruppen().stream().map(g -> {
-                    for (Gruppe fromLager : allFromLager) {
-                        if (fromLager.getOriginalId().equals(g.getOriginalId())) {
-                            return fromLager;
-                        }
-                    }
-                    // Hier wird kopiert um nicht das Original aus der
-                    // Liste zu Modifizieren
-                    return new Gruppe(g);
-                }).collect(toList());
-            } else {
-                return Client.get().getAllUnassignedGruppen().stream().map(g -> {
-                    for (Gruppe fromLager : allFromLager) {
-                        if (fromLager.getOriginalId().equals(g.getOriginalId())) {
-                            // wird nie erreicht, weil die Gruppe die hier
-                            // zurückgegeben wird ja assigned ist. Aber ich will
-                            // ja die unassigned nur.
-                            return fromLager;
-                        }
-                    }
-                    // Hier wird kopiert um nicht das Original aus der
-                    // Liste zu Modifizieren
-                    return new Gruppe(g);
-                }).collect(toList());
-            }
-        });
-
-        tableBuilderProgramm = JTableBuilders.programm(lager, () -> Client.get().getAllProgramm(lager.getId()));
-        tableBuilderEssen = JTableBuilders.essen(lager, () -> Client.get().getAllEssen(lager.getId()));
-
+        tableBuilderStab = JTableBuilders.stab(lager, get()::getAllPersons,
+                allStab -> get().getAllStab(lager.getId(), allStab));
+        tableBuilderMaterialwart = JTableBuilders.materialwart(lager, get()::getAllPersons,
+                allMaterialwart -> get().getAllMaterialwart(lager.getId(), allMaterialwart));
+        tableBuilderZelt = JTableBuilders.zelt(lager, get()::getAllZelt,
+                allZeltFromLager -> get().getAllZeltFromLager(lager.getId(), allZeltFromLager));
+        tableBuilderGruppe = JTableBuilders.gruppe(lager, getJCheckBoxAlleGruppenAnzeigen()::isSelected);
+        comboboxBuilderLagerort = JComboBoxBuilder.get(Lagerort.class, get()::getAllLagerort);
+        tableBuilderProgramm = JTableBuilders.programm(lager);
+        tableBuilderEssen = JTableBuilders.essen(lager);
         initialize();
     }
 
@@ -454,8 +381,8 @@ public class TPLager extends JTabbedPane {
                 Date stop = (Date) getJFormattedTextFieldDatumStop().getValue();
 
                 Client.get().speichereLager(lager.getId(), name, motto, start, stop, lager.getJahr().getId(),
-                        lagerort.getOriginalId());
-                Events.get().fireAktualisieren();
+                        lagerort.getOriginalId(), asyncCallback -> Events.get().fireAktualisieren());
+
             });
         }
         return jButtonAendernDaten;
@@ -545,14 +472,6 @@ public class TPLager extends JTabbedPane {
         return jPanel1;
     }
 
-    public HauptFenster getHauptFenster() {
-        return hauptFenster;
-    }
-
-    public void setHauptFenster(HauptFenster hauptFenster) {
-        this.hauptFenster = hauptFenster;
-    }
-
     private JPanel getJPanelMaterialwart() {
         if (jPanelMaterialwart == null) {
             jPanelMaterialwart = new JPanel();
@@ -608,7 +527,8 @@ public class TPLager extends JTabbedPane {
             jButtonHinzufuegenProgramm.setText("Hinzufügen");
             jButtonHinzufuegenProgramm.addActionListener(e -> {
                 if (getJTableProgramm().getModel().getRowCount() == 0) {
-                    Client.get().speichereProgramm(lager.getId(), null, lager.getDatumStart(), null, null, null);
+                    Client.get().speichereProgramm(lager.getId(), null, lager.getDatumStart(), null, null, null,
+                            asyncCallback -> tableBuilderProgramm.refresh());
                 } else {
                     Date leztesDatum = (Date) getJTableProgramm().getModel()
                             .getValueAt(getJTableProgramm().getModel().getRowCount() - 1, 0);
@@ -617,9 +537,9 @@ public class TPLager extends JTabbedPane {
                     c.setTime(leztesDatum);
                     c.add(Calendar.DAY_OF_MONTH, 1);
 
-                    Client.get().speichereProgramm(lager.getId(), null, c.getTime(), null, null, null);
+                    Client.get().speichereProgramm(lager.getId(), null, c.getTime(), null, null, null,
+                            asyncCallback -> tableBuilderProgramm.refresh());
                 }
-                tableBuilderProgramm.refresh();
             });
         }
         return jButtonHinzufuegenProgramm;
@@ -667,7 +587,8 @@ public class TPLager extends JTabbedPane {
             jButtonHinzufuegenEssen.setText("Hinzufügen");
             jButtonHinzufuegenEssen.addActionListener(e -> {
                 if (getJTableEssen().getModel().getRowCount() == 0) {
-                    Client.get().speichereEssen(lager.getId(), null, lager.getDatumStart(), null, null, null);
+                    Client.get().speichereEssen(lager.getId(), null, lager.getDatumStart(), null, null, null,
+                            tableBuilderEssen -> tableBuilderProgramm.refresh());
                 } else {
                     Date leztesDatum = (Date) getJTableEssen().getModel()
                             .getValueAt(getJTableEssen().getModel().getRowCount() - 1, 0);
@@ -676,9 +597,9 @@ public class TPLager extends JTabbedPane {
                     c.setTime(leztesDatum);
                     c.add(Calendar.DAY_OF_MONTH, 1);
 
-                    Client.get().speichereEssen(lager.getId(), null, c.getTime(), null, null, null);
+                    Client.get().speichereEssen(lager.getId(), null, c.getTime(), null, null, null,
+                            tableBuilderEssen -> tableBuilderProgramm.refresh());
                 }
-                tableBuilderEssen.refresh();
             });
         }
         return jButtonHinzufuegenEssen;

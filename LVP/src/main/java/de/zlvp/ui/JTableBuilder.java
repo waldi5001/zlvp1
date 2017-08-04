@@ -31,6 +31,7 @@ import de.javasoft.swing.JYTableHeader;
 import de.javasoft.swing.jytable.renderer.CellLayoutHint;
 import de.javasoft.swing.jytable.sort.JYTableSortController;
 import de.javasoft.swing.table.ObjectTableCellEditor;
+import de.zlvp.controller.AsyncCallback;
 
 public class JTableBuilder<E> {
 
@@ -57,17 +58,21 @@ public class JTableBuilder<E> {
     }
 
     public void refresh() {
-        this.table.setRowSorter(null);
-        this.table.setModel(new TableModel<>(changedData, columns, data = loader.get(), mapper, objectSetter));
-        setColumns();
+        loader.get(result -> {
+            this.table.setRowSorter(null);
+            this.table.setModel(new TableModel<>(changedData, columns, data = result, mapper, objectSetter));
+            setColumns();
+        });
     }
 
     public void save() {
         for (E d : changedData) {
-            saver.save(d);
+            saver.save(d, asyncCallback -> {
+                changedData.clear();
+                refresh();
+            });
         }
-        changedData.clear();
-        refresh();
+
     }
 
     public JTable build() {
@@ -124,11 +129,11 @@ public class JTableBuilder<E> {
     }
 
     public void deleteSelectedRows() {
+        List<E> dataToDelete = new ArrayList<>();
         for (int i : table.getSelectedRows()) {
-            E e = data.get(table.convertRowIndexToModel(i));
-            deleter.delete(e);
+            dataToDelete.add(data.get(table.convertRowIndexToModel(i)));
         }
-        refresh();
+        deleter.delete(dataToDelete, result -> refresh());
     }
 
     private void setColumns() {
@@ -368,7 +373,7 @@ public class JTableBuilder<E> {
 
     @FunctionalInterface
     public static interface Loader<T> {
-        List<T> get();
+        void get(AsyncCallback<List<T>> result);
     }
 
     @FunctionalInterface
@@ -383,12 +388,12 @@ public class JTableBuilder<E> {
 
     @FunctionalInterface
     public static interface Saver<T> {
-        void save(T data);
+        void save(T toSave, AsyncCallback<Void> asyncCallback);
     }
 
     @FunctionalInterface
     public static interface Deleter<T> {
-        void delete(T data);
+        void delete(List<T> data, AsyncCallback<Void> asyncCallback);
     }
 
     public static class Columns {

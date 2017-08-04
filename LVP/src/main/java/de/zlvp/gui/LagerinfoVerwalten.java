@@ -1,20 +1,17 @@
 package de.zlvp.gui;
 
-import static java.util.stream.Collectors.toList;
+import static de.zlvp.Client.get;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.beans.PropertyVetoException;
-import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
 import de.javasoft.swing.JYTableScrollPane;
-import de.zlvp.Client;
 import de.zlvp.entity.Lagerinfo;
-import de.zlvp.entity.Person;
 import de.zlvp.ui.InternalFrame;
 import de.zlvp.ui.JTableBuilder;
 import de.zlvp.ui.JTableBuilders;
@@ -33,21 +30,7 @@ public class LagerinfoVerwalten extends InternalFrame {
     private JTableBuilder<Lagerinfo> tableBuilder;
 
     public LagerinfoVerwalten() {
-
-        List<Person> allPersons = Client.get().getAllPerson();
-        tableBuilder = JTableBuilders.lagerinfo(() -> {
-            List<Lagerinfo> allLagerinfo = Client.get().getAllLagerinfo();
-            return allPersons.stream().map(p -> {
-                for (Lagerinfo li : allLagerinfo) {
-                    if (p.getId().equals(li.getOriginalId())) {
-                        li.setChecked(true);
-                        return li;
-                    }
-                }
-                return new Lagerinfo(p);
-            }).collect(toList());
-        });
-
+        tableBuilder = JTableBuilders.lagerinfo(get()::getAllPersons, get()::getAllLagerinfo);
         initialize();
         setUp();
         setMaximizable(true);

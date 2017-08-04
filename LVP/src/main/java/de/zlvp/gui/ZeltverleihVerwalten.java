@@ -1,5 +1,7 @@
 package de.zlvp.gui;
 
+import static de.zlvp.Client.get;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -21,7 +23,6 @@ import javax.swing.JTextField;
 import javax.swing.text.DateFormatter;
 
 import de.javasoft.swing.JYTableScrollPane;
-import de.zlvp.Client;
 import de.zlvp.entity.Zelt;
 import de.zlvp.entity.Zeltverleih;
 import de.zlvp.ui.InternalFrame;
@@ -62,7 +63,8 @@ public class ZeltverleihVerwalten extends InternalFrame {
 
     public ZeltverleihVerwalten(Zelt zelt) {
         this.zelt = zelt;
-        tableBuilder = JTableBuilder.get(Zeltverleih.class, () -> Client.get().getAllZeltverleih(zelt.getId()));
+        tableBuilder = JTableBuilder.get(Zeltverleih.class,
+                asyncCallback -> get().getAllZeltverleih(zelt.getId(), asyncCallback));
         initialize();
         setUp();
         getJButtonLoeschen().setEnabled(false);
@@ -293,10 +295,10 @@ public class ZeltverleihVerwalten extends InternalFrame {
                 Date datum = (Date) getJFormattedTextFieldDatum().getValue();
                 String person = getJTextFieldPerson().getText();
                 String bemerkung = getJTextAreaBemerkung().getText();
-                Client.get().speichereZeltverleih(null, zelt.getId(), datum != null ? datum : new Date(),
+                get().speichereZeltverleih(null, zelt.getId(), datum != null ? datum : new Date(),
                         person != null && !person.isEmpty() ? person : "Neu",
-                        bemerkung != null && !bemerkung.isEmpty() ? bemerkung : "Neu");
-                tableBuilder.refresh();
+                        bemerkung != null && !bemerkung.isEmpty() ? bemerkung : "Neu",
+                        asyncCallback -> tableBuilder.refresh());
             });
         }
         return jButtonNeuerVerleih;
@@ -310,10 +312,11 @@ public class ZeltverleihVerwalten extends InternalFrame {
                 Date datum = (Date) getJFormattedTextFieldDatum().getValue();
                 String person = getJTextFieldPerson().getText();
                 String bemerkung = getJTextAreaBemerkung().getText();
-                Client.get().speichereZeltverleih(selectedVerleih.getId(), zelt.getId(),
-                        datum != null ? datum : new Date(), person != null && !person.isEmpty() ? person : "Neu",
-                        bemerkung != null && !bemerkung.isEmpty() ? bemerkung : "Neu");
-                tableBuilder.refresh();
+                get().speichereZeltverleih(selectedVerleih.getId(), zelt.getId(), datum != null ? datum : new Date(),
+                        person != null && !person.isEmpty() ? person : "Neu",
+                        bemerkung != null && !bemerkung.isEmpty() ? bemerkung : "Neu",
+                        asyncCallback -> tableBuilder.refresh());
+
             });
         }
         return jButtonAendern;
@@ -324,8 +327,7 @@ public class ZeltverleihVerwalten extends InternalFrame {
             jButtonLoeschen = new JButton();
             jButtonLoeschen.setText("Löschen");
             jButtonLoeschen.addActionListener(e -> {
-                Client.get().loescheZeltverleih(selectedVerleih.getId());
-                tableBuilder.refresh();
+                get().loescheZeltverleih(selectedVerleih.getId(), asyncCallback -> tableBuilder.refresh());
             });
         }
         return jButtonLoeschen;

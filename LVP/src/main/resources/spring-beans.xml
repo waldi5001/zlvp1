@@ -20,9 +20,7 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
-	<bean id="spinnerAndErrorInterceptor" class="de.zlvp.SpinnerAndErrorInterceptor">
-		<property name="fensterKlasse" ref="fensterKlasse" />
-	</bean>
+	<bean id="asyncAndErrorInterceptor" class="de.zlvp.AsyncAndErrorInterceptor" />
 
 	<bean id="methodLogInterceptor" class="org.springframework.aop.interceptor.CustomizableTraceInterceptor">
 		<property name="enterMessage" value="Start: $[targetClassShortName]#$[methodName] $[arguments]" />
@@ -140,7 +138,7 @@
 		</property>
 		<property name="interceptorNames">
 			<list>
-				<value>spinnerAndErrorInterceptor</value>
+				<value>asyncAndErrorInterceptor</value>
 				<value>methodLogInterceptor</value>
 				<value>transactionInterceptor</value>
 			</list>

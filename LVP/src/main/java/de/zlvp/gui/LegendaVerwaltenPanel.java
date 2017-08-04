@@ -1,5 +1,7 @@
 package de.zlvp.gui;
 
+import static de.zlvp.Client.get;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
@@ -8,7 +10,6 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 
 import de.javasoft.swing.JYTableScrollPane;
-import de.zlvp.Client;
 import de.zlvp.entity.Lagerort;
 import de.zlvp.entity.Legenda;
 import de.zlvp.ui.JTableBuilder;
@@ -28,8 +29,7 @@ public class LegendaVerwaltenPanel extends JPanel {
     public LegendaVerwaltenPanel(Lagerort lagerort) {
         this.lagerort = lagerort;
 
-        tableBuilderLegenda = JTableBuilders.legenda(lagerort,
-                () -> Client.get().getAllLegendaFromLagerort(lagerort.getOriginalId()));
+        tableBuilderLegenda = JTableBuilders.legenda(lagerort);
 
         initialize();
     }
@@ -62,9 +62,8 @@ public class LegendaVerwaltenPanel extends JPanel {
             jButtonNeu = new JButton();
             jButtonNeu.setText("Neu");
             jButtonNeu.addActionListener(e -> {
-                Client.get().speichereLegenda(null, lagerort.getOriginalId(), "Neu", "Neu", null, null, null, null,
-                        null, null, null, null, null, null, null);
-                tableBuilderLegenda.refresh();
+                get().speichereLegenda(null, lagerort.getOriginalId(), "Neu", "Neu", null, null, null, null, null, null,
+                        null, null, null, null, null, asyncCallback -> tableBuilderLegenda.refresh());
             });
         }
         return jButtonNeu;

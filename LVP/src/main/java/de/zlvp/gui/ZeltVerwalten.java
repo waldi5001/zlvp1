@@ -1,5 +1,7 @@
 package de.zlvp.gui;
 
+import static de.zlvp.Client.get;
+
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -17,7 +19,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.text.DateFormatter;
 
-import de.zlvp.Client;
 import de.zlvp.entity.Zelt;
 import de.zlvp.ui.InternalFrame;
 import de.zlvp.ui.JListBuilder;
@@ -60,7 +61,7 @@ public class ZeltVerwalten extends InternalFrame {
     private JListBuilder<Zelt> jListBuilder;
 
     public ZeltVerwalten() {
-        jListBuilder = JListBuilder.get(Zelt.class, () -> Client.get().getAllZelt()).map(z -> z.getBezeichnung());
+        jListBuilder = JListBuilder.get(Zelt.class, get()::getAllZelt);
 
         initialize();
         setUp();
@@ -175,7 +176,7 @@ public class ZeltVerwalten extends InternalFrame {
 
     private JList<Zelt> getJList() {
         if (jList == null) {
-            jList = JListBuilder.get(Zelt.class, () -> Client.get().getAllZelt()).map(z -> z.getBezeichnung()).build();
+            jList = jListBuilder.build();
             jList.addListSelectionListener(e -> {
                 Zelt zelt = getJList().getSelectedValue();
                 if (zelt != null) {
@@ -242,12 +243,10 @@ public class ZeltVerwalten extends InternalFrame {
                 String bezeichnung = getJTextFieldBezeichnung().getText();
                 Date angeschafft = (Date) getJFormattedTextFieldAngeschafft().getValue();
                 double preis = 0;
-                Client.get().speichereZelt(selectedValue.getId(), bezeichnung, angeschafft, preis);
-
-                jListBuilder.refresh();
-
-                getJList().setSelectedValue(selectedValue, true);
-
+                get().speichereZelt(selectedValue.getId(), bezeichnung, angeschafft, preis, asyncCallback -> {
+                    jListBuilder.refresh();
+                    getJList().setSelectedValue(selectedValue, true);
+                });
             });
         }
         return jButtonAendern;

@@ -8,6 +8,8 @@ import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
+import de.zlvp.controller.AsyncCallback;
+
 public class JComboBoxBuilder<E> {
 
     private JComboBox<E> jCombobox;
@@ -54,9 +56,11 @@ public class JComboBoxBuilder<E> {
 
     public void refresh() {
         jCombobox.setModel(new DefaultComboBoxModel<>());
-        for (E e : loader.get()) {
-            this.jCombobox.addItem(e);
-        }
+        loader.get(result -> {
+            for (E e : result) {
+                this.jCombobox.addItem(e);
+            }
+        });
     }
 
     @FunctionalInterface
@@ -66,7 +70,7 @@ public class JComboBoxBuilder<E> {
 
     @FunctionalInterface
     public static interface Loader<T> {
-        List<T> get();
+        void get(AsyncCallback<List<T>> result);
     }
 
 }
