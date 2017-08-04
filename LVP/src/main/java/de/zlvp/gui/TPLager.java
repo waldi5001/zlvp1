@@ -9,7 +9,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -354,7 +353,8 @@ public class TPLager extends JTabbedPane {
 
     private JFormattedTextField getJFormattedTextFieldDatumStop() {
         if (jFormattedTextFieldDatumStop == null) {
-            jFormattedTextFieldDatumStop = new JFormattedTextField(new SimpleDateFormat("dd.MM.yy"));
+            jFormattedTextFieldDatumStop = new JFormattedTextField(
+                    new DateFormatter(DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN)));
             jFormattedTextFieldDatumStop.setValue(lager.getDatumStop());
         }
         return jFormattedTextFieldDatumStop;
