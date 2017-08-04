@@ -1,7 +1,5 @@
 package de.zlvp;
 
-import java.util.concurrent.ExecutionException;
-
 import javax.swing.SwingWorker;
 
 import org.aopalliance.intercept.MethodInterceptor;
@@ -10,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.javasoft.swing.DetailsDialog;
-import de.zlvp.controller.AsyncCallback;
 
 public class AsyncAndErrorInterceptor implements MethodInterceptor {
     private static Logger log = LoggerFactory.getLogger(AsyncAndErrorInterceptor.class);
@@ -18,36 +15,17 @@ public class AsyncAndErrorInterceptor implements MethodInterceptor {
     @Override
     public Object invoke(MethodInvocation invocation) {
         try {
-            if (invocation.getArguments().length > 0) {
-                Object arg = invocation.getArguments()[invocation.getArguments().length - 1];
-                if (arg instanceof AsyncCallback<?>) {
-                    SwingWorker<Object, Void> sw = new SwingWorker<Object, Void>() {
-                        @Override
-                        protected Object doInBackground() {
-                            try {
-                                return invocation.proceed();
-                            } catch (Throwable e) {
-                                throw new RuntimeException(e.getMessage(), e);
-                            }
-                        }
-
-                        @SuppressWarnings("unchecked")
-                        @Override
-                        protected void done() {
-                            try {
-                                ((AsyncCallback<Object>) arg).get(get());
-                            } catch (InterruptedException | ExecutionException e) {
-                                handleThrowable(e);
-                            }
-                        }
-                    };
-                    sw.execute();
-                } else {
-                    return invocation.proceed();
+            SwingWorker<Object, Void> sw = new SwingWorker<Object, Void>() {
+                @Override
+                protected Object doInBackground() {
+                    try {
+                        return invocation.proceed();
+                    } catch (Throwable e) {
+                        throw new RuntimeException(e.getMessage(), e);
+                    }
                 }
-            } else {
-                return invocation.proceed();
-            }
+            };
+            sw.execute();
         } catch (Throwable e) {
             handleThrowable(e);
         }

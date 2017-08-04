@@ -29,57 +29,57 @@ import de.zlvp.entity.Zeltverleih;
 
 public interface Controller {
 
-    List<Person> findPerson(String vorname, String nachname, AsyncCallback<List<Person>> callback);
+    void findPerson(String vorname, String nachname, AsyncCallback<List<Person>> callback);
 
-    List<Anrede> getAllAnrede(AsyncCallback<List<Anrede>> callback);
+    void getAllAnrede(AsyncCallback<List<Anrede>> callback);
 
-    List<Essen> getAllEssen(int lagerId, AsyncCallback<List<Essen>> callback);
+    void getAllEssen(int lagerId, AsyncCallback<List<Essen>> callback);
 
-    List<Gruppe> getAllGruppen(AsyncCallback<List<Gruppe>> callback);
+    void getAllGruppen(AsyncCallback<List<Gruppe>> callback);
 
-    List<Gruppe> getAllGruppenFromLager(int lagerId, AsyncCallback<List<Gruppe>> callback);
+    void getAllGruppenFromLager(int lagerId, AsyncCallback<List<Gruppe>> callback);
 
-    List<Jahr> getAllJahr(AsyncCallback<List<Jahr>> callback);
+    void getAllJahr(AsyncCallback<List<Jahr>> callback);
 
-    List<Lager> getAllLager(int jahrId, AsyncCallback<List<Lager>> callback);
+    void getAllLager(int jahrId, AsyncCallback<List<Lager>> callback);
 
-    List<Lagerinfo> getAllLagerinfo(AsyncCallback<List<Lagerinfo>> callback);
+    void getAllLagerinfo(AsyncCallback<List<Lagerinfo>> callback);
 
-    List<Lagerort> getAllLagerort(AsyncCallback<List<Lagerort>> callback);
+    void getAllLagerort(AsyncCallback<List<Lagerort>> callback);
 
-    List<Legenda> getAllLegendaFromLagerort(int lagerortId, AsyncCallback<List<Legenda>> callback);
+    void getAllLegendaFromLagerort(int lagerortId, AsyncCallback<List<Legenda>> callback);
 
-    List<Legendatyp> getAllLegendatyp(AsyncCallback<List<Legendatyp>> callback);
+    void getAllLegendatyp(AsyncCallback<List<Legendatyp>> callback);
 
-    List<Leiter> getAllLeiter(int gruppeId, AsyncCallback<List<Leiter>> callback);
+    void getAllLeiter(int gruppeId, AsyncCallback<List<Leiter>> callback);
 
-    List<Materialwart> getAllMaterialwart(int lagerId, AsyncCallback<List<Materialwart>> callback);
+    void getAllMaterialwart(int lagerId, AsyncCallback<List<Materialwart>> callback);
 
-    List<Person> getAllPersons(AsyncCallback<List<Person>> callback);
+    void getAllPersons(AsyncCallback<List<Person>> callback);
 
-    List<Programm> getAllProgramm(int lagerId, AsyncCallback<List<Programm>> callback);
+    void getAllProgramm(int lagerId, AsyncCallback<List<Programm>> callback);
 
-    List<Schaden> getAllSchaeden(Integer id, AsyncCallback<List<Schaden>> callback);
+    void getAllSchaeden(Integer id, AsyncCallback<List<Schaden>> callback);
 
-    List<Stab> getAllStab(int lagerId, AsyncCallback<List<Stab>> callback);
+    void getAllStab(int lagerId, AsyncCallback<List<Stab>> callback);
 
-    List<Teilnehmer> getAllTeilnehmer(int gruppeId, AsyncCallback<List<Teilnehmer>> callback);
+    void getAllTeilnehmer(int gruppeId, AsyncCallback<List<Teilnehmer>> callback);
 
-    List<Gruppe> getAllUnassignedGruppen(AsyncCallback<List<Gruppe>> callback);
+    void getAllUnassignedGruppen(AsyncCallback<List<Gruppe>> callback);
 
-    List<Zelt> getAllZelt(AsyncCallback<List<Zelt>> callback);
+    void getAllZelt(AsyncCallback<List<Zelt>> callback);
 
-    List<Zeltdetail> getAllZeltdetail(int zeltId, AsyncCallback<List<Zeltdetail>> callback);
+    void getAllZeltdetail(int zeltId, AsyncCallback<List<Zeltdetail>> callback);
 
-    List<ZeltdetailBezeichnung> getAllZeltdetailBezeichnung(AsyncCallback<List<ZeltdetailBezeichnung>> callback);
+    void getAllZeltdetailBezeichnung(AsyncCallback<List<ZeltdetailBezeichnung>> callback);
 
-    List<Zelt> getAllZeltFromGruppe(int gruppeId, AsyncCallback<List<Zelt>> callback);
+    void getAllZeltFromGruppe(int gruppeId, AsyncCallback<List<Zelt>> callback);
 
-    List<Zelt> getAllZeltFromLager(int lagerId, AsyncCallback<List<Zelt>> callback);
+    void getAllZeltFromLager(int lagerId, AsyncCallback<List<Zelt>> callback);
 
-    List<Zeltverleih> getAllZeltverleih(Integer id, AsyncCallback<List<Zeltverleih>> callback);
+    void getAllZeltverleih(Integer id, AsyncCallback<List<Zeltverleih>> callback);
 
-    Jahr getJahr(int jahrId, AsyncCallback<Jahr> callback);
+    void getJahr(int jahrId, AsyncCallback<Jahr> callback);
 
     void loescheSchaden(Integer id, AsyncCallback<Void> callback);
 
@@ -160,9 +160,9 @@ public interface Controller {
 
     void verschiebeTeilnehmer(int id, int gruppeId, AsyncCallback<Void> callback);
 
-    List<User> getAllUsers(AsyncCallback<List<User>> callback);
+    void getAllUsers(AsyncCallback<List<User>> callback);
 
-    List<String> getAllGroups(AsyncCallback<List<String>> callback);
+    void getAllGroups(AsyncCallback<List<String>> callback);
 
     void createUser(String username, char[] cs, AsyncCallback<Void> callback);
 

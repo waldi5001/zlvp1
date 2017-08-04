@@ -78,22 +78,22 @@ public class ControllerImpl implements Controller {
     private ZeltdetailDao zeltdetailDao;
 
     @Override
-    public List<Person> findPerson(String vorname, String nachname, AsyncCallback<List<Person>> callback) {
-        return personDao.findPerson(vorname, nachname);
+    public void findPerson(String vorname, String nachname, AsyncCallback<List<Person>> callback) {
+        callback.get(personDao.findPerson(vorname, nachname));
     }
 
     @Override
-    public List<Anrede> getAllAnrede(AsyncCallback<List<Anrede>> callback) {
-        return anredeDao.getAll();
+    public void getAllAnrede(AsyncCallback<List<Anrede>> callback) {
+        callback.get(anredeDao.getAll());
     }
 
     @Override
-    public List<Lagerinfo> getAllLagerinfo(AsyncCallback<List<Lagerinfo>> callback) {
-        return lagerinfoDao.getAll();
+    public void getAllLagerinfo(AsyncCallback<List<Lagerinfo>> callback) {
+        callback.get(lagerinfoDao.getAll());
     }
 
     @Override
-    public List<Jahr> getAllJahr(AsyncCallback<List<Jahr>> callback) {
+    public void getAllJahr(AsyncCallback<List<Jahr>> callback) {
         int heutigesJahr = Year.now().getValue();
 
         Jahr jahr = jahrDao.getJahrByBezeichnung(heutigesJahr);
@@ -101,11 +101,11 @@ public class ControllerImpl implements Controller {
             jahrDao.insertJahr(heutigesJahr);
         }
 
-        return jahrDao.getAll();
+        callback.get(jahrDao.getAll());
     }
 
     @Override
-    public Jahr getJahr(int jahrId, AsyncCallback<Jahr> callback) {
+    public void getJahr(int jahrId, AsyncCallback<Jahr> callback) {
         Jahr jahr = jahrDao.getJahr(jahrId);
         jahr.getLager().addAll(lagerDao.getAll(jahrId));
         for (Lager lager : jahr.getLager()) {
@@ -117,152 +117,151 @@ public class ControllerImpl implements Controller {
                 g.getTeilnehmer().addAll(teilnehmerDao.getAll(g.getOriginalId()));
             }
         }
-        return jahr;
+        callback.get(jahr);
     }
 
     @Override
-    public List<Lager> getAllLager(int jahrId, AsyncCallback<List<Lager>> callback) {
-        return lagerDao.getAll(jahrId);
+    public void getAllLager(int jahrId, AsyncCallback<List<Lager>> callback) {
+        callback.get(lagerDao.getAll(jahrId));
     }
 
     @Override
-    public List<Stab> getAllStab(int lagerId, AsyncCallback<List<Stab>> callback) {
-        return stabDao.getAll(lagerId);
+    public void getAllStab(int lagerId, AsyncCallback<List<Stab>> callback) {
+        callback.get(stabDao.getAll(lagerId));
     }
 
     @Override
-    public List<Materialwart> getAllMaterialwart(int lagerId, AsyncCallback<List<Materialwart>> callback) {
+    public void getAllMaterialwart(int lagerId, AsyncCallback<List<Materialwart>> callback) {
         List<Materialwart> all = materialwartDao.getAll(lagerId);
         Lager lager = lagerDao.get(lagerId);
         for (Materialwart mw : all) {
             mw.setLager(lager);
         }
-        return all;
+        callback.get(all);
     }
 
     @Override
-    public List<Gruppe> getAllUnassignedGruppen(AsyncCallback<List<Gruppe>> callback) {
-        return gruppeDao.getAllUnasigned();
+    public void getAllUnassignedGruppen(AsyncCallback<List<Gruppe>> callback) {
+        callback.get(gruppeDao.getAllUnasigned());
     }
 
     @Override
-    public List<Gruppe> getAllGruppen(AsyncCallback<List<Gruppe>> callback) {
-        return gruppeDao.getAll();
+    public void getAllGruppen(AsyncCallback<List<Gruppe>> callback) {
+        callback.get(gruppeDao.getAll());
     }
 
     @Override
-    public List<Gruppe> getAllGruppenFromLager(int lagerId, AsyncCallback<List<Gruppe>> callback) {
+    public void getAllGruppenFromLager(int lagerId, AsyncCallback<List<Gruppe>> callback) {
         List<Gruppe> allFromLager = gruppeDao.getAllFromLager(lagerId);
         Lager lager = lagerDao.get(lagerId);
         for (Gruppe gruppe : allFromLager) {
             gruppe.setLager(lager);
         }
-        return allFromLager;
+        callback.get(allFromLager);
     }
 
     @Override
-    public List<Leiter> getAllLeiter(int gruppeId, AsyncCallback<List<Leiter>> callback) {
+    public void getAllLeiter(int gruppeId, AsyncCallback<List<Leiter>> callback) {
         Gruppe gruppe = gruppeDao.get(gruppeId);
         List<Leiter> all = leiterDao.getAll(gruppeId);
         for (Leiter leiter : all) {
             leiter.setGruppe(gruppe);
         }
-        return all;
+        callback.get(all);
     }
 
     @Override
-    public List<Teilnehmer> getAllTeilnehmer(int gruppeId, AsyncCallback<List<Teilnehmer>> callback) {
+    public void getAllTeilnehmer(int gruppeId, AsyncCallback<List<Teilnehmer>> callback) {
         Gruppe gruppe = gruppeDao.get(gruppeId);
         List<Teilnehmer> all = teilnehmerDao.getAll(gruppeId);
         for (Teilnehmer teilnehmer : all) {
             teilnehmer.setGruppe(gruppe);
         }
-        return all;
+        callback.get(all);
     }
 
     @Override
-    public List<Person> getAllPersons(AsyncCallback<List<Person>> callback) {
-        return personDao.getAll();
+    public void getAllPersons(AsyncCallback<List<Person>> callback) {
+        callback.get(personDao.getAll());
     }
 
     @Override
-    public List<Zelt> getAllZelt(AsyncCallback<List<Zelt>> callback) {
-        return zeltDao.getAll();
+    public void getAllZelt(AsyncCallback<List<Zelt>> callback) {
+        callback.get(zeltDao.getAll());
     }
 
     @Override
-    public List<Zelt> getAllZeltFromLager(int lagerId, AsyncCallback<List<Zelt>> callback) {
+    public void getAllZeltFromLager(int lagerId, AsyncCallback<List<Zelt>> callback) {
         List<Zelt> allFromLager = zeltDao.getAllFromLager(lagerId);
         Lager lager = lagerDao.get(lagerId);
         for (Zelt zelt : allFromLager) {
             zelt.getLager().add(lager);
         }
-        return allFromLager;
+        callback.get(allFromLager);
     }
 
     @Override
-    public List<Zelt> getAllZeltFromGruppe(int gruppeId, AsyncCallback<List<Zelt>> callback) {
+    public void getAllZeltFromGruppe(int gruppeId, AsyncCallback<List<Zelt>> callback) {
         Gruppe gruppe = gruppeDao.get(gruppeId);
         List<Zelt> allFromGruppe = zeltDao.getAllFromGruppe(gruppeId);
         for (Zelt zelt : allFromGruppe) {
             zelt.getGruppe().add(gruppe);
         }
-        return allFromGruppe;
+        callback.get(allFromGruppe);
     }
 
     @Override
-    public List<Programm> getAllProgramm(int lagerId, AsyncCallback<List<Programm>> callback) {
-        return programmDao.getAllFromLager(lagerId);
+    public void getAllProgramm(int lagerId, AsyncCallback<List<Programm>> callback) {
+        callback.get(programmDao.getAllFromLager(lagerId));
     }
 
     @Override
-    public List<Essen> getAllEssen(int lagerId, AsyncCallback<List<Essen>> callback) {
-        return essenDao.getAllFromLager(lagerId);
+    public void getAllEssen(int lagerId, AsyncCallback<List<Essen>> callback) {
+        callback.get(essenDao.getAllFromLager(lagerId));
     }
 
     @Override
-    public List<Lagerort> getAllLagerort(AsyncCallback<List<Lagerort>> callback) {
-        return lagerortDao.getAll();
+    public void getAllLagerort(AsyncCallback<List<Lagerort>> callback) {
+        callback.get(lagerortDao.getAll());
     }
 
     @Override
-    public List<Legendatyp> getAllLegendatyp(AsyncCallback<List<Legendatyp>> callback) {
-        return legendatypDao.getAll();
+    public void getAllLegendatyp(AsyncCallback<List<Legendatyp>> callback) {
+        callback.get(legendatypDao.getAll());
     }
 
     @Override
-    public List<Legenda> getAllLegendaFromLagerort(int lagerortId, AsyncCallback<List<Legenda>> callback) {
+    public void getAllLegendaFromLagerort(int lagerortId, AsyncCallback<List<Legenda>> callback) {
         List<Legenda> legenda = legendaDao.getAllFromLagerort(lagerortId);
         for (Legenda l : legenda) {
             l.setLegendaTyp(legendatypDao.getFromLegenda(l.getId()));
             l.setAnrede(anredeDao.getAnredeFromLegenda(l.getId()));
         }
-        return legenda;
+        callback.get(legenda);
     }
 
     @Override
-    public List<Zeltdetail> getAllZeltdetail(int zeltId, AsyncCallback<List<Zeltdetail>> callback) {
+    public void getAllZeltdetail(int zeltId, AsyncCallback<List<Zeltdetail>> callback) {
         List<Zeltdetail> allFromZelt = zeltdetailDao.getAllFromZelt(zeltId);
         for (Zeltdetail zeltdetail : allFromZelt) {
             zeltdetail.setZeltdetailbezeichnung(zeltdetailBezeichnungDao.getForZeltdetail(zeltdetail.getId()));
         }
-        return allFromZelt;
+        callback.get(allFromZelt);
     }
 
     @Override
-    public List<ZeltdetailBezeichnung> getAllZeltdetailBezeichnung(
-            AsyncCallback<List<ZeltdetailBezeichnung>> callback) {
-        return zeltdetailBezeichnungDao.getAll();
+    public void getAllZeltdetailBezeichnung(AsyncCallback<List<ZeltdetailBezeichnung>> callback) {
+        callback.get(zeltdetailBezeichnungDao.getAll());
     }
 
     @Override
-    public List<Schaden> getAllSchaeden(Integer id, AsyncCallback<List<Schaden>> callback) {
-        return schadenDao.getAllFromZelt(id);
+    public void getAllSchaeden(Integer id, AsyncCallback<List<Schaden>> callback) {
+        callback.get(schadenDao.getAllFromZelt(id));
     }
 
     @Override
-    public List<Zeltverleih> getAllZeltverleih(Integer id, AsyncCallback<List<Zeltverleih>> callback) {
-        return zeltverleihDao.getAllFromZelt(id);
+    public void getAllZeltverleih(Integer id, AsyncCallback<List<Zeltverleih>> callback) {
+        callback.get(zeltverleihDao.getAllFromZelt(id));
     }
 
     @Override
@@ -515,12 +514,12 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public List<String> getAllGroups(AsyncCallback<List<String>> callback) {
-        return userDao.getAllGroups();
+    public void getAllGroups(AsyncCallback<List<String>> callback) {
+        callback.get(userDao.getAllGroups());
     }
 
     @Override
-    public List<User> getAllUsers(AsyncCallback<List<User>> callback) {
+    public void getAllUsers(AsyncCallback<List<User>> callback) {
         List<User> result = new ArrayList<>();
         for (String userId : userDao.getAllUsers()) {
             User user = new User(userId);
@@ -528,7 +527,7 @@ public class ControllerImpl implements Controller {
             user.getGroups().addAll(groupsForUser);
             result.add(user);
         }
-        return result;
+        callback.get(result);
     }
 
     @Override
