@@ -9,7 +9,6 @@ import de.zlvp.entity.Stab;
 public class StabDao extends AbstractDao<Stab> {
 
     private static final String allStabFromLager = "SELECT stLaSt.stlastid, stLaSt.funktion, p.* FROM Person p INNER JOIN stLaSt ON p.PeID = stLaSt.Person INNER JOIN Lager l ON l.LaID = stLaSt.Lager WHERE l.LaID = ?";
-    private static final String stabById = "SELECT stLaSt.stlastid, stLaSt.funktion, p.* FROM Person p INNER JOIN stLaSt ON p.PeID = stLaSt.Person WHERE stLaSt.stLaStId = ?;";
 
     private static final String updateFunktion = "UPDATE stLaSt SET Funktion = ? WHERE stlastid = ?;";
     private static final String insertStab = "INSERT INTO stLaSt (lager, person, funktion) VALUES (?,?,?);";
