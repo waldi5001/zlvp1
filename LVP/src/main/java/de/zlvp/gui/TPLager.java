@@ -27,7 +27,6 @@ import javax.swing.JTextField;
 import javax.swing.text.DateFormatter;
 
 import de.javasoft.swing.JYTableScrollPane;
-import de.zlvp.Client;
 import de.zlvp.Events;
 import de.zlvp.entity.Essen;
 import de.zlvp.entity.Gruppe;
@@ -380,7 +379,7 @@ public class TPLager extends JTabbedPane {
                 Date start = (Date) getJFormattedTextFieldDatumStart().getValue();
                 Date stop = (Date) getJFormattedTextFieldDatumStop().getValue();
 
-                Client.get().speichereLager(lager.getId(), name, motto, start, stop, lager.getJahr().getId(),
+                get().speichereLager(lager.getId(), name, motto, start, stop, lager.getJahr().getId(),
                         lagerort.getOriginalId(), asyncCallback -> Events.get().fireAktualisieren());
 
             });
@@ -527,17 +526,17 @@ public class TPLager extends JTabbedPane {
             jButtonHinzufuegenProgramm.setText("Hinzufügen");
             jButtonHinzufuegenProgramm.addActionListener(e -> {
                 if (getJTableProgramm().getModel().getRowCount() == 0) {
-                    Client.get().speichereProgramm(lager.getId(), null, lager.getDatumStart(), null, null, null,
+                    get().speichereProgramm(lager.getId(), null, lager.getDatumStart(), null, null, null,
                             asyncCallback -> tableBuilderProgramm.refresh());
                 } else {
-                    Date leztesDatum = (Date) getJTableProgramm().getModel()
+                    Date letztesDatum = (Date) getJTableProgramm().getModel()
                             .getValueAt(getJTableProgramm().getModel().getRowCount() - 1, 0);
 
                     Calendar c = Calendar.getInstance();
-                    c.setTime(leztesDatum);
+                    c.setTime(letztesDatum);
                     c.add(Calendar.DAY_OF_MONTH, 1);
 
-                    Client.get().speichereProgramm(lager.getId(), null, c.getTime(), null, null, null,
+                    get().speichereProgramm(lager.getId(), null, c.getTime(), null, null, null,
                             asyncCallback -> tableBuilderProgramm.refresh());
                 }
             });
@@ -587,18 +586,18 @@ public class TPLager extends JTabbedPane {
             jButtonHinzufuegenEssen.setText("Hinzufügen");
             jButtonHinzufuegenEssen.addActionListener(e -> {
                 if (getJTableEssen().getModel().getRowCount() == 0) {
-                    Client.get().speichereEssen(lager.getId(), null, lager.getDatumStart(), null, null, null,
-                            tableBuilderEssen -> tableBuilderProgramm.refresh());
+                    get().speichereEssen(lager.getId(), null, lager.getDatumStart(), null, null, null,
+                            cb -> tableBuilderEssen.refresh());
                 } else {
-                    Date leztesDatum = (Date) getJTableEssen().getModel()
+                    Date letztesDatum = (Date) getJTableEssen().getModel()
                             .getValueAt(getJTableEssen().getModel().getRowCount() - 1, 0);
 
                     Calendar c = Calendar.getInstance();
-                    c.setTime(leztesDatum);
+                    c.setTime(letztesDatum);
                     c.add(Calendar.DAY_OF_MONTH, 1);
 
-                    Client.get().speichereEssen(lager.getId(), null, c.getTime(), null, null, null,
-                            tableBuilderEssen -> tableBuilderProgramm.refresh());
+                    get().speichereEssen(lager.getId(), null, c.getTime(), null, null, null,
+                            cb -> tableBuilderEssen.refresh());
                 }
             });
         }

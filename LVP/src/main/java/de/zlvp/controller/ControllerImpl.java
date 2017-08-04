@@ -446,10 +446,15 @@ public class ControllerImpl implements Controller {
             AsyncCallback<Void> callback) {
         if (id == null && lagerId != null) {
             programmDao.speichereProgramm(lagerId, datum, morgen, mittag, abend);
-        } else if (id != null && lagerId == null) {
-            programmDao.loescheProgramm(id);
         } else {
             programmDao.aendereProgramm(id, morgen, mittag, abend, datum);
+        }
+    }
+
+    @Override
+    public void loescheProgramm(List<Integer> ids, AsyncCallback<Void> callback) {
+        for (Integer id : ids) {
+            programmDao.loescheProgramm(id);
         }
     }
 
@@ -458,10 +463,15 @@ public class ControllerImpl implements Controller {
             AsyncCallback<Void> callback) {
         if (id == null && lagerId != null) {
             essenDao.speichereEssen(lagerId, datum, morgen, mittag, abend);
-        } else if (id != null && lagerId == null) {
-            essenDao.loescheEssen(id);
         } else {
             essenDao.aendereEssen(id, morgen, mittag, abend, datum);
+        }
+    }
+
+    @Override
+    public void loescheEssen(List<Integer> ids, AsyncCallback<Void> callback) {
+        for (Integer id : ids) {
+            essenDao.loescheEssen(id);
         }
     }
 

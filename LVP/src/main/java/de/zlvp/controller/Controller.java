@@ -143,8 +143,12 @@ public interface Controller {
     void speichereProgramm(Integer lagerId, Integer id, Date datum, String morgen, String mittag, String abend,
             AsyncCallback<Void> callback);
 
+    void loescheProgramm(List<Integer> ids, AsyncCallback<Void> callback);
+
     void speichereEssen(Integer lagerId, Integer id, Date datum, String morgen, String mittag, String abend,
             AsyncCallback<Void> callback);
+
+    void loescheEssen(List<Integer> ids, AsyncCallback<Void> callback);
 
     void speichereLagerinfo(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
             String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
