@@ -19,10 +19,10 @@ import javax.swing.JTextField;
 
 import de.zlvp.Client;
 import de.zlvp.entity.User;
+import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.DualListField;
 import de.zlvp.ui.DualListField.ElementAddedCallback;
 import de.zlvp.ui.DualListField.ElementRemovedCallback;
-import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JListBuilder;
 
 public class Benutzerverwaltung extends AbstractJInternalFrame {
@@ -67,8 +67,7 @@ public class Benutzerverwaltung extends AbstractJInternalFrame {
             }
         });
 
-        DualListField<String, String> dualListField = createDualListField();
-        getJSplitPane().add(dualListField);
+        getJSplitPane().add(createDualListField());
 
         getContentPane().add(getjPanelButtons(), BorderLayout.SOUTH);
         getjPanelButtons().add(getjButtonAnlegen());
@@ -91,8 +90,10 @@ public class Benutzerverwaltung extends AbstractJInternalFrame {
         if (jListBenutzer == null) {
             jListBenutzer = jListBuilder.build();
             jListBenutzer.addListSelectionListener(e -> {
-                jListBuilderFrom.refresh();
-                jListBuilderTo.refresh();
+                if (!e.getValueIsAdjusting()) {
+                    jListBuilderFrom.refresh();
+                    jListBuilderTo.refresh();
+                }
             });
         }
         return jListBenutzer;
