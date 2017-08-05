@@ -267,17 +267,20 @@ public class ControllerImpl implements Controller {
     @Override
     public void speichereZeltDetailBezeichnung(String detailBezeichnung, AsyncCallback<Void> callback) {
         zeltdetailBezeichnungDao.speichern(detailBezeichnung);
+        callback.get(null);
     }
 
     @Override
     public void speichereLager(Integer id, String name, String thema, Date start, Date stop, int jahrId, int lagerortId,
             AsyncCallback<Void> callback) {
         lagerDao.speichern(id, name, thema, start, stop, lagerortId, jahrId);
+        callback.get(null);
     }
 
     @Override
     public void speichereLagerort(String lagerort, AsyncCallback<Void> callback) {
         lagerortDao.speichern(lagerort);
+        callback.get(null);
     }
 
     @Override
@@ -286,6 +289,7 @@ public class ControllerImpl implements Controller {
             String handy, String email, String bemerkung, AsyncCallback<Void> callback) {
         legendaDao.speichern(id, lagerortId, nachname, vorname, firma, strasse, plz, ort, legendatypId, anredeId, tel,
                 fax, handy, email, bemerkung);
+        callback.get(null);
     }
 
     @Override
@@ -293,6 +297,7 @@ public class ControllerImpl implements Controller {
             String plz, String ort, Date gebtag, String telnr, String email, String handy, String nottel,
             AsyncCallback<Void> callback) {
         personDao.speichern(id, vorname, nachname, gebtag, strasse, plz, ort, telnr, email, geschlecht, handy, nottel);
+        callback.get(null);
     }
 
     @Override
@@ -301,7 +306,6 @@ public class ControllerImpl implements Controller {
             String nottel, Funktion funktion, int lagerId, AsyncCallback<Void> callback) {
         personDao.speichern(personId, vorname, nachname, gebtag, strasse, plz, ort, telnr, email, geschlecht, handy,
                 nottel);
-
         // Wenn ein Stab ohne Funktion ausgewählt wird ignorieren.
         if (id == null && funktion != REMOVE) {
             // ansonsten anlegen
@@ -313,12 +317,14 @@ public class ControllerImpl implements Controller {
                 stabDao.speichern(id, lagerId, personId, funktion);
             }
         }
+        callback.get(null);
     }
 
     @Override
     public void speichereZelt(Integer zeltId, String bezeichnung, Date angeschafft, double preis,
             AsyncCallback<Void> callback) {
         zeltDao.speichern(zeltId, bezeichnung, angeschafft, preis, "EUR");
+        callback.get(null);
     }
 
     @Override
@@ -328,7 +334,7 @@ public class ControllerImpl implements Controller {
         } else {
             zeltDao.loeschenZuLager(id);
         }
-
+        callback.get(null);
     }
 
     @Override
@@ -339,59 +345,65 @@ public class ControllerImpl implements Controller {
         } else {
             zeltDao.loeschenZuGruppe(id);
         }
-
+        callback.get(null);
     }
 
     @Override
     public void speichereSchaden(Integer id, int zeltId, Date datum, String schaden, AsyncCallback<Void> callback) {
         schadenDao.speichern(id, zeltId, datum, schaden);
+        callback.get(null);
     }
 
     @Override
     public void speichereZeltverleih(Integer id, int zeltId, Date datum, String person, String bemerkung,
             AsyncCallback<Void> callback) {
         zeltverleihDao.speichern(id, zeltId, datum, person, bemerkung);
+        callback.get(null);
     }
 
     @Override
     public void speichereZeltdetail(Integer id, int zeltId, int anzahl, int bezeichnung, String schluessel,
             AsyncCallback<Void> callback) {
         zeltdetailDao.speichern(id, zeltId, anzahl, bezeichnung, schluessel);
+        callback.get(null);
     }
 
     @Override
     public void speichereMaterialwart(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
             String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
             String nottel, Integer lagerId, AsyncCallback<Void> callback) {
-
         personDao.speichern(personId, vorname, name, gebDat, strasse, plz, ort, telNr, email, geschlecht, handy,
                 nottel);
-
         if (lagerId != null) {
             materialwartDao.speichern(lagerId, personId);
         } else if (id != null && lagerId == null) {
             materialwartDao.loeschen(id);
         }
+        callback.get(null);
     }
 
     @Override
     public void loescheSchaden(Integer id, AsyncCallback<Void> callback) {
         schadenDao.loeschen(id);
+        callback.get(null);
     }
 
     @Override
     public void loescheZeltverleih(int id, AsyncCallback<Void> callback) {
         zeltverleihDao.loeschen(id);
+        callback.get(null);
     }
 
     @Override
     public void loescheZeltdetail(int id, AsyncCallback<Void> callback) {
         zeltdetailDao.loeschen(id);
+        callback.get(null);
     }
 
     @Override
     public void loescheZeltdetailBezeichnung(int id, AsyncCallback<Void> callback) {
         zeltdetailBezeichnungDao.loeschen(id);
+        callback.get(null);
     }
 
     @Override
@@ -407,6 +419,7 @@ public class ControllerImpl implements Controller {
         } else if (id != null && lagerId == null) {
             gruppeDao.loeschen(id);
         }
+        callback.get(null);
     }
 
     @Override
@@ -420,6 +433,7 @@ public class ControllerImpl implements Controller {
         } else if (id != null && gruppeId == null) {
             leiterDao.loesche(id);
         }
+        callback.get(null);
     }
 
     @Override
@@ -433,11 +447,13 @@ public class ControllerImpl implements Controller {
         } else if (id != null && gruppeId == null) {
             teilnehmerDao.loesche(id);
         }
+        callback.get(null);
     }
 
     @Override
     public void aenderePasswort(String user, char[] neuesPasswort, AsyncCallback<Void> callback) {
         userDao.changePasswort(user, valueOf(neuesPasswort));
+        callback.get(null);
     }
 
     @Override
@@ -448,6 +464,7 @@ public class ControllerImpl implements Controller {
         } else {
             programmDao.aendereProgramm(id, morgen, mittag, abend, datum);
         }
+        callback.get(null);
     }
 
     @Override
@@ -455,6 +472,7 @@ public class ControllerImpl implements Controller {
         for (Integer id : ids) {
             programmDao.loescheProgramm(id);
         }
+        callback.get(null);
     }
 
     @Override
@@ -465,6 +483,7 @@ public class ControllerImpl implements Controller {
         } else {
             essenDao.aendereEssen(id, morgen, mittag, abend, datum);
         }
+        callback.get(null);
     }
 
     @Override
@@ -472,6 +491,7 @@ public class ControllerImpl implements Controller {
         for (Integer id : ids) {
             essenDao.loescheEssen(id);
         }
+        callback.get(null);
     }
 
     @Override
@@ -485,6 +505,7 @@ public class ControllerImpl implements Controller {
         } else if (id != null && !checked) {
             lagerinfoDao.loesche(id);
         }
+        callback.get(null);
     }
 
     @Override
@@ -492,6 +513,7 @@ public class ControllerImpl implements Controller {
         Gruppe gruppe = gruppeDao.getFromLager(gruppenId);
         gruppeDao.loeschen(gruppenId);
         gruppeDao.speicherenLager(lagerId, gruppe.getOriginalId());
+        callback.get(null);
     }
 
     @Override
@@ -499,6 +521,7 @@ public class ControllerImpl implements Controller {
         Leiter leiter = leiterDao.get(id);
         leiterDao.loesche(id);
         leiterDao.speichere(gruppeId, leiter.getOriginalId());
+        callback.get(null);
     }
 
     @Override
@@ -506,11 +529,13 @@ public class ControllerImpl implements Controller {
         Teilnehmer teilnehmer = teilnehmerDao.get(id);
         teilnehmerDao.loesche(id);
         teilnehmerDao.speichere(gruppeId, teilnehmer.getOriginalId());
+        callback.get(null);
     }
 
     @Override
     public void createUser(String username, char[] cs, AsyncCallback<Void> callback) {
         userDao.createUser(username, valueOf(cs));
+        callback.get(null);
     }
 
     @Override
@@ -533,16 +558,19 @@ public class ControllerImpl implements Controller {
     @Override
     public void grantUser(String user, String groups, AsyncCallback<Void> callback) {
         userDao.grantUser(user, groups);
+        callback.get(null);
     }
 
     @Override
     public void revokeUser(String user, String groups, AsyncCallback<Void> callback) {
         userDao.revokeUser(user, groups);
+        callback.get(null);
     }
 
     @Override
     public void dropUser(String username, AsyncCallback<Void> callback) {
         userDao.dropUser(username);
+        callback.get(null);
     }
 
     public void setJahrDao(JahrDao jahrDao) {
