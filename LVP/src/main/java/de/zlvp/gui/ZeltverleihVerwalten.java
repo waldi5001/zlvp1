@@ -66,7 +66,7 @@ public class ZeltverleihVerwalten extends AbstractJInternalFrame {
         tableBuilder = JTableBuilder.get(Zeltverleih.class,
                 asyncCallback -> get().getAllZeltverleih(zelt.getId(), asyncCallback));
         initialize();
-        setUp();
+        setupDialog();
         getJButtonLoeschen().setEnabled(false);
         getJButtonAendern().setEnabled(false);
     }

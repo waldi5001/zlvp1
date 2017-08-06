@@ -61,7 +61,7 @@ public class LagerAnlegen extends AbstractJInternalFrame {
         this.jahrId = jahrId;
         comboboxBuilderLagerort = JComboBoxBuilder.get(Lagerort.class, get()::getAllLagerort);
         initialize();
-        setUp();
+        setupDialog();
     }
 
     private void initialize() {

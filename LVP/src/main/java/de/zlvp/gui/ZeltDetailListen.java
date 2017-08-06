@@ -47,7 +47,7 @@ public class ZeltDetailListen extends AbstractJInternalFrame {
 
     public ZeltDetailListen() {
         initialize();
-        setUp();
+        setupDialog();
     }
 
     private void initialize() {

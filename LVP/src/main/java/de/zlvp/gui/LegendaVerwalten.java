@@ -1,7 +1,5 @@
 package de.zlvp.gui;
 
-import java.beans.PropertyVetoException;
-
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 
@@ -20,17 +18,10 @@ public class LegendaVerwalten extends AbstractJInternalFrame {
         this.lagerort = lagerort;
 
         initialize();
-        setUp();
+        setup();
 
         JRootPane rootPane = SwingUtilities.getRootPane(legendaVerwalten.getJButtonSpeichern());
         rootPane.setDefaultButton(legendaVerwalten.getJButtonSpeichern());
-
-        setMaximizable(true);
-        try {
-            setMaximum(true);
-        } catch (PropertyVetoException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
     }
 
     private void initialize() {

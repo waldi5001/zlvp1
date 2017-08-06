@@ -6,7 +6,6 @@ import static javax.swing.tree.TreeSelectionModel.SINGLE_TREE_SELECTION;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.beans.PropertyVetoException;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -62,17 +61,7 @@ public class HauptFenster extends AbstractJInternalFrame {
         Events.bus().register(this);
 
         initialize();
-        setUp();
-        // wird erst nach dem aktualisieren sichtbar
-        setVisible(false);
-        setResizable(true);
-        setIconifiable(true);
-        setMaximizable(true);
-        try {
-            setMaximum(true);
-        } catch (PropertyVetoException e1) {
-            throw new RuntimeException(e1.getMessage(), e1);
-        }
+        setup();
     }
 
     private void initialize() {

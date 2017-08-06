@@ -104,7 +104,7 @@ public class ZeltZubehoer extends AbstractJInternalFrame {
                         .add(getJComboBoxBezeichnungTabelle()).build());
 
         initialize();
-        setUp();
+        setupDialog();
         getJButtonLoeschen().setEnabled(false);
     }
 

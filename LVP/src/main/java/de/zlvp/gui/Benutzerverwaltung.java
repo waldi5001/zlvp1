@@ -46,7 +46,7 @@ public class Benutzerverwaltung extends AbstractJInternalFrame {
         jListBuilder = JListBuilder.get(User.class, Client.get()::getAllUsers).map(u -> u.getName());
 
         initialize();
-        setUp();
+        setupDialog();
     }
 
     private void initialize() {

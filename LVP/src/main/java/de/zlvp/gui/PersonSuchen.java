@@ -109,7 +109,7 @@ public class PersonSuchen extends AbstractJInternalFrame {
                 .findPerson(getJTextFieldVorname().getText(), getJTextFieldName().getText(), asyncCallback));
 
         initialize();
-        setUp();
+        setupDialog();
         getJButtonOK().setEnabled(false);
         getJButtonStatistik().setEnabled(false);
     }

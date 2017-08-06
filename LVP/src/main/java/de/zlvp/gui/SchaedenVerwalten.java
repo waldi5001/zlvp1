@@ -65,7 +65,7 @@ public class SchaedenVerwalten extends AbstractJInternalFrame {
         tableBuilder = JTableBuilder.get(Schaden.class,
                 asyncCallback -> get().getAllSchaeden(zelt.getId(), asyncCallback));
         initialize();
-        setUp();
+        setupDialog();
         getJButtonLoeschen().setEnabled(false);
         getJButtonAendern().setEnabled(false);
     }

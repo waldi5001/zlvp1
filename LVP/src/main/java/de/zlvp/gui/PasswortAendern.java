@@ -45,7 +45,7 @@ public class PasswortAendern extends AbstractJInternalFrame {
     public PasswortAendern(String name) {
         this.name = name;
         initialize();
-        setUp();
+        setupDialog();
     }
 
     private void initialize() {

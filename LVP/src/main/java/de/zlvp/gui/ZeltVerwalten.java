@@ -64,7 +64,7 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
         jListBuilder = JListBuilder.get(Zelt.class, get()::getAllZelt);
 
         initialize();
-        setUp();
+        setupDialog();
         getJButtonVerleih().setEnabled(false);
         getJButtonAendern().setEnabled(false);
         getJButtonDetailAendern().setEnabled(false);

@@ -44,7 +44,7 @@ public class ZeltAnlegen extends AbstractJInternalFrame {
 
     public ZeltAnlegen() {
         initialize();
-        setUp();
+        setupDialog();
     }
 
     private void initialize() {

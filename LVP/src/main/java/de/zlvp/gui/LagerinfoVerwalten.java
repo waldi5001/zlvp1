@@ -4,7 +4,6 @@ import static de.zlvp.Client.get;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.beans.PropertyVetoException;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -32,13 +31,9 @@ public class LagerinfoVerwalten extends AbstractJInternalFrame {
     public LagerinfoVerwalten() {
         tableBuilder = JTableBuilders.lagerinfo(get()::getAllPersons, get()::getAllLagerinfo);
         initialize();
-        setUp();
-        setMaximizable(true);
-        try {
-            setMaximum(true);
-        } catch (PropertyVetoException e) {
-            e.printStackTrace();
-        }
+        setup();
+        // Sollte erst nach Laden gemacht werden.
+        setVisible(true);
     }
 
     private void initialize() {
@@ -101,4 +96,4 @@ public class LagerinfoVerwalten extends AbstractJInternalFrame {
         return jButtonAbbrechen;
     }
 
-} // @jve:decl-index=0:visual-constraint="10,10"
+}

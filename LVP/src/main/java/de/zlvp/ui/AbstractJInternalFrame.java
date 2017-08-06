@@ -3,6 +3,7 @@ package de.zlvp.ui;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.beans.PropertyVetoException;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
@@ -17,19 +18,39 @@ public class AbstractJInternalFrame extends JInternalFrame {
         this.desktopPane = DesktopPane.get();
     }
 
-    protected void setUp() {
+    protected void setupDialog() {
         desktopPane.add(this);
         Dimension sizeDesktopPane = desktopPane.getSize();
-        this.setResizable(true);
-        this.setClosable(true);
-        this.setIconifiable(true);
-        this.setVisible(true);
+        setResizable(true);
+        setClosable(true);
+        setIconifiable(true);
+        setVisible(true);
 
         if (sizeDesktopPane.width == 0 && sizeDesktopPane.height == 0) {
             sizeDesktopPane = getToolkit().getScreenSize();
         }
-        this.setBounds((sizeDesktopPane.width - this.getSize().width) / 2,
+        setBounds((sizeDesktopPane.width - this.getSize().width) / 2,
                 (sizeDesktopPane.height - this.getSize().height) / 2, this.getSize().width, this.getSize().height);
+    }
+
+    protected void setup() {
+        desktopPane.add(this);
+        Dimension sizeDesktopPane = desktopPane.getSize();
+        setResizable(true);
+        setClosable(true);
+        setIconifiable(true);
+        setMaximizable(true);
+
+        if (sizeDesktopPane.width == 0 && sizeDesktopPane.height == 0) {
+            sizeDesktopPane = getToolkit().getScreenSize();
+        }
+        setBounds((sizeDesktopPane.width - this.getSize().width) / 2,
+                (sizeDesktopPane.height - this.getSize().height) / 2, this.getSize().width, this.getSize().height);
+        try {
+            setMaximum(true);
+        } catch (PropertyVetoException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     private static final long serialVersionUID = 1L;
