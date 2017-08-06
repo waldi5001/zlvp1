@@ -111,10 +111,17 @@ public class TPLager extends JTabbedPane {
         tableBuilderZelt = JTableBuilders.zelt(lager, get()::getAllZelt,
                 allZeltFromLager -> get().getAllZeltFromLager(lager.getId(), allZeltFromLager));
         tableBuilderGruppe = JTableBuilders.gruppe(lager, getJCheckBoxAlleGruppenAnzeigen()::isSelected);
-        comboboxBuilderLagerort = JComboBoxBuilder.get(Lagerort.class, get()::getAllLagerort);
+        comboboxBuilderLagerort = JComboBoxBuilder.get(Lagerort.class, get()::getAllLagerort, () -> {
+            if (lager.getLagerort() != null) {
+                jComboBoxLagerOrt.setSelectedItem(lager.getLagerort());
+            } else {
+                jComboBoxLagerOrt.setSelectedIndex(-1);
+            }
+        });
         tableBuilderProgramm = JTableBuilders.programm(lager);
         tableBuilderEssen = JTableBuilders.essen(lager);
         initialize();
+
     }
 
     private void initialize() {
@@ -607,11 +614,6 @@ public class TPLager extends JTabbedPane {
     private JComboBox<Lagerort> getJComboBoxLagerOrt() {
         if (jComboBoxLagerOrt == null) {
             jComboBoxLagerOrt = comboboxBuilderLagerort.build();
-            if (lager.getLagerort() != null) {
-                jComboBoxLagerOrt.setSelectedItem(lager.getLagerort());
-            } else {
-                jComboBoxLagerOrt.setSelectedIndex(-1);
-            }
         }
         return jComboBoxLagerOrt;
     }

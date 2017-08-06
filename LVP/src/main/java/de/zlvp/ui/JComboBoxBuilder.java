@@ -15,13 +15,19 @@ public class JComboBoxBuilder<E> {
     private JComboBox<E> jCombobox;
     private ValueGetter<E> mapper;
     final private Loader<E> loader;
+    final private PostLoadCallback postLoadCallback;
 
-    public static <E> JComboBoxBuilder<E> get(Class<E> clazz, Loader<E> loader) {
-        return new JComboBoxBuilder<>(loader);
+    public static <E> JComboBoxBuilder<E> get(Class<E> clazz, Loader<E> loader, PostLoadCallback postLoadCallback) {
+        return new JComboBoxBuilder<>(loader, postLoadCallback);
     }
 
-    private JComboBoxBuilder(Loader<E> loader) {
+    public static <E> JComboBoxBuilder<E> get(Class<E> clazz, Loader<E> loader) {
+        return new JComboBoxBuilder<>(loader, null);
+    }
+
+    private JComboBoxBuilder(Loader<E> loader, PostLoadCallback postLoadCallback) {
         this.loader = loader;
+        this.postLoadCallback = postLoadCallback;
     }
 
     public JComboBoxBuilder<E> map(ValueGetter<E> mapper) {
@@ -60,6 +66,9 @@ public class JComboBoxBuilder<E> {
             for (E e : result) {
                 this.jCombobox.addItem(e);
             }
+            if (postLoadCallback != null) {
+                postLoadCallback.afterLoad();
+            }
         });
     }
 
@@ -71,6 +80,11 @@ public class JComboBoxBuilder<E> {
     @FunctionalInterface
     public static interface Loader<T> {
         void get(AsyncCallback<List<T>> result);
+    }
+
+    @FunctionalInterface
+    public static interface PostLoadCallback {
+        void afterLoad();
     }
 
 }
