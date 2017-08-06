@@ -40,6 +40,8 @@ import de.zlvp.entity.Lagerort;
 import de.zlvp.entity.ZeltdetailBezeichnung;
 import de.zlvp.ui.Actions;
 import de.zlvp.ui.DesktopPane;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class FensterKlasse extends JFrame {
 
@@ -175,6 +177,8 @@ public class FensterKlasse extends JFrame {
 
     private JMenuItem jMenuItemExcelImportieren;
 
+    private JMenuItem jMenuItemReportOeffnen;
+
     public FensterKlasse() {
         super();
 
@@ -233,6 +237,7 @@ public class FensterKlasse extends JFrame {
             jMenuDatei.add(getJMenuItemBenutzerWechseln());
             jMenuDatei.add(getJMenuExport());
             jMenuDatei.add(getJMenuItemUeber());
+            jMenuDatei.add(getJMenuItemReportOeffnen());
             jMenuDatei.add(getJMenuExcelItemVorlageSpeichern());
             jMenuDatei.add(getJMenuExcelItemExcelImportieren());
             jMenuDatei.add(getjMenuItemBenutzerverwaltung());
@@ -277,6 +282,39 @@ public class FensterKlasse extends JFrame {
             });
         }
         return jMenuItemUeber;
+    }
+
+    private JMenuItem getJMenuItemReportOeffnen() {
+        if (jMenuItemReportOeffnen == null) {
+            jMenuItemReportOeffnen = new JMenuItem();
+            jMenuItemReportOeffnen.setText("Report öffnen");
+            jMenuItemReportOeffnen.addActionListener(e -> {
+                ExtendedFileChooser chooser = new ExtendedFileChooser();
+
+                chooser.setFileFilter(new FileFilter() {
+                    @Override
+                    public boolean accept(File f) {
+                        return f.isDirectory() || f.getName().toLowerCase().endsWith(".jrprint");
+                    }
+
+                    @Override
+                    public String getDescription() {
+                        return "*.jrprint - JasperReports";
+                    }
+                });
+
+                if (chooser.showOpenDialog(DesktopPane.get()) == ExtendedFileChooser.APPROVE_OPTION) {
+                    try {
+                        JasperViewer.viewReport(chooser.getSelectedFile().getCanonicalPath(), false, false);
+                    } catch (IOException e1) {
+                        throw new RuntimeException(e1.getMessage(), e1);
+                    } catch (JRException e1) {
+                        throw new RuntimeException(e1.getMessage(), e1);
+                    }
+                }
+            });
+        }
+        return jMenuItemReportOeffnen;
     }
 
     private JMenuItem getJMenuExcelItemVorlageSpeichern() {
