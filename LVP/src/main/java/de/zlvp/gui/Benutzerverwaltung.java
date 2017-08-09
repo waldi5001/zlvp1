@@ -17,7 +17,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
-import de.zlvp.Client;
 import de.zlvp.entity.User;
 import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.DualListField;
@@ -43,7 +42,13 @@ public class Benutzerverwaltung extends AbstractJInternalFrame {
     private JListBuilder<String> jListBuilderFrom;
 
     public Benutzerverwaltung() {
-        jListBuilder = JListBuilder.get(User.class, Client.get()::getAllUsers).map(u -> u.getName());
+        jListBuilder = JListBuilder.get(User.class, get()::getAllUsers).map(u -> u.getName());
+        jListBuilderFrom = JListBuilder.get(String.class, get()::getAllGroups);
+        jListBuilderTo = JListBuilder.get(String.class, asyncCallback -> {
+            if (getjListBenutzer().getSelectedValue() != null) {
+                asyncCallback.get(new ArrayList<>(getjListBenutzer().getSelectedValue().getGroups()));
+            }
+        });
 
         initialize();
         setupDialog();
@@ -60,13 +65,6 @@ public class Benutzerverwaltung extends AbstractJInternalFrame {
 
         getJSplitPane().add(getjScrollPaneBenutzerListe());
 
-        jListBuilderFrom = JListBuilder.get(String.class, Client.get()::getAllGroups);
-        jListBuilderTo = JListBuilder.get(String.class, asyncCallback -> {
-            if (getjListBenutzer().getSelectedValue() != null) {
-                asyncCallback.get(new ArrayList<>(getjListBenutzer().getSelectedValue().getGroups()));
-            }
-        });
-
         getJSplitPane().add(createDualListField());
 
         getContentPane().add(getjPanelButtons(), BorderLayout.SOUTH);
@@ -78,10 +76,16 @@ public class Benutzerverwaltung extends AbstractJInternalFrame {
     private DualListField<String, String> createDualListField() {
         return new DualListField<>(jListBuilderFrom.build(), jListBuilderTo.build(),
                 (ElementAddedCallback<String>) from -> {
-                    Client.get().grantUser(getjListBenutzer().getSelectedValue().getName(), from, cb -> {
+                    get().grantUser(getjListBenutzer().getSelectedValue().getName(), from, cb -> {
+                        getjListBenutzer().getSelectedValue().getGroups().add(from);
+                        jListBuilderTo.refresh();
+                        jListBuilderFrom.refresh();
                     });
                 }, (ElementRemovedCallback<String>) to -> {
-                    Client.get().revokeUser(getjListBenutzer().getSelectedValue().getName(), to, cb -> {
+                    get().revokeUser(getjListBenutzer().getSelectedValue().getName(), to, cb -> {
+                        getjListBenutzer().getSelectedValue().getGroups().remove(to);
+                        jListBuilderTo.refresh();
+                        jListBuilderFrom.refresh();
                     });
                 });
     }
@@ -132,7 +136,7 @@ public class Benutzerverwaltung extends AbstractJInternalFrame {
                 int option = JOptionPane.showConfirmDialog(null, message, "Neuen Benutzer anlegen",
                         JOptionPane.OK_CANCEL_OPTION);
                 if (option == JOptionPane.OK_OPTION) {
-                    Client.get().createUser(username.getText(), password.getPassword(),
+                    get().createUser(username.getText(), password.getPassword(),
                             asyncCallback -> jListBuilder.refresh());
                 }
             });

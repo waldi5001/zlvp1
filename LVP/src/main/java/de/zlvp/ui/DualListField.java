@@ -62,13 +62,33 @@ public class DualListField<F, T> extends JPanel {
         add(jScrollPaneTo);
 
         jListTo.getModel().addListDataListener(new ListDataAddedListener() {
+            @Override
+            public void intervalAdded(ListDataEvent e) {
+                DefaultListModel<T> toModel = (DefaultListModel<T>) e.getSource();
+                DefaultListModel<F> fromModel = (DefaultListModel<F>) jListFrom.getModel();
+
+                Enumeration<T> newElements = toModel.elements();
+                while (newElements.hasMoreElements()) {
+                    T to = newElements.nextElement();
+                    Enumeration<F> elements = fromModel.elements();
+                    while (elements.hasMoreElements()) {
+                        F from = elements.nextElement();
+                        if (to != null && to.equals(from)) {
+                            fromModel.removeElement(from);
+                        }
+                    }
+                }
+            }
+        });
+
+        jListFrom.getModel().addListDataListener(new ListDataAddedListener() {
 
             @Override
             public void intervalAdded(ListDataEvent e) {
-                DefaultListModel<T> newValueModel = (DefaultListModel<T>) e.getSource();
-                DefaultListModel<F> fromModel = (DefaultListModel<F>) jListFrom.getModel();
+                DefaultListModel<T> toModel = (DefaultListModel<T>) jListTo.getModel();
+                DefaultListModel<F> fromModel = (DefaultListModel<F>) e.getSource();
 
-                Enumeration<T> newElements = newValueModel.elements();
+                Enumeration<T> newElements = toModel.elements();
                 while (newElements.hasMoreElements()) {
                     T to = newElements.nextElement();
                     Enumeration<F> elements = fromModel.elements();
@@ -90,13 +110,7 @@ public class DualListField<F, T> extends JPanel {
                 }
             }
         });
-        jButtonAdd.addActionListener(e -> {
-            add();
-        });
 
-        jButtonRemove.addActionListener(e -> {
-            remove();
-        });
         jListTo.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -105,27 +119,23 @@ public class DualListField<F, T> extends JPanel {
                 }
             }
         });
+
+        jButtonAdd.addActionListener(e -> {
+            add();
+        });
+
+        jButtonRemove.addActionListener(e -> {
+            remove();
+        });
     }
 
     private void remove() {
         T selectedValue = jListTo.getSelectedValue();
-        if (selectedValue != null) {
-            DefaultListModel<F> m = (DefaultListModel<F>) jListFrom.getModel();
-            m.insertElementAt((F) selectedValue, 0);
-        }
-        DefaultListModel<T> model = (DefaultListModel<T>) jListTo.getModel();
-        model.removeElement(selectedValue);
         removedCallback.removed(selectedValue);
     }
 
     private void add() {
         F selectedValue = jListFrom.getSelectedValue();
-        if (selectedValue != null) {
-            DefaultListModel<T> m = (DefaultListModel<T>) jListTo.getModel();
-            m.insertElementAt((T) selectedValue, 0);
-        }
-        DefaultListModel<F> model = (DefaultListModel<F>) jListFrom.getModel();
-        model.removeElement(selectedValue);
         addedCallback.added(selectedValue);
     }
 
