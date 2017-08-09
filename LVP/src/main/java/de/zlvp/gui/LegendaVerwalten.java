@@ -22,6 +22,7 @@ public class LegendaVerwalten extends AbstractJInternalFrame {
 
         JRootPane rootPane = SwingUtilities.getRootPane(legendaVerwalten.getJButtonSpeichern());
         rootPane.setDefaultButton(legendaVerwalten.getJButtonSpeichern());
+        setVisible(true);
     }
 
     private void initialize() {
