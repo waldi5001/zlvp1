@@ -24,6 +24,7 @@ import de.zlvp.entity.Leiter;
 import de.zlvp.entity.Materialwart;
 import de.zlvp.entity.Person;
 import de.zlvp.entity.Programm;
+import de.zlvp.entity.Schaden;
 import de.zlvp.entity.Stab;
 import de.zlvp.entity.Teilnehmer;
 import de.zlvp.entity.Zelt;
@@ -546,6 +547,20 @@ public class JTableBuilders {
                         .addColumn(ColumnBuilder.get(String.class).add("PLZ").build())//
                         .addColumn(ColumnBuilder.get(String.class).add("Ort").build())//
                         .addColumn(ColumnBuilder.get(Date.class).add("Geburtsdatum").build());// ;
+    }
+
+    public static JTableBuilder<Schaden> schaden(Loader<Schaden> loader) {
+        return JTableBuilder.get(Schaden.class, loader)//
+                .addColumn(ColumnBuilder.get(Date.class).add("Datum").preferredWidth(70).build())//
+                .addColumn(ColumnBuilder.get(String.class).add("Schaden").preferredWidth(270).build())//
+                .get((s, index) -> {
+                    if (index == 0) {
+                        return s.getDatum();
+                    } else if (index == 1) {
+                        return s.getSchaden();
+                    }
+                    return null;
+                });
     }
 
     @FunctionalInterface

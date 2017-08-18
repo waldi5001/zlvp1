@@ -18,11 +18,13 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.text.DateFormatter;
 
+import de.javasoft.swing.JYTableScrollPane;
 import de.zlvp.entity.Schaden;
 import de.zlvp.entity.Zelt;
 import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JTableBuilder;
 import de.zlvp.ui.JTableBuilder.ColumnBuilder;
+import de.zlvp.ui.JTableBuilders;
 
 public class SchaedenVerwalten extends AbstractJInternalFrame {
 
@@ -48,7 +50,7 @@ public class SchaedenVerwalten extends AbstractJInternalFrame {
 
     private JPanel jPanel3;
 
-    private JScrollPane jScrollPaneSchäden;
+    private JScrollPane jScrollPaneSchaeden;
 
     private JTable jTableSchaeden;
 
@@ -62,8 +64,7 @@ public class SchaedenVerwalten extends AbstractJInternalFrame {
 
     public SchaedenVerwalten(Zelt zelt) {
         this.zelt = zelt;
-        tableBuilder = JTableBuilder.get(Schaden.class,
-                asyncCallback -> get().getAllSchaeden(zelt.getId(), asyncCallback));
+        tableBuilder = JTableBuilders.schaden(asyncCallback -> get().getAllSchaeden(zelt.getId(), asyncCallback));
         initialize();
         setupDialog();
         getJButtonLoeschen().setEnabled(false);
@@ -188,7 +189,7 @@ public class SchaedenVerwalten extends AbstractJInternalFrame {
             jSplitPane = new JSplitPane();
             jSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
             jSplitPane.setDividerLocation(100);
-            jSplitPane.setTopComponent(getJScrollPaneSchäden());
+            jSplitPane.setTopComponent(getJScrollPaneSchaeden());
             jSplitPane.setBottomComponent(getJPanel3());
         }
         return jSplitPane;
@@ -220,12 +221,11 @@ public class SchaedenVerwalten extends AbstractJInternalFrame {
         return jPanel3;
     }
 
-    private JScrollPane getJScrollPaneSchäden() {
-        if (jScrollPaneSchäden == null) {
-            jScrollPaneSchäden = new JScrollPane();
-            jScrollPaneSchäden.setViewportView(getJTableSchaeden());
+    private JScrollPane getJScrollPaneSchaeden() {
+        if (jScrollPaneSchaeden == null) {
+            jScrollPaneSchaeden = new JYTableScrollPane(getJTableSchaeden());
         }
-        return jScrollPaneSchäden;
+        return jScrollPaneSchaeden;
     }
 
     private JTable getJTableSchaeden() {
@@ -258,7 +258,6 @@ public class SchaedenVerwalten extends AbstractJInternalFrame {
                 }
 
             });
-            jTableSchaeden.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         }
         return jTableSchaeden;
     }
