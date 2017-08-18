@@ -1,5 +1,7 @@
 package de.zlvp;
 
+import static javax.swing.SwingUtilities.invokeLater;
+
 import javax.swing.SwingWorker;
 
 import org.aopalliance.intercept.MethodInterceptor;
@@ -8,13 +10,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.javasoft.swing.DetailsDialog;
+import de.zlvp.controller.AsyncCallback;
 
 public class AsyncAndErrorInterceptor implements MethodInterceptor {
     private static Logger log = LoggerFactory.getLogger(AsyncAndErrorInterceptor.class);
 
     @Override
+    @SuppressWarnings("unchecked")
     public Object invoke(MethodInvocation invocation) {
         try {
+            AsyncCallback<Object> originalCallback = (AsyncCallback<Object>) invocation
+                    .getArguments()[invocation.getArguments().length - 1];
+
+            AsyncCallback<Object> edtCallback = result -> invokeLater(() -> {
+                originalCallback.get(result);
+            });
+
+            invocation.getArguments()[invocation.getArguments().length - 1] = edtCallback;
+
             SwingWorker<Object, Void> sw = new SwingWorker<Object, Void>() {
                 @Override
                 protected Object doInBackground() {

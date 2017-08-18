@@ -1,7 +1,5 @@
 package de.zlvp.ui;
 
-import static javax.swing.SwingUtilities.invokeLater;
-
 import java.awt.Component;
 import java.util.List;
 
@@ -71,13 +69,11 @@ public class JListBuilder<E> {
 
     public void refresh() {
         loader.get(asyncCallback -> {
-            invokeLater(() -> {
-                DefaultListModel<E> listModel = (DefaultListModel<E>) jlist.getModel();
-                listModel.clear();
-                for (E e : asyncCallback) {
-                    listModel.addElement(e);
-                }
-            });
+            DefaultListModel<E> listModel = (DefaultListModel<E>) jlist.getModel();
+            listModel.clear();
+            for (E e : asyncCallback) {
+                listModel.addElement(e);
+            }
         });
     }
 }
