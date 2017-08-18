@@ -41,7 +41,7 @@ public class ZeltDetailListen extends AbstractJInternalFrame {
 
     private JButton jButtonZeDetail;
 
-    private JButton jButtonZeSchäden;
+    private JButton jButtonZeSchaeden;
 
     private JButton jButtonZeHistory;
 
@@ -123,7 +123,7 @@ public class ZeltDetailListen extends AbstractJInternalFrame {
             jPanel2 = new JPanel();
             jPanel2.setLayout(new GridBagLayout());
             jPanel2.add(getJButtonZeDetail(), gridBagConstraints);
-            jPanel2.add(getJButtonZeSchäden(), gridBagConstraints1);
+            jPanel2.add(getJButtonZeSchaeden(), gridBagConstraints1);
             jPanel2.add(getJButtonZeHistory(), gridBagConstraints2);
         }
         return jPanel2;
@@ -173,16 +173,16 @@ public class ZeltDetailListen extends AbstractJInternalFrame {
         return jButtonZeDetail;
     }
 
-    private JButton getJButtonZeSchäden() {
-        if (jButtonZeSchäden == null) {
-            jButtonZeSchäden = new JButton();
-            jButtonZeSchäden.setText("Schäden");
-            jButtonZeSchäden.addActionListener(e -> {
+    private JButton getJButtonZeSchaeden() {
+        if (jButtonZeSchaeden == null) {
+            jButtonZeSchaeden = new JButton();
+            jButtonZeSchaeden.setText("Schäden");
+            jButtonZeSchaeden.addActionListener(e -> {
                 Zelt zelt = getJListZelt().getSelectedValue();
                 Client.getReports().zeltSchaeden(zelt.getId());
             });
         }
-        return jButtonZeSchäden;
+        return jButtonZeSchaeden;
     }
 
     private JButton getJButtonZeHistory() {
