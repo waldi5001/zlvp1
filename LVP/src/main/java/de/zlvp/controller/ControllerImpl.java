@@ -48,6 +48,7 @@ import de.zlvp.entity.Schaden;
 import de.zlvp.entity.Stab;
 import de.zlvp.entity.Teilnehmer;
 import de.zlvp.entity.User;
+import de.zlvp.entity.Waehrung;
 import de.zlvp.entity.Zelt;
 import de.zlvp.entity.Zeltdetail;
 import de.zlvp.entity.ZeltdetailBezeichnung;
@@ -321,9 +322,9 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void speichereZelt(Integer zeltId, String bezeichnung, Date angeschafft, double preis,
+    public void speichereZelt(Integer zeltId, String bezeichnung, Date angeschafft, double preis, Waehrung waehrung,
             AsyncCallback<Void> callback) {
-        zeltDao.speichern(zeltId, bezeichnung, angeschafft, preis, "EUR");
+        zeltDao.speichern(zeltId, bezeichnung, angeschafft, preis, waehrung);
         callback.get(null);
     }
 

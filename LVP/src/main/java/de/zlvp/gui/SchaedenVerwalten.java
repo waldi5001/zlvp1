@@ -23,7 +23,6 @@ import de.zlvp.entity.Schaden;
 import de.zlvp.entity.Zelt;
 import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JTableBuilder;
-import de.zlvp.ui.JTableBuilder.ColumnBuilder;
 import de.zlvp.ui.JTableBuilders;
 
 public class SchaedenVerwalten extends AbstractJInternalFrame {
@@ -230,17 +229,7 @@ public class SchaedenVerwalten extends AbstractJInternalFrame {
 
     private JTable getJTableSchaeden() {
         if (jTableSchaeden == null) {
-            jTableSchaeden = tableBuilder//
-                    .addColumn(ColumnBuilder.get(Date.class).add("Datum").preferredWidth(70).build())//
-                    .addColumn(ColumnBuilder.get(String.class).add("Schaden").preferredWidth(270).build())//
-                    .get((s, index) -> {
-                        if (index == 0) {
-                            return s.getDatum();
-                        } else if (index == 1) {
-                            return s.getSchaden();
-                        }
-                        return null;
-                    }).build();
+            jTableSchaeden = tableBuilder.build();
             jTableSchaeden.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
                 public void mouseClicked(java.awt.event.MouseEvent e) {

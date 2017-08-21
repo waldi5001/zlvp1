@@ -5,23 +5,18 @@ import static de.zlvp.Client.get;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextField;
-import javax.swing.text.DateFormatter;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 
+import de.javasoft.swing.JYTableScrollPane;
 import de.zlvp.entity.Zelt;
 import de.zlvp.ui.AbstractJInternalFrame;
-import de.zlvp.ui.JListBuilder;
+import de.zlvp.ui.JTableBuilder;
+import de.zlvp.ui.JTableBuilders;
 
 public class ZeltVerwalten extends AbstractJInternalFrame {
 
@@ -31,22 +26,9 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
 
     private JPanel jPanel;
 
-    private JSplitPane jSplitPane;
-
     private JPanel jPanel1;
 
-    private JPanel jPanel2;
-
-    private JList<Zelt> jList;
-
-    private JTextField jTextFieldBezeichnung;
-
-    private JFormattedTextField jFormattedTextFieldAngeschafft;
-
-    private JTextField jTextFieldPreis;
-    private JLabel jLabel;
-    private JLabel jLabel1;
-    private JLabel jLabel2;
+    private JTable jTable;
 
     private JPanel jPanel3;
 
@@ -58,13 +40,16 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
 
     private JScrollPane jScrollPane;
 
-    private JListBuilder<Zelt> jListBuilder;
+    private JTableBuilder<Zelt> jTableBuilder;
 
     public ZeltVerwalten() {
-        jListBuilder = JListBuilder.get(Zelt.class, get()::getAllZelt);
+        jTableBuilder = JTableBuilders.zelt(asyncCallback -> get().getAllZelt(result -> {
+            asyncCallback.get(result);
+            setVisible(true);
+        }));
 
         initialize();
-        setupDialog();
+        setup();
         getJButtonVerleih().setEnabled(false);
         getJButtonAendern().setEnabled(false);
         getJButtonDetailAendern().setEnabled(false);
@@ -72,7 +57,6 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
     }
 
     private void initialize() {
-        this.setSize(520, 396);
         this.setContentPane(getJContentPane());
         this.setTitle("Zelte Verwalten / Ändern");
     }
@@ -90,21 +74,10 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
         if (jPanel == null) {
             jPanel = new JPanel();
             jPanel.setLayout(new BorderLayout());
-            jPanel.add(getJSplitPane(), java.awt.BorderLayout.CENTER);
+            jPanel.add(getJPanel1(), java.awt.BorderLayout.CENTER);
             jPanel.add(getJPanel3(), java.awt.BorderLayout.SOUTH);
         }
         return jPanel;
-    }
-
-    private JSplitPane getJSplitPane() {
-        if (jSplitPane == null) {
-            jSplitPane = new JSplitPane();
-            jSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-            jSplitPane.setTopComponent(getJPanel1());
-            jSplitPane.setBottomComponent(getJPanel2());
-            jSplitPane.setDividerLocation(150);
-        }
-        return jSplitPane;
     }
 
     private JPanel getJPanel1() {
@@ -121,105 +94,26 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
         return jPanel1;
     }
 
-    private JPanel getJPanel2() {
-        if (jPanel2 == null) {
-            GridBagConstraints gridBagConstraints6 = new GridBagConstraints();
-            gridBagConstraints6.gridx = 0;
-            gridBagConstraints6.anchor = java.awt.GridBagConstraints.WEST;
-            gridBagConstraints6.insets = new java.awt.Insets(10, 10, 0, 0);
-            gridBagConstraints6.gridy = 2;
-            jLabel2 = new JLabel();
-            jLabel2.setText("Preis:");
-            GridBagConstraints gridBagConstraints5 = new GridBagConstraints();
-            gridBagConstraints5.gridx = 0;
-            gridBagConstraints5.anchor = java.awt.GridBagConstraints.WEST;
-            gridBagConstraints5.insets = new java.awt.Insets(10, 10, 0, 0);
-            gridBagConstraints5.gridy = 1;
-            jLabel1 = new JLabel();
-            jLabel1.setText("Angeschafft:");
-            GridBagConstraints gridBagConstraints4 = new GridBagConstraints();
-            gridBagConstraints4.gridx = 0;
-            gridBagConstraints4.anchor = java.awt.GridBagConstraints.WEST;
-            gridBagConstraints4.insets = new java.awt.Insets(10, 10, 0, 0);
-            gridBagConstraints4.gridy = 0;
-            jLabel = new JLabel();
-            jLabel.setText("Bezeichnung:");
-            GridBagConstraints gridBagConstraints3 = new GridBagConstraints();
-            gridBagConstraints3.fill = java.awt.GridBagConstraints.HORIZONTAL;
-            gridBagConstraints3.gridy = 2;
-            gridBagConstraints3.weightx = 1.0;
-            gridBagConstraints3.insets = new java.awt.Insets(10, 10, 0, 10);
-            gridBagConstraints3.gridx = 1;
-            GridBagConstraints gridBagConstraints2 = new GridBagConstraints();
-            gridBagConstraints2.fill = java.awt.GridBagConstraints.HORIZONTAL;
-            gridBagConstraints2.gridy = 1;
-            gridBagConstraints2.weightx = 1.0;
-            gridBagConstraints2.insets = new java.awt.Insets(10, 10, 0, 10);
-            gridBagConstraints2.gridx = 1;
-            GridBagConstraints gridBagConstraints1 = new GridBagConstraints();
-            gridBagConstraints1.fill = java.awt.GridBagConstraints.HORIZONTAL;
-            gridBagConstraints1.gridy = 0;
-            gridBagConstraints1.weightx = 1.0;
-            gridBagConstraints1.insets = new java.awt.Insets(10, 10, 0, 10);
-            gridBagConstraints1.gridx = 1;
-            jPanel2 = new JPanel();
-            jPanel2.setLayout(new GridBagLayout());
-            jPanel2.add(getJTextFieldBezeichnung(), gridBagConstraints1);
-            jPanel2.add(getJFormattedTextFieldAngeschafft(), gridBagConstraints2);
-            jPanel2.add(getJTextFieldPreis(), gridBagConstraints3);
-            jPanel2.add(jLabel, gridBagConstraints4);
-            jPanel2.add(jLabel1, gridBagConstraints5);
-            jPanel2.add(jLabel2, gridBagConstraints6);
-        }
-        return jPanel2;
-    }
-
-    private JList<Zelt> getJList() {
-        if (jList == null) {
-            jList = jListBuilder.build();
-            jList.addListSelectionListener(e -> {
-                Zelt zelt = getJList().getSelectedValue();
-                if (zelt != null) {
-                    getJButtonVerleih().setEnabled(true);
-                    getJButtonAendern().setEnabled(true);
-                    getJButtonDetailAendern().setEnabled(true);
-                    getJButtonSchaeden().setEnabled(true);
-
-                    getJTextFieldBezeichnung().setText(zelt.getBezeichnung());
-                    getJFormattedTextFieldAngeschafft().setValue(zelt.getAngeschafft());
-                    getJTextFieldPreis().setText(Double.toString(zelt.getPreis()));
-                } else {
+    private JTable getJTable() {
+        if (jTable == null) {
+            jTable = jTableBuilder.build();
+            jTable.getSelectionModel().addListSelectionListener(e -> {
+                ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+                if (lsm.isSelectionEmpty()) {
                     getJButtonVerleih().setEnabled(false);
                     getJButtonAendern().setEnabled(false);
                     getJButtonDetailAendern().setEnabled(false);
                     getJButtonSchaeden().setEnabled(false);
+                } else {
+                    getJButtonVerleih().setEnabled(true);
+                    getJButtonAendern().setEnabled(true);
+                    getJButtonDetailAendern().setEnabled(true);
+                    getJButtonSchaeden().setEnabled(true);
                 }
-
             });
-        }
-        return jList;
-    }
 
-    private JTextField getJTextFieldBezeichnung() {
-        if (jTextFieldBezeichnung == null) {
-            jTextFieldBezeichnung = new JTextField();
         }
-        return jTextFieldBezeichnung;
-    }
-
-    private JFormattedTextField getJFormattedTextFieldAngeschafft() {
-        if (jFormattedTextFieldAngeschafft == null) {
-            jFormattedTextFieldAngeschafft = new JFormattedTextField(
-                    new DateFormatter(DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN)));
-        }
-        return jFormattedTextFieldAngeschafft;
-    }
-
-    private JTextField getJTextFieldPreis() {
-        if (jTextFieldPreis == null) {
-            jTextFieldPreis = new JTextField();
-        }
-        return jTextFieldPreis;
+        return jTable;
     }
 
     private JPanel getJPanel3() {
@@ -239,14 +133,7 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
             jButtonAendern = new JButton();
             jButtonAendern.setText("Ändern");
             jButtonAendern.addActionListener(e -> {
-                Zelt selectedValue = getJList().getSelectedValue();
-                String bezeichnung = getJTextFieldBezeichnung().getText();
-                Date angeschafft = (Date) getJFormattedTextFieldAngeschafft().getValue();
-                double preis = 0;
-                get().speichereZelt(selectedValue.getId(), bezeichnung, angeschafft, preis, asyncCallback -> {
-                    jListBuilder.refresh();
-                    getJList().setSelectedValue(selectedValue, true);
-                });
+                jTableBuilder.save();
             });
         }
         return jButtonAendern;
@@ -257,7 +144,7 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
             jButtonDetailAendern = new JButton();
             jButtonDetailAendern.setText("Detail ändern");
             jButtonDetailAendern.addActionListener(e -> {
-                Zelt selectedValue = getJList().getSelectedValue();
+                Zelt selectedValue = jTableBuilder.getSelectedValue();
                 new ZeltZubehoer(selectedValue);
             });
         }
@@ -275,8 +162,7 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
 
     private JScrollPane getJScrollPane() {
         if (jScrollPane == null) {
-            jScrollPane = new JScrollPane();
-            jScrollPane.setViewportView(getJList());
+            jScrollPane = new JYTableScrollPane(getJTable());
         }
         return jScrollPane;
     }
@@ -290,7 +176,7 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
             jButtonSchaeden = new JButton();
             jButtonSchaeden.setText("Schäden");
             jButtonSchaeden.addActionListener(e -> {
-                Zelt selectedValue = getJList().getSelectedValue();
+                Zelt selectedValue = jTableBuilder.getSelectedValue();
                 new SchaedenVerwalten(selectedValue);
             });
         }
@@ -302,11 +188,11 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
             jButtonVerleih = new JButton();
             jButtonVerleih.setText("Verleih");
             jButtonVerleih.addActionListener(e -> {
-                Zelt selectedValue = getJList().getSelectedValue();
+                Zelt selectedValue = jTableBuilder.getSelectedValue();
                 new ZeltverleihVerwalten(selectedValue);
             });
         }
         return jButtonVerleih;
     }
 
-} // @jve:decl-index=0:visual-constraint="10,10"
+}

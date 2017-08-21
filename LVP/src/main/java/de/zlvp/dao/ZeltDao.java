@@ -1,8 +1,10 @@
 package de.zlvp.dao;
 
+import java.sql.Types;
 import java.util.Date;
 import java.util.List;
 
+import de.zlvp.entity.Waehrung;
 import de.zlvp.entity.Zelt;
 
 public class ZeltDao extends AbstractDao<Zelt> {
@@ -20,23 +22,27 @@ public class ZeltDao extends AbstractDao<Zelt> {
     private static final String deleteFromGruppe = "delete from stgrze where stgrzeid = ?";
 
     public List<Zelt> getAll() {
-        return select(findAll, rs -> new Zelt(rs.getInt("zeid"), rs.getInt("zeid"), rs.getString("bezeichnung"),
-                rs.getDouble("preis"), rs.getDate("angeschafft"), rs.getString("waehrung")));
+        return select(findAll,
+                rs -> new Zelt(rs.getInt("zeid"), rs.getInt("zeid"), rs.getString("bezeichnung"), rs.getDouble("preis"),
+                        rs.getDate("angeschafft"),
+                        rs.getInt("waehrung") != 0 ? Waehrung.fromDbId(rs.getInt("waehrung")) : null));
     }
 
     public List<Zelt> getAllFromLager(int lagerId) {
         return select(findAllFromLager, ps -> ps.setInt(1, lagerId),
                 rs -> new Zelt(rs.getInt("stlazeid"), rs.getInt("zeid"), rs.getString("bezeichnung"),
-                        rs.getDouble("preis"), rs.getDate("angeschafft"), rs.getString("waehrung")));
+                        rs.getDouble("preis"), rs.getDate("angeschafft"),
+                        rs.getInt("waehrung") != 0 ? Waehrung.fromDbId(rs.getInt("waehrung")) : null));
     }
 
     public List<Zelt> getAllFromGruppe(int gruppeId) {
         return select(findAllFromGruppe, ps -> ps.setInt(1, gruppeId),
                 rs -> new Zelt(rs.getInt("stgrzeid"), rs.getInt("zeid"), rs.getString("bezeichnung"),
-                        rs.getDouble("preis"), rs.getDate("angeschafft"), rs.getString("waehrung")));
+                        rs.getDouble("preis"), rs.getDate("angeschafft"),
+                        rs.getInt("waehrung") != 0 ? Waehrung.fromDbId(rs.getInt("waehrung")) : null));
     }
 
-    public void speichern(Integer zeltId, String bezeichnung, Date angeschafft, double preis, String waehrung) {
+    public void speichern(Integer zeltId, String bezeichnung, Date angeschafft, double preis, Waehrung waehrung) {
         if (zeltId == null) {
             insertOrUpdate(insert, ps -> {
                 ps.setString(1, bezeichnung);
@@ -46,7 +52,11 @@ public class ZeltDao extends AbstractDao<Zelt> {
                 } else {
                     ps.setDate(3, null);
                 }
-                ps.setString(4, waehrung);
+                if (waehrung == null) {
+                    ps.setNull(4, Types.INTEGER);
+                } else {
+                    ps.setInt(4, waehrung.getDbId());
+                }
             });
         } else {
             insertOrUpdate(update, ps -> {
@@ -57,7 +67,11 @@ public class ZeltDao extends AbstractDao<Zelt> {
                 } else {
                     ps.setDate(3, null);
                 }
-                ps.setString(4, waehrung);
+                if (waehrung == null) {
+                    ps.setNull(4, Types.INTEGER);
+                } else {
+                    ps.setInt(4, waehrung.getDbId());
+                }
                 ps.setInt(5, zeltId);
             });
         }

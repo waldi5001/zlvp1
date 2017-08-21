@@ -22,6 +22,7 @@ import de.zlvp.entity.Schaden;
 import de.zlvp.entity.Stab;
 import de.zlvp.entity.Teilnehmer;
 import de.zlvp.entity.User;
+import de.zlvp.entity.Waehrung;
 import de.zlvp.entity.Zelt;
 import de.zlvp.entity.Zeltdetail;
 import de.zlvp.entity.ZeltdetailBezeichnung;
@@ -123,7 +124,7 @@ public interface Controller {
             String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
             String telNr2, Integer gruppeId, AsyncCallback<Void> callback);
 
-    void speichereZelt(Integer zeltId, String bezeichnung, Date angeschafft, double preis,
+    void speichereZelt(Integer zeltId, String bezeichnung, Date angeschafft, double preis, Waehrung waehrung,
             AsyncCallback<Void> callback);
 
     void speichereZeltdetail(Integer id, int zeltId, int anzahl, int bezeichnung, String schluessel,

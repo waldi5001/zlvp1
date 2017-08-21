@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class Zelt extends AbstractEntity {
 
-    public Zelt(Integer id, Integer zeltId, String brzNummer, double preis, Date angeschafft, String waehrung) {
+    public Zelt(Integer id, Integer zeltId, String brzNummer, double preis, Date angeschafft, Waehrung waehrung) {
         setId(id);
         setOriginalId(zeltId);
         this.brzNummer = brzNummer;
@@ -27,7 +27,7 @@ public class Zelt extends AbstractEntity {
 
     private Date angeschafft;
 
-    private String waehrung;
+    private Waehrung waehrung;
 
     private List<Zeltdetail> zeltdetail;
 
@@ -77,8 +77,20 @@ public class Zelt extends AbstractEntity {
         return angeschafft;
     }
 
-    public String getWaehrung() {
+    public void setPreis(double preis) {
+        this.preis = preis;
+    }
+
+    public void setAngeschafft(Date angeschafft) {
+        this.angeschafft = angeschafft;
+    }
+
+    public Waehrung getWaehrung() {
         return waehrung;
+    }
+
+    public void setWaehrung(Waehrung waehrung) {
+        this.waehrung = waehrung;
     }
 
 }

@@ -27,6 +27,7 @@ import de.zlvp.entity.Programm;
 import de.zlvp.entity.Schaden;
 import de.zlvp.entity.Stab;
 import de.zlvp.entity.Teilnehmer;
+import de.zlvp.entity.Waehrung;
 import de.zlvp.entity.Zelt;
 import de.zlvp.ui.JTableBuilder.ColumnBuilder;
 import de.zlvp.ui.JTableBuilder.Columns;
@@ -171,6 +172,40 @@ public class JTableBuilders {
                         .addColumn(ColumnBuilder.get(String.class).editable(false).add("Bezeichnung").build());//
     }
 
+    public static JTableBuilder<Zelt> zelt(Loader<Zelt> allZelt) {
+        return JTableBuilder.get(Zelt.class, allZelt)//
+                .set((zelt, val, index) -> {
+                    if (index == 1) {
+                        zelt.setAngeschafft((Date) val);
+                    } else if (index == 2) {
+                        zelt.setPreis((Double) val);
+                    } else if (index == 3) {
+                        zelt.setWaehrung((Waehrung) val);
+                    }
+                })//
+                .get((zelt, index) -> {
+                    if (index == 0) {
+                        return zelt.getBezeichnung();
+                    } else if (index == 1) {
+                        return zelt.getAngeschafft();
+                    } else if (index == 2) {
+                        return zelt.getPreis();
+                    } else if (index == 3) {
+                        return zelt.getWaehrung() != null ? zelt.getWaehrung().getBezeichnung() : null;
+                    }
+                    return null;
+                })
+                .save((zeltToSave, asyncCallback) -> get().speichereZelt(zeltToSave.getId(),
+                        zeltToSave.getBezeichnung(), zeltToSave.getAngeschafft(), zeltToSave.getPreis(),
+                        zeltToSave.getWaehrung(), asyncCallback))//
+                .addColumn(ColumnBuilder.get(String.class).add("Bezeichnung").editable(false).build())
+                .addColumn(ColumnBuilder.get(Date.class).add("Angeschafft").build())
+                .addColumn(ColumnBuilder.get(Double.class).add("Preis").build()).addColumn(ColumnBuilder
+                        .get(String.class).add("Währung").add(JComboBoxBuilder.get(Waehrung.class, result -> {
+                            result.get(asList(Waehrung.values()));
+                        }).map(w -> w.getBezeichnung()).build()).build());//
+    }
+
     public static JTableBuilder<Zelt> zelt(Gruppe gruppe, Loader<Zelt> allZeltFromLager, Loader<Zelt> allFromGruppe) {
         return getWithCopy(Zelt.class, Zelt.class, allZeltFromLager, allFromGruppe,
                 (s, t) -> s.getBezeichnung().equals(t.getBezeichnung()))//
@@ -281,7 +316,6 @@ public class JTableBuilders {
                         .addColumn(ColumnBuilder.get(String.class).add("PLZ").build())//
                         .addColumn(ColumnBuilder.get(String.class).add("Ort").build())//
                         .addColumn(ColumnBuilder.get(Date.class).add("Geburtsdatum").build());//
-
     }
 
     public static JTableBuilder<Teilnehmer> teilnehmer(Gruppe gruppe, Loader<Person> loaderPerson,
@@ -551,8 +585,6 @@ public class JTableBuilders {
 
     public static JTableBuilder<Schaden> schaden(Loader<Schaden> loader) {
         return JTableBuilder.get(Schaden.class, loader)//
-                .addColumn(ColumnBuilder.get(Date.class).add("Datum").preferredWidth(70).build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Schaden").preferredWidth(270).build())//
                 .get((s, index) -> {
                     if (index == 0) {
                         return s.getDatum();
@@ -560,7 +592,8 @@ public class JTableBuilders {
                         return s.getSchaden();
                     }
                     return null;
-                });
+                }).addColumn(ColumnBuilder.get(Date.class).add("Datum").preferredWidth(70).build())//
+                .addColumn(ColumnBuilder.get(String.class).add("Schaden").preferredWidth(270).build());//
     }
 
     @FunctionalInterface
