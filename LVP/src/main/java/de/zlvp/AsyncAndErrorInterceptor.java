@@ -34,8 +34,9 @@ public class AsyncAndErrorInterceptor implements MethodInterceptor {
                     try {
                         return invocation.proceed();
                     } catch (Throwable e) {
-                        throw new RuntimeException(e.getMessage(), e);
+                        handleThrowable(e);
                     }
+                    return null;
                 }
             };
             sw.execute();
