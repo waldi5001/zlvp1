@@ -25,6 +25,6 @@ public enum Geschlecht {
                 return geschlecht;
             }
         }
-        throw new RuntimeException("Geschlecht ID unbekannt");
+        throw new RuntimeException("Geschlecht ID unbekannt " + dbId);
     }
 }
