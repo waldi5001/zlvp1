@@ -90,7 +90,13 @@ public class ControllerImpl implements Controller {
 
     @Override
     public void getAllLagerinfo(AsyncCallback<List<Lagerinfo>> callback) {
-        callback.get(lagerinfoDao.getAll());
+        List<Lagerinfo> all = lagerinfoDao.getAll();
+        for (Lagerinfo lagerinfo : all) {
+            // Ob das hier so gut ist? Brauch ich weil ich kein anderes
+            // Kriterium hab um anzuzeigen dass ich eine Lagerinfo bin.
+            lagerinfo.setChecked(true);
+        }
+        callback.get(all);
     }
 
     @Override
