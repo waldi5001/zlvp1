@@ -40,6 +40,11 @@ public class JTableBuilders {
         boolean isSelected();
     }
 
+    @FunctionalInterface
+    private static interface Comparator<S, T> {
+        boolean isEqual(S s, T t);
+    }
+
     public static JTableBuilder<Stab> stab(Lager lager, Loader<Person> loaderPerson, Loader<Stab> loaderStab) {
         return getWithCopy(Person.class, Stab.class, loaderPerson, loaderStab,
                 (s, t) -> s.getId().equals(t.getOriginalId()))//
@@ -82,12 +87,12 @@ public class JTableBuilders {
                                 s.getVorname(), s.getName(), s.getStrasse(), s.getPlz(), s.getOrt(), s.getGebDat(),
                                 s.getTelNr(), s.getEmail(), s.getHandy(), s.getTelNr(), s.getFunktion(), lager.getId(),
                                 cb))//
-                        .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("Vorname").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("Straße").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("PLZ").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("Ort").build())//
-                        .addColumn(ColumnBuilder.get(Date.class).add("Geburtsdatum").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Nachname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Vorname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Straße").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("PLZ").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Ort").build())//
+                        .addColumn(ColumnBuilder.get(Date.class).editable(false).add("Geburtsdatum").build())
                         .addColumn(ColumnBuilder.get(Funktion.class).add("Funktion")
                                 .add(JComboBoxBuilder.get(Funktion.class, allFunktion -> {
                                     allFunktion.get(asList(Funktion.values()));
@@ -138,12 +143,12 @@ public class JTableBuilders {
                                 mw.getOrt(), mw.getGebDat(), mw.getTelNr(), mw.getEmail(), mw.getHandy(), mw.getTelNr(),
                                 mw.getLager() != null ? mw.getLager().getId() : null, cb))//
                         .addColumn(Columns.CHECK)//
-                        .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("Vorname").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("Straße").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("PLZ").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("Ort").build())//
-                        .addColumn(ColumnBuilder.get(Date.class).add("Geburtsdatum").build());//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Nachname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Vorname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Straße").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("PLZ").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Ort").build())//
+                        .addColumn(ColumnBuilder.get(Date.class).editable(false).add("Geburtsdatum").build());//
     }
 
     public static JTableBuilder<Zelt> zelt(Lager lager, Loader<Zelt> allZelt, Loader<Zelt> allZeltFromLager) {
@@ -203,7 +208,8 @@ public class JTableBuilders {
                 .addColumn(ColumnBuilder.get(Double.class).add("Preis").build()).addColumn(ColumnBuilder
                         .get(String.class).add("Währung").add(JComboBoxBuilder.get(Waehrung.class, result -> {
                             result.get(asList(Waehrung.values()));
-                        }).map(w -> w.getBezeichnung()).build()).build());//
+                        }).map(w -> w.getBezeichnung()).build()).build())//
+                .silentSaveOnClick();//
     }
 
     public static JTableBuilder<Zelt> zelt(Gruppe gruppe, Loader<Zelt> allZeltFromLager, Loader<Zelt> allFromGruppe) {
@@ -263,7 +269,7 @@ public class JTableBuilders {
                         gruppe.getLager() != null ? gruppe.getLager().getId() : null, gruppe.getName(),
                         gruppe.getSchlachtruf(), cb))//
                 .addColumn(Columns.CHECK)//
-                .addColumn(ColumnBuilder.get(String.class).add("Bezeichnung").build());//
+                .addColumn(ColumnBuilder.get(String.class).editable(false).add("Bezeichnung").build());//
     }
 
     public static JTableBuilder<Leiter> leiter(Gruppe gruppe, Loader<Person> loaderPerson, Loader<Leiter> allLeiter) {
@@ -310,12 +316,12 @@ public class JTableBuilders {
                                 le.getGruppe() != null ? le.getGruppe().getOriginalId() : null,
                                 gespeichertCallback -> Events.get().fireAktualisieren()))//
                         .addColumn(Columns.CHECK)//
-                        .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("Vorname").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("Straße").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("PLZ").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("Ort").build())//
-                        .addColumn(ColumnBuilder.get(Date.class).add("Geburtsdatum").build());//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Nachname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Vorname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Straße").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("PLZ").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Ort").build())//
+                        .addColumn(ColumnBuilder.get(Date.class).editable(false).add("Geburtsdatum").build());//
     }
 
     public static JTableBuilder<Teilnehmer> teilnehmer(Gruppe gruppe, Loader<Person> loaderPerson,
@@ -363,12 +369,12 @@ public class JTableBuilders {
                                 te.getGruppe() != null ? te.getGruppe().getOriginalId() : null,
                                 gespeichertCallback -> Events.get().fireAktualisieren()))//
                         .addColumn(Columns.CHECK)//
-                        .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("Vorname").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("Straße").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("PLZ").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("Ort").build())//
-                        .addColumn(ColumnBuilder.get(Date.class).add("Geburtsdatum").build());//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Nachname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Vorname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Straße").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("PLZ").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Ort").build())//
+                        .addColumn(ColumnBuilder.get(Date.class).editable(false).add("Geburtsdatum").build());//
     }
 
     public static JTableBuilder<Programm> programm(Lager lager) {
@@ -406,7 +412,8 @@ public class JTableBuilders {
                 .addColumn(Columns.WOCHENTAG)//
                 .addColumn(ColumnBuilder.get(String.class).add("Morgen").multiline().build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Mittag").multiline().build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Abend").multiline().build());//
+                .addColumn(ColumnBuilder.get(String.class).add("Abend").multiline().build())//
+                .silentSaveOnClick();//
     }
 
     public static JTableBuilder<Essen> essen(Lager lager) {
@@ -443,13 +450,8 @@ public class JTableBuilders {
                 .addColumn(Columns.WOCHENTAG)//
                 .addColumn(ColumnBuilder.get(String.class).add("Morgen").multiline().build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Mittag").multiline().build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Abend").multiline().build());//
-    }
-
-    private static String getWochentag(Date datum) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(datum);
-        return calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.GERMAN);
+                .addColumn(ColumnBuilder.get(String.class).add("Abend").multiline().build())//
+                .silentSaveOnClick();//
     }
 
     public static JTableBuilder<Legenda> legenda(Lagerort lagerort) {
@@ -529,7 +531,8 @@ public class JTableBuilders {
                 .addColumn(ColumnBuilder.get(String.class).add("Handy").build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Email").build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Fax").build())//
-                .addColumn(ColumnBuilder.get(String.class).multiline().add("Bemerkung").build());//
+                .addColumn(ColumnBuilder.get(String.class).multiline().add("Bemerkung").build())//
+                .silentSaveOnClick();//
     }
 
     public static JTableBuilder<Lagerinfo> lagerinfo(Loader<Person> loaderPerson, Loader<Lagerinfo> allLagerinfo) {
@@ -575,12 +578,12 @@ public class JTableBuilders {
                                 li.getGebDat(), li.getTelNr(), li.getEmail(), li.getHandy(), li.getTelNr(),
                                 li.isChecked(), cb))
                         .addColumn(Columns.CHECK)//
-                        .addColumn(ColumnBuilder.get(String.class).add("Nachname").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("Vorname").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("Straße").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("PLZ").build())//
-                        .addColumn(ColumnBuilder.get(String.class).add("Ort").build())//
-                        .addColumn(ColumnBuilder.get(Date.class).add("Geburtsdatum").build());// ;
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Nachname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Vorname").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Straße").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("PLZ").build())//
+                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Ort").build())//
+                        .addColumn(ColumnBuilder.get(Date.class).editable(false).add("Geburtsdatum").build());//
     }
 
     public static JTableBuilder<Schaden> schaden(Loader<Schaden> loader) {
@@ -593,12 +596,14 @@ public class JTableBuilders {
                     }
                     return null;
                 }).addColumn(ColumnBuilder.get(Date.class).add("Datum").preferredWidth(70).build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Schaden").preferredWidth(270).build());//
+                .addColumn(ColumnBuilder.get(String.class).add("Schaden").preferredWidth(270).build())//
+                .silentSaveOnClick();//
     }
 
-    @FunctionalInterface
-    private static interface Comparator<S, T> {
-        boolean isEqual(S s, T t);
+    private static String getWochentag(Date datum) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(datum);
+        return calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.GERMAN);
     }
 
     private static <S, T> JTableBuilder<T> getWithCopy(Class<S> sClass, Class<T> tClass, Loader<S> sourceLoader,
@@ -620,6 +625,6 @@ public class JTableBuilders {
                 }).collect(toList());
                 asyncCallback.get(result);
             }));
-        });
+        }).silentSaveOnClick();
     }
 }

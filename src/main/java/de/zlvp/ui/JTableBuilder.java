@@ -48,6 +48,7 @@ public class JTableBuilder<E> {
     private ObjectSetter<E> objectSetter;
     private Saver<E> saver;
     private Deleter<E> deleter;
+    private boolean silentSaveOnClick = false;
 
     public static <E> JTableBuilder<E> get(Class<E> clazz, Loader<E> loader) {
         return new JTableBuilder<>(loader);
@@ -60,7 +61,8 @@ public class JTableBuilder<E> {
     public void refresh() {
         loader.get(result -> {
             this.table.setRowSorter(null);
-            this.table.setModel(new TableModel<>(changedData, columns, data = result, mapper, objectSetter));
+            this.table.setModel(new TableModel<>(changedData, columns, data = result, mapper, objectSetter,
+                    silentSaveOnClick, saver));
             setColumns();
         });
     }
@@ -72,7 +74,6 @@ public class JTableBuilder<E> {
                 refresh();
             });
         }
-
     }
 
     public JTable build() {
@@ -167,10 +168,16 @@ public class JTableBuilder<E> {
             if (preferredWidth != null) {
                 tableColumn.setPreferredWidth(preferredWidth);
             }
+
             if (width != null) {
                 tableColumn.setMaxWidth(width);
             }
         }
+    }
+
+    public JTableBuilder<E> silentSaveOnClick() {
+        silentSaveOnClick = true;
+        return this;
     }
 
     private static class TableModel<T> extends AbstractTableModel {
@@ -180,14 +187,18 @@ public class JTableBuilder<E> {
         private final ObjectSetter<T> setter;
         private final List<Column<?>> columns;
         private final Set<T> changedData;
+        private final boolean silentSaveOnClick;
+        private final Saver<T> saver;
 
         public TableModel(Set<T> changedData, List<Column<?>> columns, List<T> data, ObjectGetter<T> mapper,
-                ObjectSetter<T> setter) {
+                ObjectSetter<T> setter, boolean silentSaveOnClick, Saver<T> saver) {
             this.columns = columns;
             this.data = data;
             this.mapper = mapper;
             this.setter = setter;
             this.changedData = changedData;
+            this.silentSaveOnClick = silentSaveOnClick;
+            this.saver = saver;
         }
 
         @Override
@@ -209,7 +220,14 @@ public class JTableBuilder<E> {
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             T d = data.get(rowIndex);
             setter.set(d, aValue, columnIndex);
-            changedData.add(d);
+
+            if (silentSaveOnClick) {
+                saver.save(d, asyncCallback -> {
+
+                });
+            } else {
+                changedData.add(d);
+            }
         }
 
         @Override
