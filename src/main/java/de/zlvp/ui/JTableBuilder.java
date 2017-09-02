@@ -7,10 +7,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EventObject;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
@@ -41,14 +39,11 @@ public class JTableBuilder<E> {
 
     private List<E> data;
 
-    private final Set<E> changedData = new HashSet<>();
-
     private ObjectGetter<E> mapper;
     private final Loader<E> loader;
     private ObjectSetter<E> objectSetter;
     private Saver<E> saver;
     private Deleter<E> deleter;
-    private boolean silentSaveOnClick = false;
 
     public static <E> JTableBuilder<E> get(Class<E> clazz, Loader<E> loader) {
         return new JTableBuilder<>(loader);
@@ -61,19 +56,9 @@ public class JTableBuilder<E> {
     public void refresh() {
         loader.get(result -> {
             this.table.setRowSorter(null);
-            this.table.setModel(new TableModel<>(changedData, columns, data = result, mapper, objectSetter,
-                    silentSaveOnClick, saver));
+            this.table.setModel(new TableModel<>(columns, data = result, mapper, objectSetter, saver));
             setColumns();
         });
-    }
-
-    public void save() {
-        for (E d : changedData) {
-            saver.save(d, asyncCallback -> {
-                changedData.clear();
-                refresh();
-            });
-        }
     }
 
     public JTable build() {
@@ -175,29 +160,20 @@ public class JTableBuilder<E> {
         }
     }
 
-    public JTableBuilder<E> silentSaveOnClick() {
-        silentSaveOnClick = true;
-        return this;
-    }
-
     private static class TableModel<T> extends AbstractTableModel {
         private static final long serialVersionUID = 1L;
         private final List<T> data;
         private final ObjectGetter<T> mapper;
         private final ObjectSetter<T> setter;
         private final List<Column<?>> columns;
-        private final Set<T> changedData;
-        private final boolean silentSaveOnClick;
         private final Saver<T> saver;
 
-        public TableModel(Set<T> changedData, List<Column<?>> columns, List<T> data, ObjectGetter<T> mapper,
-                ObjectSetter<T> setter, boolean silentSaveOnClick, Saver<T> saver) {
+        public TableModel(List<Column<?>> columns, List<T> data, ObjectGetter<T> mapper, ObjectSetter<T> setter,
+                Saver<T> saver) {
             this.columns = columns;
             this.data = data;
             this.mapper = mapper;
             this.setter = setter;
-            this.changedData = changedData;
-            this.silentSaveOnClick = silentSaveOnClick;
             this.saver = saver;
         }
 
@@ -221,13 +197,9 @@ public class JTableBuilder<E> {
             T d = data.get(rowIndex);
             setter.set(d, aValue, columnIndex);
 
-            if (silentSaveOnClick) {
-                saver.save(d, asyncCallback -> {
+            saver.save(d, asyncCallback -> {
 
-                });
-            } else {
-                changedData.add(d);
-            }
+            });
         }
 
         @Override

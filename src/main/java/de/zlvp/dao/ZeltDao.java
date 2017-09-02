@@ -52,7 +52,7 @@ public class ZeltDao extends AbstractDao<Zelt> {
                 } else {
                     ps.setDate(3, null);
                 }
-                if (waehrung == null) {
+                if (waehrung == null || waehrung == Waehrung.NULL) {
                     ps.setNull(4, Types.INTEGER);
                 } else {
                     ps.setInt(4, waehrung.getDbId());
@@ -67,7 +67,7 @@ public class ZeltDao extends AbstractDao<Zelt> {
                 } else {
                     ps.setDate(3, null);
                 }
-                if (waehrung == null) {
+                if (waehrung == null || waehrung == Waehrung.NULL) {
                     ps.setNull(4, Types.INTEGER);
                 } else {
                     ps.setInt(4, waehrung.getDbId());

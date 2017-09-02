@@ -32,8 +32,6 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
 
     private JPanel jPanel3;
 
-    private JButton jButtonAendern;
-
     private JButton jButtonDetailAendern;
 
     private JButton jButtonAbbrechen;
@@ -51,7 +49,6 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
         initialize();
         setup();
         getJButtonVerleih().setEnabled(false);
-        getJButtonAendern().setEnabled(false);
         getJButtonDetailAendern().setEnabled(false);
         getJButtonSchaeden().setEnabled(false);
     }
@@ -101,12 +98,10 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
                 ListSelectionModel lsm = (ListSelectionModel) e.getSource();
                 if (lsm.isSelectionEmpty()) {
                     getJButtonVerleih().setEnabled(false);
-                    getJButtonAendern().setEnabled(false);
                     getJButtonDetailAendern().setEnabled(false);
                     getJButtonSchaeden().setEnabled(false);
                 } else {
                     getJButtonVerleih().setEnabled(true);
-                    getJButtonAendern().setEnabled(true);
                     getJButtonDetailAendern().setEnabled(true);
                     getJButtonSchaeden().setEnabled(true);
                 }
@@ -119,24 +114,12 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
     private JPanel getJPanel3() {
         if (jPanel3 == null) {
             jPanel3 = new JPanel();
-            jPanel3.add(getJButtonAendern(), null);
             jPanel3.add(getJButtonDetailAendern(), null);
             jPanel3.add(getJButtonSchaeden(), null);
             jPanel3.add(getJButtonVerleih(), null);
             jPanel3.add(getJButtonAbbrechen(), null);
         }
         return jPanel3;
-    }
-
-    private JButton getJButtonAendern() {
-        if (jButtonAendern == null) {
-            jButtonAendern = new JButton();
-            jButtonAendern.setText("Ändern");
-            jButtonAendern.addActionListener(e -> {
-                jTableBuilder.save();
-            });
-        }
-        return jButtonAendern;
     }
 
     private JButton getJButtonDetailAendern() {

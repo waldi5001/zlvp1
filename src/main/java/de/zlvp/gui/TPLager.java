@@ -49,18 +49,13 @@ public class TPLager extends JTabbedPane {
     private JPanel jPanelProgramm;
     private JScrollPane jScrollPaneS;
     private JTable jTableStab;
-    private JButton jButtonOKGruppe;
-    private JButton jButtonOKStab;
     private JScrollPane jScrollPaneG;
     private JTable jTableGruppe;
     private JScrollPane jScrollPaneZ;
     private JTable jTableZelte;
-    private JButton jButtonOKZelte;
     private JPanel jPanel15;
-    private JButton jButtonAendereProgramm;
     private JPanel jPanelEssen;
     private JPanel jPanel18;
-    private JButton jButtonAendernEssen;
     private JPanel jPanelDaten;
     private JTextField jTextFieldName;
     private JTextField jTextFieldThema;
@@ -75,7 +70,6 @@ public class TPLager extends JTabbedPane {
     private JLabel jLabel7;
     private JLabel jLabel8;
     private JPanel jPanelMaterialwart;
-    private JButton jButtonOKMaterialwart;
     private JScrollPane jScrollPaneMW;
     private JTable jTableMaterialwart;
     private JScrollPane jScrollPaneProgramm;
@@ -141,10 +135,6 @@ public class TPLager extends JTabbedPane {
             jPanelStab = new JPanel();
             jPanelStab.setLayout(new BorderLayout());
             jPanelStab.add(getJScrollPaneS(), BorderLayout.CENTER);
-
-            JPanel buttonPanel = new JPanel(new FlowLayout());
-            buttonPanel.add(getJButtonOKStab());
-            jPanelStab.add(buttonPanel, java.awt.BorderLayout.SOUTH);
         }
         return jPanelStab;
     }
@@ -157,10 +147,6 @@ public class TPLager extends JTabbedPane {
 
             JPanel panel = new JPanel(new GridLayout(1, 2));
             panel.add(getJCheckBoxAlleGruppenAnzeigen());
-
-            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            buttonPanel.add(getJButtonOKGruppe());
-            panel.add(buttonPanel);
 
             jPanelGruppe.add(panel, java.awt.BorderLayout.SOUTH);
         }
@@ -180,9 +166,6 @@ public class TPLager extends JTabbedPane {
             jPanelZelte = new JPanel();
             jPanelZelte.setLayout(new BorderLayout());
             jPanelZelte.add(getJScrollPaneZ(), java.awt.BorderLayout.CENTER);
-            JPanel buttonPanel = new JPanel(new FlowLayout());
-            buttonPanel.add(getJButtonOKZelte());
-            jPanelZelte.add(buttonPanel, java.awt.BorderLayout.SOUTH);
         }
         return jPanelZelte;
     }
@@ -209,27 +192,6 @@ public class TPLager extends JTabbedPane {
             jTableStab = tableBuilderStab.build();
         }
         return jTableStab;
-    }
-
-    private JButton getJButtonOKGruppe() {
-        if (jButtonOKGruppe == null) {
-            jButtonOKGruppe = new JButton();
-            jButtonOKGruppe.setText("OK");
-            jButtonOKGruppe.addActionListener(e -> {
-                tableBuilderGruppe.save();
-                Events.get().fireAktualisieren();
-            });
-        }
-        return jButtonOKGruppe;
-    }
-
-    private JButton getJButtonOKStab() {
-        if (jButtonOKStab == null) {
-            jButtonOKStab = new JButton();
-            jButtonOKStab.setText("OK");
-            jButtonOKStab.addActionListener(e -> tableBuilderStab.save());
-        }
-        return jButtonOKStab;
     }
 
     private JScrollPane getJScrollPaneG() {
@@ -260,35 +222,14 @@ public class TPLager extends JTabbedPane {
         return jTableZelte;
     }
 
-    private JButton getJButtonOKZelte() {
-        if (jButtonOKZelte == null) {
-            jButtonOKZelte = new JButton();
-            jButtonOKZelte.setText("OK");
-            jButtonOKZelte.addActionListener(e -> tableBuilderZelt.save());
-        }
-        return jButtonOKZelte;
-    }
-
     private JPanel getJPanel15() {
         if (jPanel15 == null) {
             jPanel15 = new JPanel();
             jPanel15.setLayout(new FlowLayout());
-            jPanel15.add(getJButtonSpeichernProgramm(), null);
             jPanel15.add(getJButtonHinzufuegenProgramm(), null);
             jPanel15.add(getJButtonLoeschenProgramm(), null);
         }
         return jPanel15;
-    }
-
-    private JButton getJButtonSpeichernProgramm() {
-        if (jButtonAendereProgramm == null) {
-            jButtonAendereProgramm = new JButton();
-            jButtonAendereProgramm.setText("Speichern");
-            jButtonAendereProgramm.addActionListener(e -> {
-                tableBuilderProgramm.save();
-            });
-        }
-        return jButtonAendereProgramm;
     }
 
     private JPanel getJPanelEssen() {
@@ -305,22 +246,10 @@ public class TPLager extends JTabbedPane {
         if (jPanel18 == null) {
             jPanel18 = new JPanel();
             jPanel18.setLayout(new FlowLayout());
-            jPanel18.add(getJButtonSpeichernEssen(), null);
             jPanel18.add(getJButtonHinzufuegenEssen(), null);
             jPanel18.add(getJButtonLoeschenEssen(), null);
         }
         return jPanel18;
-    }
-
-    private JButton getJButtonSpeichernEssen() {
-        if (jButtonAendernEssen == null) {
-            jButtonAendernEssen = new JButton();
-            jButtonAendernEssen.setText("Speichern");
-            jButtonAendernEssen.addActionListener(e -> {
-                tableBuilderEssen.save();
-            });
-        }
-        return jButtonAendernEssen;
     }
 
     private JPanel getJPanelDaten() {
@@ -483,20 +412,8 @@ public class TPLager extends JTabbedPane {
             jPanelMaterialwart = new JPanel();
             jPanelMaterialwart.setLayout(new BorderLayout());
             jPanelMaterialwart.add(getJScrollPaneMW(), BorderLayout.CENTER);
-            JPanel buttonPanel = new JPanel(new FlowLayout());
-            buttonPanel.add(getJButtonOKMaterialwart());
-            jPanelMaterialwart.add(buttonPanel, java.awt.BorderLayout.SOUTH);
         }
         return jPanelMaterialwart;
-    }
-
-    private JButton getJButtonOKMaterialwart() {
-        if (jButtonOKMaterialwart == null) {
-            jButtonOKMaterialwart = new JButton();
-            jButtonOKMaterialwart.setText("OK");
-            jButtonOKMaterialwart.addActionListener(e -> tableBuilderMaterialwart.save());
-        }
-        return jButtonOKMaterialwart;
     }
 
     private JScrollPane getJScrollPaneMW() {

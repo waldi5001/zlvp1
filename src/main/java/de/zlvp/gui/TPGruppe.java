@@ -40,8 +40,6 @@ public class TPGruppe extends JTabbedPane {
 
     private JButton jButtonOKDaten;
 
-    private JButton jButtonOKLeiter;
-
     private JTextField jTextFieldName;
     private JLabel jLabelName;
     private JLabel jLabelSchlachtruf;
@@ -56,15 +54,11 @@ public class TPGruppe extends JTabbedPane {
 
     private JTable jTableTeilnehmer;
 
-    private JButton jButtonOKTeilnehmer;
-
     private JPanel jPanelZelt;
 
     private JScrollPane jScrollPaneZ;
 
     private JTable jTableZelt;
-
-    private JButton jButtonOKZelte;
 
     private JScrollPane jScrollPaneSchlachtruf;
 
@@ -103,9 +97,6 @@ public class TPGruppe extends JTabbedPane {
             jPanelLeiter = new JPanel();
             jPanelLeiter.setLayout(new BorderLayout());
             jPanelLeiter.add(getJScrollPaneL(), java.awt.BorderLayout.CENTER);
-            JPanel buttonPanel = new JPanel(new FlowLayout());
-            buttonPanel.add(getJButtonOKLeiter());
-            jPanelLeiter.add(buttonPanel, java.awt.BorderLayout.SOUTH);
         }
         return jPanelLeiter;
     }
@@ -181,17 +172,6 @@ public class TPGruppe extends JTabbedPane {
         return jButtonOKDaten;
     }
 
-    private JButton getJButtonOKLeiter() {
-        if (jButtonOKLeiter == null) {
-            jButtonOKLeiter = new JButton();
-            jButtonOKLeiter.setText("OK");
-            jButtonOKLeiter.addActionListener(e -> {
-                tableBuilderLeiter.save();
-            });
-        }
-        return jButtonOKLeiter;
-    }
-
     private JTextField getJTextFieldName() {
         if (jTextFieldName == null) {
             jTextFieldName = new JTextField();
@@ -219,9 +199,6 @@ public class TPGruppe extends JTabbedPane {
             jPanelTeilnehmer = new JPanel();
             jPanelTeilnehmer.setLayout(new BorderLayout());
             jPanelTeilnehmer.add(getJScrollPaneT(), java.awt.BorderLayout.CENTER);
-            JPanel buttonPanel = new JPanel(new FlowLayout());
-            buttonPanel.add(getJButtonOKTeilnehmer());
-            jPanelTeilnehmer.add(buttonPanel, java.awt.BorderLayout.SOUTH);
         }
         return jPanelTeilnehmer;
     }
@@ -240,23 +217,11 @@ public class TPGruppe extends JTabbedPane {
         return jTableTeilnehmer;
     }
 
-    private JButton getJButtonOKTeilnehmer() {
-        if (jButtonOKTeilnehmer == null) {
-            jButtonOKTeilnehmer = new JButton();
-            jButtonOKTeilnehmer.setText("OK");
-            jButtonOKTeilnehmer.addActionListener(e -> tableBuilderTeilnehmer.save());
-        }
-        return jButtonOKTeilnehmer;
-    }
-
     private JPanel getJPanelZelt() {
         if (jPanelZelt == null) {
             jPanelZelt = new JPanel();
             jPanelZelt.setLayout(new BorderLayout());
             jPanelZelt.add(getJScrollPaneZ(), java.awt.BorderLayout.CENTER);
-            JPanel buttonPanel = new JPanel(new FlowLayout());
-            buttonPanel.add(getJButtonOKZelte());
-            jPanelZelt.add(buttonPanel, java.awt.BorderLayout.SOUTH);
         }
         return jPanelZelt;
     }
@@ -266,15 +231,6 @@ public class TPGruppe extends JTabbedPane {
             jScrollPaneZ = new JYTableScrollPane(getJTableZelt());
         }
         return jScrollPaneZ;
-    }
-
-    private JButton getJButtonOKZelte() {
-        if (jButtonOKZelte == null) {
-            jButtonOKZelte = new JButton();
-            jButtonOKZelte.setText("OK");
-            jButtonOKZelte.addActionListener(e -> tableBuilderZelt.save());
-        }
-        return jButtonOKZelte;
     }
 
     private JScrollPane getJScrollPaneSchlachtruf() {

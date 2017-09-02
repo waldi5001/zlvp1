@@ -58,8 +58,6 @@ public class ZeltZubehoer extends AbstractJInternalFrame {
 
     private JButton jButtonHinzufuegen;
 
-    private JButton jButtonSpeichern;
-
     private final Zelt zelt;
 
     final private JTableBuilder<Zeltdetail> tableBuilder;
@@ -140,7 +138,6 @@ public class ZeltZubehoer extends AbstractJInternalFrame {
             jPanel1.add(getJButtonHinzufuegen(), null);
             jPanel1.add(getJButtonBezeichnungHinz(), null);
             jPanel1.add(getJButtonLoeschen(), null);
-            jPanel1.add(getJButtonSpeichern(), null);
             jPanel1.add(getJButtonAbbrechen(), null);
         }
         return jPanel1;
@@ -165,18 +162,6 @@ public class ZeltZubehoer extends AbstractJInternalFrame {
             jPanel2.add(getJPanel3(), gridBagConstraints1);
         }
         return jPanel2;
-    }
-
-    private JButton getJButtonSpeichern() {
-        if (jButtonSpeichern == null) {
-            jButtonSpeichern = new JButton();
-            jButtonSpeichern.setText("Speichern");
-            jButtonSpeichern.addActionListener(e -> {
-                tableBuilder.save();
-                setVisible(false);
-            });
-        }
-        return jButtonSpeichern;
     }
 
     private JButton getJButtonAbbrechen() {

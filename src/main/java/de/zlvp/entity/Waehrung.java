@@ -1,7 +1,7 @@
 package de.zlvp.entity;
 
 public enum Waehrung {
-    EUR("€", 1), DM("DM", 2), CHF("CHF", 3);
+    NULL("", 0), EUR("€", 1), DM("DM", 2), CHF("CHF", 3);
 
     private final String display;
     private final int dbId;

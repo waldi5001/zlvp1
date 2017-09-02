@@ -208,8 +208,7 @@ public class JTableBuilders {
                 .addColumn(ColumnBuilder.get(Double.class).add("Preis").build()).addColumn(ColumnBuilder
                         .get(String.class).add("Währung").add(JComboBoxBuilder.get(Waehrung.class, result -> {
                             result.get(asList(Waehrung.values()));
-                        }).map(w -> w.getBezeichnung()).build()).build())//
-                .silentSaveOnClick();//
+                        }).map(w -> w.getBezeichnung()).build()).build());//
     }
 
     public static JTableBuilder<Zelt> zelt(Gruppe gruppe, Loader<Zelt> allZeltFromLager, Loader<Zelt> allFromGruppe) {
@@ -267,7 +266,7 @@ public class JTableBuilders {
                 })
                 .save((gruppe, cb) -> get().speichereGruppe(gruppe.getId(), gruppe.getOriginalId(),
                         gruppe.getLager() != null ? gruppe.getLager().getId() : null, gruppe.getName(),
-                        gruppe.getSchlachtruf(), cb))//
+                        gruppe.getSchlachtruf(), gespeichertCallback -> Events.get().fireAktualisieren()))//
                 .addColumn(Columns.CHECK)//
                 .addColumn(ColumnBuilder.get(String.class).editable(false).add("Bezeichnung").build());//
     }
@@ -412,8 +411,7 @@ public class JTableBuilders {
                 .addColumn(Columns.WOCHENTAG)//
                 .addColumn(ColumnBuilder.get(String.class).add("Morgen").multiline().build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Mittag").multiline().build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Abend").multiline().build())//
-                .silentSaveOnClick();//
+                .addColumn(ColumnBuilder.get(String.class).add("Abend").multiline().build());//
     }
 
     public static JTableBuilder<Essen> essen(Lager lager) {
@@ -450,8 +448,7 @@ public class JTableBuilders {
                 .addColumn(Columns.WOCHENTAG)//
                 .addColumn(ColumnBuilder.get(String.class).add("Morgen").multiline().build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Mittag").multiline().build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Abend").multiline().build())//
-                .silentSaveOnClick();//
+                .addColumn(ColumnBuilder.get(String.class).add("Abend").multiline().build());//
     }
 
     public static JTableBuilder<Legenda> legenda(Lagerort lagerort) {
@@ -531,8 +528,7 @@ public class JTableBuilders {
                 .addColumn(ColumnBuilder.get(String.class).add("Handy").build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Email").build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Fax").build())//
-                .addColumn(ColumnBuilder.get(String.class).multiline().add("Bemerkung").build())//
-                .silentSaveOnClick();//
+                .addColumn(ColumnBuilder.get(String.class).multiline().add("Bemerkung").build());//
     }
 
     public static JTableBuilder<Lagerinfo> lagerinfo(Loader<Person> loaderPerson, Loader<Lagerinfo> allLagerinfo) {
@@ -596,8 +592,7 @@ public class JTableBuilders {
                     }
                     return null;
                 }).addColumn(ColumnBuilder.get(Date.class).add("Datum").preferredWidth(70).build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Schaden").preferredWidth(270).build())//
-                .silentSaveOnClick();//
+                .addColumn(ColumnBuilder.get(String.class).add("Schaden").preferredWidth(270).build());//
     }
 
     private static String getWochentag(Date datum) {
@@ -625,6 +620,6 @@ public class JTableBuilders {
                 }).collect(toList());
                 asyncCallback.get(result);
             }));
-        }).silentSaveOnClick();
+        });
     }
 }

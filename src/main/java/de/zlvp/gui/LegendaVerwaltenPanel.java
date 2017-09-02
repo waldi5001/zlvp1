@@ -21,7 +21,6 @@ public class LegendaVerwaltenPanel extends JPanel {
     private JTable jTableLegenda;
     private JPanel jPanelButtons;
     private JButton jButtonNeu;
-    private JButton jButtonSpeichern;
 
     private final Lagerort lagerort;
     private JTableBuilder<Legenda> tableBuilderLegenda;
@@ -52,7 +51,6 @@ public class LegendaVerwaltenPanel extends JPanel {
             jPanelButtons = new JPanel();
             jPanelButtons.setLayout(new FlowLayout());
             jPanelButtons.add(getJButtonNeu());
-            jPanelButtons.add(getJButtonSpeichern());
         }
         return jPanelButtons;
     }
@@ -67,17 +65,6 @@ public class LegendaVerwaltenPanel extends JPanel {
             });
         }
         return jButtonNeu;
-    }
-
-    public JButton getJButtonSpeichern() {
-        if (jButtonSpeichern == null) {
-            jButtonSpeichern = new JButton();
-            jButtonSpeichern.setText("Speichern");
-            jButtonSpeichern.addActionListener(e -> {
-                tableBuilderLegenda.save();
-            });
-        }
-        return jButtonSpeichern;
     }
 
 }

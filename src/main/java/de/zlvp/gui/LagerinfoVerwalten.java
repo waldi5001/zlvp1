@@ -22,7 +22,6 @@ public class LagerinfoVerwalten extends AbstractJInternalFrame {
     private JPanel jContentPane;
     private JPanel jPanel;
     private JPanel jPanelButtons;
-    private JButton jButtonOK;
     private JTable jTablePerson;
     private JButton jButtonAbbrechen;
 
@@ -65,19 +64,9 @@ public class LagerinfoVerwalten extends AbstractJInternalFrame {
         if (jPanelButtons == null) {
             jPanelButtons = new JPanel();
             jPanelButtons.setLayout(new FlowLayout());
-            jPanelButtons.add(getJButtonOK());
             jPanelButtons.add(getJButtonAbbrechen());
         }
         return jPanelButtons;
-    }
-
-    private JButton getJButtonOK() {
-        if (jButtonOK == null) {
-            jButtonOK = new JButton();
-            jButtonOK.setText("OK");
-            jButtonOK.addActionListener(e -> tableBuilder.save());
-        }
-        return jButtonOK;
     }
 
     private JTable getJTablePerson() {
