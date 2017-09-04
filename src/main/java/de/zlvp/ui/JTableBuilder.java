@@ -63,6 +63,7 @@ public class JTableBuilder<E> {
 
     public JTable build() {
         this.table = new JYTable();
+        this.table.setCellSelectionEnabled(true);
         JYTableHeader header = (JYTableHeader) table.getTableHeader();
         CellLayoutHint hint = header.getCellLayoutHint();
 
