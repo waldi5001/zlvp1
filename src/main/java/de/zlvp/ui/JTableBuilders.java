@@ -276,7 +276,7 @@ public class JTableBuilders {
                 (s, t) -> s.getId().equals(t.getOriginalId()))//
                         .set((person, val, index) -> {
                             if (index == 0) {
-                                person.setGruppe((boolean) val == true ? gruppe : null);
+                                person.setChecked((boolean) val);
                             } else if (index == 1) {
                                 person.setName((String) val);
                             } else if (index == 2) {
@@ -293,7 +293,7 @@ public class JTableBuilders {
                         })//
                         .get((person, index) -> {
                             if (index == 0) {
-                                return person.getGruppe() != null;
+                                return person.isChecked();
                             } else if (index == 1) {
                                 return person.getName();
                             } else if (index == 2) {
@@ -309,11 +309,9 @@ public class JTableBuilders {
                             }
                             return null;
                         })
-                        .save((le, cb) -> get().speichereLeiter(le.getId(), le.getOriginalId(), le.getGeschlecht(),
-                                le.getVorname(), le.getName(), le.getStrasse(), le.getPlz(), le.getOrt(),
-                                le.getGebDat(), le.getTelNr(), le.getEmail(), le.getHandy(), le.getTelNr(),
-                                le.getGruppe() != null ? le.getGruppe().getOriginalId() : null,
-                                gespeichertCallback -> Events.get().fireAktualisieren()))//
+                        .save((le, cb) -> get().speichereLeiter(le.isChecked(), le.getOriginalId(),
+                                le.isChecked() ? gruppe.getOriginalId() : le.getGruppe().getId(),
+                                gespeichertCallback -> Events.get().fireLeiterSaved(le)))//
                         .addColumn(Columns.CHECK)//
                         .addColumn(ColumnBuilder.get(String.class).editable(false).add("Nachname").build())//
                         .addColumn(ColumnBuilder.get(String.class).editable(false).add("Vorname").build())//
@@ -329,7 +327,7 @@ public class JTableBuilders {
                 (s, t) -> s.getId().equals(t.getOriginalId()))//
                         .set((person, val, index) -> {
                             if (index == 0) {
-                                person.setGruppe((boolean) val == true ? gruppe : null);
+                                person.setChecked((boolean) val);
                             } else if (index == 1) {
                                 person.setName((String) val);
                             } else if (index == 2) {
@@ -346,7 +344,7 @@ public class JTableBuilders {
                         })//
                         .get((person, index) -> {
                             if (index == 0) {
-                                return person.getGruppe() != null;
+                                return person.isChecked();
                             } else if (index == 1) {
                                 return person.getName();
                             } else if (index == 2) {
@@ -362,11 +360,9 @@ public class JTableBuilders {
                             }
                             return null;
                         })
-                        .save((te, cb) -> get().speichereTeilnehmer(te.getId(), te.getOriginalId(), te.getGeschlecht(),
-                                te.getVorname(), te.getName(), te.getStrasse(), te.getPlz(), te.getOrt(),
-                                te.getGebDat(), te.getTelNr(), te.getEmail(), te.getHandy(), te.getTelNr(),
-                                te.getGruppe() != null ? te.getGruppe().getOriginalId() : null,
-                                gespeichertCallback -> Events.get().fireAktualisieren()))//
+                        .save((te, cb) -> get().speichereTeilnehmer(te.isChecked(), te.getOriginalId(),
+                                te.isChecked() ? gruppe.getOriginalId() : te.getGruppe().getId(),
+                                gespeichertCallback -> Events.get().fireTeilnehmerSaved(te)))//
                         .addColumn(Columns.CHECK)//
                         .addColumn(ColumnBuilder.get(String.class).editable(false).add("Nachname").build())//
                         .addColumn(ColumnBuilder.get(String.class).editable(false).add("Vorname").build())//

@@ -173,6 +173,8 @@ public class ControllerImpl implements Controller {
         List<Leiter> all = leiterDao.getAll(gruppeId);
         for (Leiter leiter : all) {
             leiter.setGruppe(gruppe);
+            // Ob das hier so gut ist?
+            leiter.setChecked(true);
         }
         callback.get(all);
     }
@@ -183,6 +185,8 @@ public class ControllerImpl implements Controller {
         List<Teilnehmer> all = teilnehmerDao.getAll(gruppeId);
         for (Teilnehmer teilnehmer : all) {
             teilnehmer.setGruppe(gruppe);
+            // Ob das hier so gut ist?
+            teilnehmer.setChecked(true);
         }
         callback.get(all);
     }
@@ -430,29 +434,21 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void speichereLeiter(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
-            String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
-            String telNr2, Integer gruppeId, AsyncCallback<Void> callback) {
-        personDao.speichern(personId, vorname, name, gebDat, strasse, plz, ort, telNr, email, geschlecht, handy,
-                telNr2);
-        if (id == null && gruppeId != null) {
+    public void speichereLeiter(boolean add, int personId, int gruppeId, AsyncCallback<Void> callback) {
+        if (add) {
             leiterDao.speichere(gruppeId, personId);
-        } else if (id != null && gruppeId == null) {
-            leiterDao.loesche(id);
+        } else {
+            leiterDao.loesche(gruppeId, personId);
         }
         callback.get(null);
     }
 
     @Override
-    public void speichereTeilnehmer(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
-            String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
-            String telNr2, Integer gruppeId, AsyncCallback<Void> callback) {
-        personDao.speichern(personId, vorname, name, gebDat, strasse, plz, ort, telNr, email, geschlecht, handy,
-                telNr2);
-        if (id == null && gruppeId != null) {
-            teilnehmerDao.speichere(gruppeId, personId);
-        } else if (id != null && gruppeId == null) {
-            teilnehmerDao.loesche(id);
+    public void speichereTeilnehmer(boolean add, int personId, int gruppeId, AsyncCallback<Void> callback) {
+        if (add) {
+            teilnehmerDao.speichere(personId, gruppeId);
+        } else {
+            teilnehmerDao.loesche(personId, gruppeId);
         }
         callback.get(null);
     }
@@ -524,18 +520,16 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void verschiebeLeiter(int id, int gruppeId, AsyncCallback<Void> callback) {
-        Leiter leiter = leiterDao.get(id);
-        leiterDao.loesche(id);
-        leiterDao.speichere(gruppeId, leiter.getOriginalId());
+    public void verschiebeLeiter(int personId, int srcGruppeId, int destGruppeId, AsyncCallback<Void> callback) {
+        leiterDao.loesche(srcGruppeId, personId);
+        leiterDao.speichere(destGruppeId, personId);
         callback.get(null);
     }
 
     @Override
-    public void verschiebeTeilnehmer(int id, int gruppeId, AsyncCallback<Void> callback) {
-        Teilnehmer teilnehmer = teilnehmerDao.get(id);
-        teilnehmerDao.loesche(id);
-        teilnehmerDao.speichere(gruppeId, teilnehmer.getOriginalId());
+    public void verschiebeTeilnehmer(int personId, int srcGruppeId, int destGruppeId, AsyncCallback<Void> callback) {
+        teilnehmerDao.loesche(personId, srcGruppeId);
+        teilnehmerDao.speichere(personId, destGruppeId);
         callback.get(null);
     }
 

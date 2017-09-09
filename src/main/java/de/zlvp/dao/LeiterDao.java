@@ -11,7 +11,7 @@ public class LeiterDao extends AbstractDao<Leiter> {
     private static final String findLeiterById = "SELECT stGrLe.stGrLe, p.* FROM Person p INNER JOIN stGrLe ON p.PeID = stGrLe.Person WHERE stGrLe.stGrLe = ?";
 
     private static final String insertLeiter = "INSERT INTO stGrLe (gruppe,person) VALUES (?,?);";
-    private static final String deleteLeiter = "DELETE FROM stGrLe WHERE stGrLe.stgrle = ?;";
+    private static final String deleteLeiter = "DELETE FROM stGrLe WHERE gruppe = ? and person = ?";
 
     public List<Leiter> getAll(int gruppe) {
         return select(findAllLeiterFromGruppe, ps -> ps.setInt(1, gruppe),
@@ -36,8 +36,11 @@ public class LeiterDao extends AbstractDao<Leiter> {
         });
     }
 
-    public void loesche(int id) {
-        delete(deleteLeiter, ps -> ps.setInt(1, id));
+    public void loesche(int gruppeId, int personId) {
+        delete(deleteLeiter, ps -> {
+            ps.setInt(1, gruppeId);
+            ps.setInt(2, personId);
+        });
     }
 
 }

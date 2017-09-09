@@ -17,6 +17,16 @@ public class Leiter extends Person {
         setOriginalId(person.getId());
     }
 
+    private boolean checked = false;
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
     private Gruppe gruppe;
 
     public Gruppe getGruppe() {

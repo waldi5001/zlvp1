@@ -102,9 +102,7 @@ public interface Controller {
             String plz, String ort, Integer legendatypId, Integer anredeId, String tel, String fax, String handy,
             String email, String bemerkung, AsyncCallback<Void> callback);
 
-    void speichereLeiter(Integer id, int personId, Geschlecht geschlecht, String vorname, String name, String strasse,
-            String plz, String ort, Date gebDat, String telNr, String email, String handy, String telNr2,
-            Integer gruppeId, AsyncCallback<Void> callback);
+    void speichereLeiter(boolean add, int personId, int gruppeId, AsyncCallback<Void> callback);
 
     void speichereMaterialwart(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
             String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
@@ -120,9 +118,7 @@ public interface Controller {
             String plz, String ort, Date gebtag, String telnr, String email, String handy, String nottel,
             Funktion funktion, int lagerId, AsyncCallback<Void> callback);
 
-    void speichereTeilnehmer(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
-            String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
-            String telNr2, Integer gruppeId, AsyncCallback<Void> callback);
+    void speichereTeilnehmer(boolean add, int personId, int gruppeId, AsyncCallback<Void> callback);
 
     void speichereZelt(Integer zeltId, String bezeichnung, Date angeschafft, double preis, Waehrung waehrung,
             AsyncCallback<Void> callback);
@@ -157,9 +153,9 @@ public interface Controller {
 
     void verschiebeGruppe(int gruppenId, int lagerId, AsyncCallback<Void> callback);
 
-    void verschiebeLeiter(int id, int gruppeId, AsyncCallback<Void> callback);
+    void verschiebeLeiter(int personId, int srcGruppeId, int destGruppeId, AsyncCallback<Void> callback);
 
-    void verschiebeTeilnehmer(int id, int gruppeId, AsyncCallback<Void> callback);
+    void verschiebeTeilnehmer(int personId, int srcGruppeId, int destGruppeId, AsyncCallback<Void> callback);
 
     void getAllUsers(AsyncCallback<List<User>> callback);
 

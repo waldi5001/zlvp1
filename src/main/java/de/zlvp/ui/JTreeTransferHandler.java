@@ -161,11 +161,11 @@ public class JTreeTransferHandler extends TransferHandler {
 
                     if (selectedOption == YES_OPTION) {
                         if ("Leiter".equals(dropUserObject) && person instanceof Leiter) {
-                            get().verschiebeLeiter(person.getId(), gruppe.getOriginalId(),
-                                    c -> Events.get().fireAktualisieren());
+                            get().verschiebeLeiter(person.getOriginalId(), srcGruppe.getOriginalId(),
+                                    gruppe.getOriginalId(), c -> Events.get().fireAktualisieren());
                         } else if ("Teilnehmer".equals(dropUserObject) && person instanceof Teilnehmer) {
-                            get().verschiebeTeilnehmer(person.getId(), gruppe.getOriginalId(),
-                                    c -> Events.get().fireAktualisieren());
+                            get().verschiebeTeilnehmer(person.getOriginalId(), srcGruppe.getOriginalId(),
+                                    gruppe.getOriginalId(), c -> Events.get().fireAktualisieren());
                         }
                     }
                 }
@@ -176,15 +176,11 @@ public class JTreeTransferHandler extends TransferHandler {
                     Gruppe gruppe = (Gruppe) ((DefaultMutableTreeNode) dropNode.getParent()).getUserObject();
 
                     if ("Leiter".equals(dropUserObject)) {
-                        get().speichereLeiter(null, person.getId(), person.getGeschlecht(), person.getVorname(),
-                                person.getName(), person.getStrasse(), person.getPlz(), person.getOrt(),
-                                person.getGebDat(), person.getTelNr(), person.getEmail(), person.getHandy(),
-                                person.getNottel(), gruppe.getOriginalId(), c -> Events.get().fireAktualisieren());
+                        get().speichereLeiter(true, person.getId(), gruppe.getOriginalId(),
+                                c -> Events.get().fireAktualisieren());
                     } else if ("Teilnehmer".equals(dropUserObject)) {
-                        get().speichereTeilnehmer(null, person.getId(), person.getGeschlecht(), person.getVorname(),
-                                person.getName(), person.getStrasse(), person.getPlz(), person.getOrt(),
-                                person.getGebDat(), person.getTelNr(), person.getEmail(), person.getHandy(),
-                                person.getNottel(), gruppe.getOriginalId(), c -> Events.get().fireAktualisieren());
+                        get().speichereTeilnehmer(true, person.getId(), gruppe.getOriginalId(),
+                                c -> Events.get().fireAktualisieren());
                     }
                 }
             }

@@ -5,7 +5,9 @@ import com.google.common.eventbus.EventBus;
 import de.zlvp.entity.Gruppe;
 import de.zlvp.entity.Jahr;
 import de.zlvp.entity.Lager;
+import de.zlvp.entity.Leiter;
 import de.zlvp.entity.Person;
+import de.zlvp.entity.Teilnehmer;
 
 public class Events {
 
@@ -51,7 +53,25 @@ public class Events {
         bus.post((LoginSuccessfull) () -> username);
     }
 
+    public void fireLeiterSaved(Leiter leiter) {
+        bus.post((LeiterSaved) () -> leiter);
+    }
+
+    public void fireTeilnehmerSaved(Teilnehmer teilnehmer) {
+        bus.post((TeilnehmerSaved) () -> teilnehmer);
+    }
+
     public static interface Aktualisieren {
+    }
+
+    @FunctionalInterface
+    public static interface LeiterSaved {
+        Leiter get();
+    }
+
+    @FunctionalInterface
+    public static interface TeilnehmerSaved {
+        Teilnehmer get();
     }
 
     @FunctionalInterface

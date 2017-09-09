@@ -23,6 +23,8 @@ import com.google.common.eventbus.Subscribe;
 import de.zlvp.Client;
 import de.zlvp.Events;
 import de.zlvp.Events.Aktualisieren;
+import de.zlvp.Events.LeiterSaved;
+import de.zlvp.Events.TeilnehmerSaved;
 import de.zlvp.entity.AbstractEntity;
 import de.zlvp.entity.Gruppe;
 import de.zlvp.entity.Jahr;
@@ -31,6 +33,7 @@ import de.zlvp.entity.Person;
 import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JTreeTransferHandler;
 import de.zlvp.ui.TreeData;
+import de.zlvp.ui.TreeData.UserObjectEqualMutableTreeNode;
 import de.zlvp.ui.TreePopup;
 
 public class HauptFenster extends AbstractJInternalFrame {
@@ -48,8 +51,6 @@ public class HauptFenster extends AbstractJInternalFrame {
     private JSplitPane jSplitPane;
 
     private JScrollPane jScrollPane;
-
-    private JPanel jPanel4;
 
     private JTree jTree;
 
@@ -116,7 +117,7 @@ public class HauptFenster extends AbstractJInternalFrame {
         if (jSplitPane == null) {
             jSplitPane = new JSplitPane();
             jSplitPane.setLeftComponent(getJScrollPane());
-            jSplitPane.setRightComponent(getJPanel4());
+            jSplitPane.setRightComponent(new JPanel());
         }
         return jSplitPane;
     }
@@ -127,13 +128,6 @@ public class HauptFenster extends AbstractJInternalFrame {
             jScrollPane.setViewportView(getJTree());
         }
         return jScrollPane;
-    }
-
-    private JPanel getJPanel4() {
-        if (jPanel4 == null) {
-            jPanel4 = new JPanel();
-        }
-        return jPanel4;
     }
 
     private JTree getJTree() {
@@ -280,5 +274,53 @@ public class HauptFenster extends AbstractJInternalFrame {
     @Subscribe
     public void aktualisieren(Aktualisieren a) {
         aktualisieren();
+    }
+
+    @Subscribe
+    public void aktualisieren(LeiterSaved event) {
+        DefaultMutableTreeNode leiterNode = getTeilnehmerOrLeiterNode("Leiter");
+        DefaultTreeModel model = (DefaultTreeModel) getJTree().getModel();
+        if (event.get().isChecked()) {
+            model.insertNodeInto(new UserObjectEqualMutableTreeNode(event.get()), leiterNode,
+                    leiterNode.getChildCount());
+        } else {
+            for (int i = 0; i < leiterNode.getChildCount(); i++) {
+                DefaultMutableTreeNode child = (DefaultMutableTreeNode) leiterNode.getChildAt(i);
+                if (child.getUserObject().equals(event.get())) {
+                    model.removeNodeFromParent(child);
+                }
+            }
+        }
+        getJTree().expandPath(new TreePath(leiterNode.getPath()));
+    }
+
+    @Subscribe
+    public void aktualisieren(TeilnehmerSaved event) {
+        DefaultMutableTreeNode leiterNode = getTeilnehmerOrLeiterNode("Teilnehmer");
+        DefaultTreeModel model = (DefaultTreeModel) getJTree().getModel();
+        if (event.get().isChecked()) {
+            model.insertNodeInto(new UserObjectEqualMutableTreeNode(event.get()), leiterNode,
+                    leiterNode.getChildCount());
+        } else {
+            for (int i = 0; i < leiterNode.getChildCount(); i++) {
+                DefaultMutableTreeNode child = (DefaultMutableTreeNode) leiterNode.getChildAt(i);
+                if (child.getUserObject().equals(event.get())) {
+                    model.removeNodeFromParent(child);
+                }
+            }
+        }
+        getJTree().expandPath(new TreePath(leiterNode.getPath()));
+    }
+
+    private DefaultMutableTreeNode getTeilnehmerOrLeiterNode(String bezeichnung) {
+        TreePath selectionPath = getJTree().getSelectionModel().getSelectionPath();
+        DefaultMutableTreeNode gruppeNode = ((DefaultMutableTreeNode) selectionPath.getLastPathComponent());
+        for (int i = 0; i < gruppeNode.getChildCount(); i++) {
+            DefaultMutableTreeNode child = (DefaultMutableTreeNode) gruppeNode.getChildAt(i);
+            if (child.getUserObject().equals(bezeichnung)) {
+                return child;
+            }
+        }
+        return gruppeNode;
     }
 }
