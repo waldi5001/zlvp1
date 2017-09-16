@@ -102,7 +102,7 @@ public interface Controller {
             String plz, String ort, Integer legendatypId, Integer anredeId, String tel, String fax, String handy,
             String email, String bemerkung, AsyncCallback<Void> callback);
 
-    void speichereLeiter(boolean add, int personId, int gruppeId, AsyncCallback<Void> callback);
+    void speichereLeiter(boolean add, int personId, int gruppeId, AsyncCallback<Gruppe> callback);
 
     void speichereMaterialwart(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
             String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
@@ -118,7 +118,7 @@ public interface Controller {
             String plz, String ort, Date gebtag, String telnr, String email, String handy, String nottel,
             Funktion funktion, int lagerId, AsyncCallback<Void> callback);
 
-    void speichereTeilnehmer(boolean add, int personId, int gruppeId, AsyncCallback<Void> callback);
+    void speichereTeilnehmer(boolean add, int personId, int gruppeId, AsyncCallback<Gruppe> callback);
 
     void speichereZelt(Integer zeltId, String bezeichnung, Date angeschafft, double preis, Waehrung waehrung,
             AsyncCallback<Void> callback);

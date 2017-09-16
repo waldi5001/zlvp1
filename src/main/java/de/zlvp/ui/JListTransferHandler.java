@@ -8,8 +8,6 @@ import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.TransferHandler;
 
-import de.zlvp.Events;
-
 public class JListTransferHandler extends TransferHandler {
     private static final long serialVersionUID = 1L;
 
@@ -39,13 +37,6 @@ public class JListTransferHandler extends TransferHandler {
             return new JListTransferabel(selctedObject);
         }
         return null;
-    }
-
-    @Override
-    protected void exportDone(JComponent source, Transferable data, int action) {
-        if (action == MOVE) {
-            Events.get().fireAktualisieren();
-        }
     }
 
     @Override

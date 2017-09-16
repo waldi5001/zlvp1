@@ -434,23 +434,25 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void speichereLeiter(boolean add, int personId, int gruppeId, AsyncCallback<Void> callback) {
+    public void speichereLeiter(boolean add, int personId, int gruppeId, AsyncCallback<Gruppe> callback) {
         if (add) {
             leiterDao.speichere(gruppeId, personId);
+            callback.get(gruppeDao.get(gruppeId));
         } else {
             leiterDao.loesche(gruppeId, personId);
+            callback.get(null);
         }
-        callback.get(null);
     }
 
     @Override
-    public void speichereTeilnehmer(boolean add, int personId, int gruppeId, AsyncCallback<Void> callback) {
+    public void speichereTeilnehmer(boolean add, int personId, int gruppeId, AsyncCallback<Gruppe> callback) {
         if (add) {
             teilnehmerDao.speichere(personId, gruppeId);
+            callback.get(gruppeDao.get(gruppeId));
         } else {
             teilnehmerDao.loesche(personId, gruppeId);
+            callback.get(null);
         }
-        callback.get(null);
     }
 
     @Override

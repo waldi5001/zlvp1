@@ -124,6 +124,7 @@ public class JTreeTransferHandler extends TransferHandler {
         }
 
         try {
+            JTree tree = (JTree) support.getComponent();
             Transferable t = support.getTransferable();
             JTree.DropLocation dl = (JTree.DropLocation) support.getDropLocation();
             DefaultMutableTreeNode dropNode = (DefaultMutableTreeNode) dl.getPath().getLastPathComponent();
@@ -152,20 +153,22 @@ public class JTreeTransferHandler extends TransferHandler {
                     Person person = (Person) srcNode.getUserObject();
                     Gruppe srcGruppe = (Gruppe) ((DefaultMutableTreeNode) srcNode.getParent().getParent())
                             .getUserObject();
-                    Gruppe gruppe = (Gruppe) ((DefaultMutableTreeNode) dropNode.getParent()).getUserObject();
+                    Gruppe destGruppe = (Gruppe) ((DefaultMutableTreeNode) dropNode.getParent()).getUserObject();
 
                     int selectedOption = JOptionPane.showConfirmDialog(null,
                             format("%s \"%s\" von \"%s\" nach \"%s\" verschieben?", person.getClass().getSimpleName(),
-                                    person.getBezeichnung(), srcGruppe.getBezeichnung(), gruppe.getBezeichnung()),
+                                    person.getBezeichnung(), srcGruppe.getBezeichnung(), destGruppe.getBezeichnung()),
                             "Gruppe verschieben", JOptionPane.YES_NO_OPTION);
 
                     if (selectedOption == YES_OPTION) {
                         if ("Leiter".equals(dropUserObject) && person instanceof Leiter) {
                             get().verschiebeLeiter(person.getOriginalId(), srcGruppe.getOriginalId(),
-                                    gruppe.getOriginalId(), c -> Events.get().fireAktualisieren());
+                                    destGruppe.getOriginalId(),
+                                    c -> Events.get().fireLeiterSaved((Leiter) person, srcGruppe, destGruppe));
                         } else if ("Teilnehmer".equals(dropUserObject) && person instanceof Teilnehmer) {
                             get().verschiebeTeilnehmer(person.getOriginalId(), srcGruppe.getOriginalId(),
-                                    gruppe.getOriginalId(), c -> Events.get().fireAktualisieren());
+                                    destGruppe.getOriginalId(),
+                                    c -> Events.get().fireTeilnehmerSaved((Teilnehmer) person, srcGruppe, destGruppe));
                         }
                     }
                 }
@@ -176,11 +179,17 @@ public class JTreeTransferHandler extends TransferHandler {
                     Gruppe gruppe = (Gruppe) ((DefaultMutableTreeNode) dropNode.getParent()).getUserObject();
 
                     if ("Leiter".equals(dropUserObject)) {
-                        get().speichereLeiter(true, person.getId(), gruppe.getOriginalId(),
-                                c -> Events.get().fireAktualisieren());
+                        get().speichereLeiter(true, person.getId(), gruppe.getOriginalId(), c -> {
+                            Leiter leiter = new Leiter(person);
+                            leiter.setGruppe(gruppe);
+                            Events.get().fireLeiterSaved(leiter, null, gruppe);
+                        });
                     } else if ("Teilnehmer".equals(dropUserObject)) {
-                        get().speichereTeilnehmer(true, person.getId(), gruppe.getOriginalId(),
-                                c -> Events.get().fireAktualisieren());
+                        get().speichereTeilnehmer(true, person.getId(), gruppe.getOriginalId(), c -> {
+                            Teilnehmer teilnehmer = new Teilnehmer(person);
+                            teilnehmer.setGruppe(gruppe);
+                            Events.get().fireTeilnehmerSaved(teilnehmer, null, gruppe);
+                        });
                     }
                 }
             }

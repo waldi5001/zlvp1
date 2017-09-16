@@ -6,6 +6,7 @@ import static javax.swing.tree.TreeSelectionModel.SINGLE_TREE_SELECTION;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.util.Enumeration;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -278,12 +279,16 @@ public class HauptFenster extends AbstractJInternalFrame {
 
     @Subscribe
     public void aktualisieren(LeiterSaved event) {
-        DefaultMutableTreeNode leiterNode = getTeilnehmerOrLeiterNode("Leiter");
         DefaultTreeModel model = (DefaultTreeModel) getJTree().getModel();
-        if (event.get().isChecked()) {
+        DefaultMutableTreeNode leiterNode = null;
+
+        if (event.destGruppe() != null) {
+            leiterNode = getTeilnehmerOrLeiterNode(event.destGruppe(), "Leiter");
             model.insertNodeInto(new UserObjectEqualMutableTreeNode(event.get()), leiterNode,
                     leiterNode.getChildCount());
-        } else {
+        }
+        if (event.srcGruppe() != null) {
+            leiterNode = getTeilnehmerOrLeiterNode(event.srcGruppe(), "Leiter");
             for (int i = 0; i < leiterNode.getChildCount(); i++) {
                 DefaultMutableTreeNode child = (DefaultMutableTreeNode) leiterNode.getChildAt(i);
                 if (child.getUserObject().equals(event.get())) {
@@ -296,7 +301,7 @@ public class HauptFenster extends AbstractJInternalFrame {
 
     @Subscribe
     public void aktualisieren(TeilnehmerSaved event) {
-        DefaultMutableTreeNode leiterNode = getTeilnehmerOrLeiterNode("Teilnehmer");
+        DefaultMutableTreeNode leiterNode = getTeilnehmerOrLeiterNode(null, "Teilnehmer");
         DefaultTreeModel model = (DefaultTreeModel) getJTree().getModel();
         if (event.get().isChecked()) {
             model.insertNodeInto(new UserObjectEqualMutableTreeNode(event.get()), leiterNode,
@@ -312,15 +317,21 @@ public class HauptFenster extends AbstractJInternalFrame {
         getJTree().expandPath(new TreePath(leiterNode.getPath()));
     }
 
-    private DefaultMutableTreeNode getTeilnehmerOrLeiterNode(String bezeichnung) {
-        TreePath selectionPath = getJTree().getSelectionModel().getSelectionPath();
-        DefaultMutableTreeNode gruppeNode = ((DefaultMutableTreeNode) selectionPath.getLastPathComponent());
-        for (int i = 0; i < gruppeNode.getChildCount(); i++) {
-            DefaultMutableTreeNode child = (DefaultMutableTreeNode) gruppeNode.getChildAt(i);
-            if (child.getUserObject().equals(bezeichnung)) {
-                return child;
+    @SuppressWarnings("unchecked")
+    private DefaultMutableTreeNode getTeilnehmerOrLeiterNode(Gruppe gruppe, String bezeichnung) {
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) getJTree().getModel().getRoot();
+        Enumeration<DefaultMutableTreeNode> breadthFirstEnumeration = root.breadthFirstEnumeration();
+        while (breadthFirstEnumeration.hasMoreElements()) {
+            DefaultMutableTreeNode gruppeNode = breadthFirstEnumeration.nextElement();
+            if (gruppeNode.getUserObject().equals(gruppe)) {
+                for (int i = 0; i < gruppeNode.getChildCount(); i++) {
+                    DefaultMutableTreeNode child = (DefaultMutableTreeNode) gruppeNode.getChildAt(i);
+                    if (child.getUserObject().equals(bezeichnung)) {
+                        return child;
+                    }
+                }
             }
         }
-        return gruppeNode;
+        return null;
     }
 }

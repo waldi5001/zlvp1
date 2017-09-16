@@ -311,7 +311,11 @@ public class JTableBuilders {
                         })
                         .save((le, cb) -> get().speichereLeiter(le.isChecked(), le.getOriginalId(),
                                 le.isChecked() ? gruppe.getOriginalId() : le.getGruppe().getId(),
-                                gespeichertCallback -> Events.get().fireLeiterSaved(le)))//
+                                gespeichertCallback -> {
+                                    Events.get().fireLeiterSaved(le, le.isChecked() ? null : gruppe,
+                                            le.isChecked() ? gruppe : null);
+                                    le.setGruppe(gespeichertCallback);
+                                }))//
                         .addColumn(Columns.CHECK)//
                         .addColumn(ColumnBuilder.get(String.class).editable(false).add("Nachname").build())//
                         .addColumn(ColumnBuilder.get(String.class).editable(false).add("Vorname").build())//
@@ -362,7 +366,11 @@ public class JTableBuilders {
                         })
                         .save((te, cb) -> get().speichereTeilnehmer(te.isChecked(), te.getOriginalId(),
                                 te.isChecked() ? gruppe.getOriginalId() : te.getGruppe().getId(),
-                                gespeichertCallback -> Events.get().fireTeilnehmerSaved(te)))//
+                                gespeichertCallback -> {
+                                    Events.get().fireTeilnehmerSaved(te, te.isChecked() ? null : gruppe,
+                                            te.isChecked() ? gruppe : null);
+                                    te.setGruppe(gespeichertCallback);
+                                }))//
                         .addColumn(Columns.CHECK)//
                         .addColumn(ColumnBuilder.get(String.class).editable(false).add("Nachname").build())//
                         .addColumn(ColumnBuilder.get(String.class).editable(false).add("Vorname").build())//

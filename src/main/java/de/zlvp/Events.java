@@ -53,25 +53,79 @@ public class Events {
         bus.post((LoginSuccessfull) () -> username);
     }
 
-    public void fireLeiterSaved(Leiter leiter) {
-        bus.post((LeiterSaved) () -> leiter);
+    public void fireLeiterSaved(Leiter leiter, Gruppe srcGruppe, Gruppe destGruppe) {
+        bus.post(new LeiterSaved() {
+            @Override
+            public Gruppe srcGruppe() {
+                return srcGruppe;
+            }
+
+            @Override
+            public Leiter get() {
+                return leiter;
+            }
+
+            @Override
+            public Gruppe destGruppe() {
+                return destGruppe;
+            }
+
+            @Override
+            public String toString() {
+                return prettyPrint();
+            }
+        });
     }
 
-    public void fireTeilnehmerSaved(Teilnehmer teilnehmer) {
-        bus.post((TeilnehmerSaved) () -> teilnehmer);
+    public void fireTeilnehmerSaved(Teilnehmer teilnehmer, Gruppe srcGruppe, Gruppe destGruppe) {
+        bus.post(new TeilnehmerSaved() {
+            @Override
+            public Teilnehmer get() {
+                return teilnehmer;
+            }
+
+            @Override
+            public Gruppe srcGruppe() {
+                return srcGruppe;
+            }
+
+            @Override
+            public Gruppe destGruppe() {
+                return destGruppe;
+            }
+
+            @Override
+            public String toString() {
+                return prettyPrint();
+            }
+        });
     }
 
     public static interface Aktualisieren {
     }
 
-    @FunctionalInterface
     public static interface LeiterSaved {
         Leiter get();
+
+        Gruppe srcGruppe();
+
+        Gruppe destGruppe();
+
+        default String prettyPrint() {
+            return String.format("Leiter: %s von %s nach %s", get(), srcGruppe(), destGruppe());
+        };
     }
 
-    @FunctionalInterface
     public static interface TeilnehmerSaved {
         Teilnehmer get();
+
+        Gruppe srcGruppe();
+
+        Gruppe destGruppe();
+
+        default String prettyPrint() {
+            return String.format("Teilnehmer: %s von %s nach %s", get(), srcGruppe(), destGruppe());
+        };
     }
 
     @FunctionalInterface
