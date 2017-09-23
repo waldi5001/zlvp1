@@ -3,10 +3,14 @@ package de.zlvp.ui;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyVetoException;
 
+import javax.swing.AbstractAction;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
+import javax.swing.KeyStroke;
 
 public class AbstractJInternalFrame extends JInternalFrame {
 
@@ -16,6 +20,21 @@ public class AbstractJInternalFrame extends JInternalFrame {
 
     public AbstractJInternalFrame() {
         this.desktopPane = DesktopPane.get();
+        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.CTRL_DOWN_MASK),
+                "close");
+        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "close");
+        getActionMap().put("close", new AbstractAction() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    setClosed(true);
+                } catch (PropertyVetoException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
     }
 
     protected void setupDialog() {
