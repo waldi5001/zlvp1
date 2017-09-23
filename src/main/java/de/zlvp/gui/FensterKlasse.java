@@ -35,7 +35,6 @@ import de.zlvp.Events.LagerSelected;
 import de.zlvp.Events.LoginSuccessfull;
 import de.zlvp.Events.PersonSelected;
 import de.zlvp.SelectionContext;
-import de.zlvp.entity.Jahr;
 import de.zlvp.entity.Lagerort;
 import de.zlvp.entity.ZeltdetailBezeichnung;
 import de.zlvp.ui.Actions;
@@ -418,19 +417,7 @@ public class FensterKlasse extends JFrame {
     private JMenuItem getJMenuItemOeffnen() {
         if (jMenuItemOeffnen == null) {
             jMenuItemOeffnen = new JMenuItem();
-            jMenuItemOeffnen.setText("Öffnen");
-            jMenuItemOeffnen.setEnabled(false);
-            jMenuItemOeffnen.addActionListener(e -> {
-                Client.get().getAllJahr(allJahre -> {
-                    Jahr[] jahre = allJahre.toArray(new Jahr[allJahre.size()]);
-                    Jahr jahr = (Jahr) JOptionPane.showInputDialog(this, null, "Jahr wählen:",
-                            JOptionPane.PLAIN_MESSAGE, null, jahre, null);
-                    if (jahr != null) {
-                        new HauptFenster(jahr.getId());
-                    }
-                });
-
-            });
+            jMenuItemOeffnen.setAction(Actions.oeffnen());
         }
         return jMenuItemOeffnen;
     }
@@ -442,17 +429,14 @@ public class FensterKlasse extends JFrame {
             jMenuAendern.setEnabled(false);
             jMenuAendern.add(getJMenuItemAePerson());
             jMenuAendern.add(getJMenuItemLegendaAendern());
+
         }
         return jMenuAendern;
     }
 
     private JMenuItem getJMenuItemAePerson() {
         if (jMenuItemAePerson == null) {
-            jMenuItemAePerson = new JMenuItem();
-            jMenuItemAePerson.setText("Person");
-            jMenuItemAePerson.addActionListener(e -> {
-                new PersonSuchen();
-            });
+            jMenuItemAePerson = new JMenuItem(Actions.personAendern());
         }
         return jMenuItemAePerson;
     }
@@ -471,11 +455,7 @@ public class FensterKlasse extends JFrame {
 
     private JMenuItem getJMenuItemZelteVerwalten() {
         if (jMenuItemZelteVerwalten == null) {
-            jMenuItemZelteVerwalten = new JMenuItem();
-            jMenuItemZelteVerwalten.setText("Zelte Verwalten");
-            jMenuItemZelteVerwalten.addActionListener(e -> {
-                new ZeltVerwalten();
-            });
+            jMenuItemZelteVerwalten = new JMenuItem(Actions.zelteVerwalten());
         }
         return jMenuItemZelteVerwalten;
     }
@@ -763,7 +743,9 @@ public class FensterKlasse extends JFrame {
         getJMenuListen().setEnabled(true);
         getJMenuLagerinfo().setEnabled(true);
         getJMenuSuchen().setEnabled(true);
-        getJMenuItemOeffnen().setEnabled(true);
+        Actions.personAendern().setEnabled(true);
+        Actions.oeffnen().setEnabled(true);
+        Actions.zelteVerwalten().setEnabled(true);
         getJMenuExcelItemExcelImportieren().setEnabled(true);
     }
 
@@ -779,11 +761,7 @@ public class FensterKlasse extends JFrame {
 
     private JMenuItem getJMenuItemSuchen() {
         if (jMenuItemSuchen == null) {
-            jMenuItemSuchen = new JMenuItem();
-            jMenuItemSuchen.setText("Person");
-            jMenuItemSuchen.addActionListener(e -> {
-                new PersonSuchen();
-            });
+            jMenuItemSuchen = new JMenuItem(Actions.personAendern());
         }
         return jMenuItemSuchen;
     }

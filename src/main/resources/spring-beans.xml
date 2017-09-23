@@ -26,7 +26,7 @@
 
 	<bean id="methodLogInterceptor" class="org.springframework.aop.interceptor.CustomizableTraceInterceptor">
 		<property name="enterMessage" value="Start: $[targetClassShortName]#$[methodName] $[arguments]" />
-		<property name="exitMessage" value="Stop: $[returnValue] Duration: $[invocationTime]" />
+		<property name="exitMessage" value="Stop: $[targetClassShortName]#$[methodName] $[returnValue] Duration: $[invocationTime]" />
 		<property name="exceptionMessage" value="Exception: $[exception]" />
 	</bean>
 

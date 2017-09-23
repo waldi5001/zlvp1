@@ -6,13 +6,18 @@ import static javax.swing.tree.TreeSelectionModel.SINGLE_TREE_SELECTION;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.Enumeration;
 
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
+import javax.swing.KeyStroke;
 import javax.swing.ToolTipManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -24,6 +29,8 @@ import com.google.common.eventbus.Subscribe;
 import de.zlvp.Client;
 import de.zlvp.Events;
 import de.zlvp.Events.Aktualisieren;
+import de.zlvp.Events.GruppeSaved;
+import de.zlvp.Events.LagerSaved;
 import de.zlvp.Events.LeiterSaved;
 import de.zlvp.Events.TeilnehmerSaved;
 import de.zlvp.entity.AbstractEntity;
@@ -99,9 +106,20 @@ public class HauptFenster extends AbstractJInternalFrame {
 
     private JButton getJButtonAktualisieren() {
         if (jButtonAktualisieren == null) {
-            jButtonAktualisieren = new JButton();
-            jButtonAktualisieren.setText("Aktualisieren");
-            jButtonAktualisieren.addActionListener(e -> aktualisieren());
+            String key = "Aktualisieren";
+            AbstractAction action = new AbstractAction(key) {
+                private static final long serialVersionUID = 1L;
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    aktualisieren();
+                }
+
+            };
+            jButtonAktualisieren = new JButton(action);
+            jButtonAktualisieren.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+                    .put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), key);
+            jButtonAktualisieren.getActionMap().put(key, action);
         }
         return jButtonAktualisieren;
     }
@@ -301,20 +319,81 @@ public class HauptFenster extends AbstractJInternalFrame {
 
     @Subscribe
     public void aktualisieren(TeilnehmerSaved event) {
-        DefaultMutableTreeNode leiterNode = getTeilnehmerOrLeiterNode(null, "Teilnehmer");
         DefaultTreeModel model = (DefaultTreeModel) getJTree().getModel();
-        if (event.get().isChecked()) {
-            model.insertNodeInto(new UserObjectEqualMutableTreeNode(event.get()), leiterNode,
-                    leiterNode.getChildCount());
-        } else {
-            for (int i = 0; i < leiterNode.getChildCount(); i++) {
-                DefaultMutableTreeNode child = (DefaultMutableTreeNode) leiterNode.getChildAt(i);
+        DefaultMutableTreeNode teilnehmerNode = null;
+
+        if (event.destGruppe() != null) {
+            teilnehmerNode = getTeilnehmerOrLeiterNode(event.destGruppe(), "Teilnehmer");
+            model.insertNodeInto(new UserObjectEqualMutableTreeNode(event.get()), teilnehmerNode,
+                    teilnehmerNode.getChildCount());
+        }
+        if (event.srcGruppe() != null) {
+            teilnehmerNode = getTeilnehmerOrLeiterNode(event.srcGruppe(), "Teilnehmer");
+            for (int i = 0; i < teilnehmerNode.getChildCount(); i++) {
+                DefaultMutableTreeNode child = (DefaultMutableTreeNode) teilnehmerNode.getChildAt(i);
                 if (child.getUserObject().equals(event.get())) {
                     model.removeNodeFromParent(child);
                 }
             }
         }
-        getJTree().expandPath(new TreePath(leiterNode.getPath()));
+        getJTree().expandPath(new TreePath(teilnehmerNode.getPath()));
+    }
+
+    @Subscribe
+    @SuppressWarnings("unchecked")
+    public void aktualisieren(GruppeSaved event) {
+
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) getJTree().getModel().getRoot();
+        Enumeration<DefaultMutableTreeNode> breadthFirstEnumeration = root.breadthFirstEnumeration();
+
+        DefaultMutableTreeNode gruppeNode = null;
+        DefaultMutableTreeNode targetNode = null;
+
+        while (breadthFirstEnumeration.hasMoreElements()) {
+            DefaultMutableTreeNode node = breadthFirstEnumeration.nextElement();
+            if (node.getUserObject().equals(event.get())) {
+                ((DefaultTreeModel) getJTree().getModel()).nodeChanged(node);
+            }
+            if (event.srcLager() != null && node.getUserObject().equals(event.srcLager())) {
+                Enumeration<DefaultMutableTreeNode> children = node.children();
+                while (children.hasMoreElements()) {
+                    DefaultMutableTreeNode child = children.nextElement();
+                    if (child.getUserObject().equals(event.get())) {
+                        gruppeNode = child;
+                    }
+                }
+            }
+            if (event.destLager() != null && node.getUserObject().equals(event.destLager())) {
+                targetNode = node;
+            }
+        }
+        if (gruppeNode != null) {
+            ((DefaultTreeModel) getJTree().getModel()).removeNodeFromParent(gruppeNode);
+            ((DefaultTreeModel) getJTree().getModel()).insertNodeInto(gruppeNode, targetNode,
+                    targetNode.getChildCount());
+            getJTree().expandPath(new TreePath(gruppeNode.getPath()));
+        } else if (targetNode != null) {
+            DefaultMutableTreeNode gruppeLeaf = new UserObjectEqualMutableTreeNode(event.get());
+            // Sollte in TreeData zentralisiert werden.
+            gruppeLeaf.add(new UserObjectEqualMutableTreeNode("Leiter"));
+            gruppeLeaf.add(new UserObjectEqualMutableTreeNode("Teilnehmer"));
+            ((DefaultTreeModel) getJTree().getModel()).insertNodeInto(gruppeLeaf, targetNode,
+                    targetNode.getChildCount());
+            getJTree().expandPath(new TreePath(gruppeLeaf.getPath()));
+        }
+    }
+
+    @Subscribe
+    @SuppressWarnings("unchecked")
+    public void aktualisieren(LagerSaved event) {
+        DefaultMutableTreeNode root = (DefaultMutableTreeNode) getJTree().getModel().getRoot();
+        Enumeration<DefaultMutableTreeNode> breadthFirstEnumeration = root.breadthFirstEnumeration();
+        while (breadthFirstEnumeration.hasMoreElements()) {
+            DefaultMutableTreeNode node = breadthFirstEnumeration.nextElement();
+            if (node.getUserObject().equals(event.get())) {
+                ((DefaultTreeModel) getJTree().getModel()).nodeChanged(node);
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")

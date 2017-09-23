@@ -57,4 +57,8 @@ public class LagerDao extends AbstractDao<Lager> {
         }
     }
 
+    public void aendern(Integer lagerId, String name, String thema, Date start, Date stop) {
+        jdbc.update(updateLager, name, thema, new java.sql.Date(start.getTime()), new java.sql.Date(stop.getTime()),
+                lagerId);
+    }
 }

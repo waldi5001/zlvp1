@@ -17,7 +17,6 @@ import de.zlvp.entity.Funktion;
 import de.zlvp.entity.Gruppe;
 import de.zlvp.entity.Lager;
 import de.zlvp.entity.Lagerinfo;
-import de.zlvp.entity.Lagerort;
 import de.zlvp.entity.Legenda;
 import de.zlvp.entity.Legendatyp;
 import de.zlvp.entity.Leiter;
@@ -232,7 +231,7 @@ public class JTableBuilders {
                             return null;
                         })
                         .save((zelt, cb) -> get().speichereZeltZuGruppe(zelt.getId(), zelt.getOriginalId(),
-                                zelt.getGruppe().isEmpty() ? null : gruppe.getOriginalId(), cb))//
+                                zelt.getGruppe().isEmpty() ? null : gruppe.getId(), cb))//
                         .addColumn(Columns.CHECK)//
                         .addColumn(ColumnBuilder.get(String.class).editable(false).add("Bezeichnung").build());//
     }
@@ -244,29 +243,26 @@ public class JTableBuilders {
             } else {
                 get().getAllUnassignedGruppen(cb);
             }
-        }, cb -> get().getAllGruppenFromLager(lager.getId(), cb), (s, t) -> s.getOriginalId().equals(t.getOriginalId()))//
+        }, cb -> cb.get(lager.getGruppe()), (s, t) -> s.getId().equals(t.getId()))//
                 .set((gruppe, val, index) -> {
                     if (index == 0) {
-                        if ((boolean) val) {
-                            gruppe.setLager(lager);
-                        } else {
-                            gruppe.setLager(null);
-                        }
-                    } else if (index == 1) {
-                        gruppe.setName((String) val);
+                        gruppe.setChecked((boolean) val);
+                        gruppe.setLager(lager);
                     }
                 })//
                 .get((gruppe, index) -> {
                     if (index == 0) {
-                        return gruppe.getLager() != null;
+                        return gruppe.isChecked();
                     } else if (index == 1) {
                         return gruppe.getBezeichnung();
                     }
                     return null;
                 })
-                .save((gruppe, cb) -> get().speichereGruppe(gruppe.getId(), gruppe.getOriginalId(),
-                        gruppe.getLager() != null ? gruppe.getLager().getId() : null, gruppe.getName(),
-                        gruppe.getSchlachtruf(), gespeichertCallback -> Events.get().fireAktualisieren()))//
+                .save((gruppe, cb) -> get().speichereGruppe(gruppe.isChecked(), gruppe.getId(),
+                        gruppe.isChecked() ? lager.getId() : gruppe.getLager().getId(), gruppe.getName(),
+                        gruppe.getSchlachtruf(),
+                        gespeichertCallback -> Events.get().fireGruppeSaved(gespeichertCallback,
+                                gruppe.isChecked() ? null : gruppe.getLager(), gruppe.isChecked() ? lager : null)))//
                 .addColumn(Columns.CHECK)//
                 .addColumn(ColumnBuilder.get(String.class).editable(false).add("Bezeichnung").build());//
     }
@@ -308,10 +304,8 @@ public class JTableBuilders {
                                 return person.getGebDat();
                             }
                             return null;
-                        })
-                        .save((le, cb) -> get().speichereLeiter(le.isChecked(), le.getOriginalId(),
-                                le.isChecked() ? gruppe.getOriginalId() : le.getGruppe().getId(),
-                                gespeichertCallback -> {
+                        }).save((le, cb) -> get().speichereLeiter(le.isChecked(), le.getOriginalId(),
+                                le.isChecked() ? gruppe.getId() : le.getGruppe().getId(), gespeichertCallback -> {
                                     Events.get().fireLeiterSaved(le, le.isChecked() ? null : gruppe,
                                             le.isChecked() ? gruppe : null);
                                     le.setGruppe(gespeichertCallback);
@@ -363,10 +357,8 @@ public class JTableBuilders {
                                 return person.getGebDat();
                             }
                             return null;
-                        })
-                        .save((te, cb) -> get().speichereTeilnehmer(te.isChecked(), te.getOriginalId(),
-                                te.isChecked() ? gruppe.getOriginalId() : te.getGruppe().getId(),
-                                gespeichertCallback -> {
+                        }).save((te, cb) -> get().speichereTeilnehmer(te.isChecked(), te.getOriginalId(),
+                                te.isChecked() ? gruppe.getId() : te.getGruppe().getId(), gespeichertCallback -> {
                                     Events.get().fireTeilnehmerSaved(te, te.isChecked() ? null : gruppe,
                                             te.isChecked() ? gruppe : null);
                                     te.setGruppe(gespeichertCallback);
@@ -455,10 +447,8 @@ public class JTableBuilders {
                 .addColumn(ColumnBuilder.get(String.class).add("Abend").multiline().build());//
     }
 
-    public static JTableBuilder<Legenda> legenda(Lagerort lagerort) {
-        return JTableBuilder
-                .get(Legenda.class,
-                        asyncCallback -> get().getAllLegendaFromLagerort(lagerort.getOriginalId(), asyncCallback))//
+    public static JTableBuilder<Legenda> legenda(Loader<Legenda> loader) {
+        return JTableBuilder.get(Legenda.class, loader)//
                 .set((person, val, index) -> {
                     if (index == 0) {
                         person.setLegendaTyp((Legendatyp) val);
@@ -514,10 +504,10 @@ public class JTableBuilders {
                     }
                     return null;
                 })
-                .save((lg, cb) -> get().speichereLegenda(lg.getId(), lagerort.getId(), lg.getName(), lg.getVorname(),
-                        lg.getFirma(), lg.getStrasse(), lg.getPlz(), lg.getOrt(), lg.getLegendaTyp().getId(),
-                        lg.getAnrede().getId(), lg.getStrasse(), lg.getFax(), lg.getHandy(), lg.getEmail(),
-                        lg.getBemerkung(), cb))//
+                .save((lg, cb) -> get().speichereLegenda(lg.getId(), lg.getLagerOrt().getId(), lg.getName(),
+                        lg.getVorname(), lg.getFirma(), lg.getStrasse(), lg.getPlz(), lg.getOrt(),
+                        lg.getLegendaTyp().getId(), lg.getAnrede().getId(), lg.getStrasse(), lg.getFax(), lg.getHandy(),
+                        lg.getEmail(), lg.getBemerkung(), cb))//
                 .addColumn(ColumnBuilder.get(Legendatyp.class)
                         .add(JComboBoxBuilder.get(Legendatyp.class, get()::getAllLegendatyp).build()).add("Typ").desc()
                         .build())//

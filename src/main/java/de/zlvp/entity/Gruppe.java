@@ -5,15 +5,14 @@ import java.util.List;
 
 public class Gruppe extends AbstractEntity {
 
-    public Gruppe(Integer id, Integer gruppeId, String name, String schlachtruf) {
+    public Gruppe(Integer id, String name, String schlachtruf) {
         setId(id);
-        setOriginalId(gruppeId);
         this.name = name;
         this.schlachtruf = schlachtruf;
     }
 
     public Gruppe(Gruppe g) {
-        this(g.getId(), g.getOriginalId(), g.getName(), g.getSchlachtruf());
+        this(g.getId(), g.getName(), g.getSchlachtruf());
     }
 
     private List<Leiter> leiter;
@@ -23,6 +22,16 @@ public class Gruppe extends AbstractEntity {
     private String schlachtruf;
 
     private Lager lager;
+
+    private boolean checked = false;
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
 
     @Override
     public String getBezeichnung() {

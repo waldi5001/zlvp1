@@ -116,7 +116,7 @@ public class PersonSuchen extends AbstractJInternalFrame {
 
     private void initialize() {
         this.setSize(500, 598);
-        this.setTitle("Person Ändern");
+        this.setTitle("Person Suchen / Ändern");
         this.setContentPane(getJContentPane());
         this.getRootPane().setDefaultButton(getJButtonSuchen());
     }

@@ -2,12 +2,17 @@ package de.zlvp.gui;
 
 import static de.zlvp.Client.get;
 
+import java.awt.AWTKeyStroke;
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.swing.JButton;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -15,6 +20,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 
 import de.javasoft.swing.JYTableScrollPane;
 import de.zlvp.Events;
@@ -35,10 +44,6 @@ public class TPGruppe extends JTabbedPane {
     private JPanel jPanelDaten;
 
     private JPanel jPanel;
-
-    private JPanel jPanel3;
-
-    private JButton jButtonOKDaten;
 
     private JTextField jTextFieldName;
     private JLabel jLabelName;
@@ -75,17 +80,17 @@ public class TPGruppe extends JTabbedPane {
         this.gruppe = gruppe;
         this.gruppe.setLager(lager);
         tableBuilderTeilnehmer = JTableBuilders.teilnehmer(gruppe, get()::getAllPersons,
-                allTeilnehmer -> get().getAllTeilnehmer(gruppe.getOriginalId(), allTeilnehmer));
+                allTeilnehmer -> get().getAllTeilnehmer(gruppe.getId(), allTeilnehmer));
         tableBuilderLeiter = JTableBuilders.leiter(gruppe, get()::getAllPersons,
-                allLeiter -> get().getAllLeiter(gruppe.getOriginalId(), allLeiter));
+                allLeiter -> get().getAllLeiter(gruppe.getId(), allLeiter));
         tableBuilderZelt = JTableBuilders.zelt(gruppe,
                 allZelt -> get().getAllZeltFromLager(gruppe.getLager().getId(), allZelt),
-                allZeltFromGruppe -> get().getAllZeltFromGruppe(gruppe.getOriginalId(), allZeltFromGruppe));
+                allZeltFromGruppe -> get().getAllZeltFromGruppe(gruppe.getId(), allZeltFromGruppe));
         initialize();
+        setupTabTraversalKeys();
     }
 
     private void initialize() {
-        this.setSize(562, 378);
         this.addTab("Daten", getJPanelDaten());
         this.addTab("Leiter", getJPanelLeiter());
         this.addTab("Teilnehmer", getJPanelTeilnehmer());
@@ -106,7 +111,6 @@ public class TPGruppe extends JTabbedPane {
             jPanelDaten = new JPanel();
             jPanelDaten.setLayout(new BorderLayout());
             jPanelDaten.add(getJPanel(), java.awt.BorderLayout.CENTER);
-            jPanelDaten.add(getJPanel3(), java.awt.BorderLayout.SOUTH);
         }
         return jPanelDaten;
     }
@@ -150,32 +154,37 @@ public class TPGruppe extends JTabbedPane {
         return jPanel;
     }
 
-    private JPanel getJPanel3() {
-        if (jPanel3 == null) {
-            jPanel3 = new JPanel();
-            jPanel3.setLayout(new FlowLayout());
-            jPanel3.add(getJButtonOKDaten(), null);
-        }
-        return jPanel3;
-    }
-
-    private JButton getJButtonOKDaten() {
-        if (jButtonOKDaten == null) {
-            jButtonOKDaten = new JButton();
-            jButtonOKDaten.setText("OK");
-            jButtonOKDaten.addActionListener(e -> {
-                get().speichereGruppe(gruppe.getId(), gruppe.getOriginalId(), gruppe.getLager().getId(),
-                        getJTextFieldName().getText(), getJTextAreaSchlachtruf().getText(),
-                        asyncCallback -> Events.get().fireAktualisieren());
-            });
-        }
-        return jButtonOKDaten;
-    }
-
     private JTextField getJTextFieldName() {
         if (jTextFieldName == null) {
             jTextFieldName = new JTextField();
             jTextFieldName.setText(gruppe.getName());
+            jTextFieldName.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void changedUpdate(DocumentEvent documentEvent) {
+                }
+
+                @Override
+                public void insertUpdate(DocumentEvent documentEvent) {
+                    save(documentEvent);
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent documentEvent) {
+                    save(documentEvent);
+                }
+
+                private void save(DocumentEvent documentEvent) {
+                    try {
+                        String name = documentEvent.getDocument().getText(0, documentEvent.getDocument().getLength());
+                        gruppe.setName(name);
+                        get().aendereGruppe(gruppe.getId(), gruppe.getName(), gruppe.getSchlachtruf(), cb -> {
+                            Events.get().fireGruppeSaved(gruppe, null, null);
+                        });
+                    } catch (BadLocationException e) {
+                        throw new RuntimeException(e.getMessage(), e);
+                    }
+                }
+            });
         }
         return jTextFieldName;
     }
@@ -245,6 +254,33 @@ public class TPGruppe extends JTabbedPane {
         if (jTextAreaSchlachtruf == null) {
             jTextAreaSchlachtruf = new JTextArea();
             jTextAreaSchlachtruf.setText(gruppe.getSchlachtruf());
+            jTextAreaSchlachtruf.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void changedUpdate(DocumentEvent documentEvent) {
+                }
+
+                @Override
+                public void insertUpdate(DocumentEvent documentEvent) {
+                    save(documentEvent);
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent documentEvent) {
+                    save(documentEvent);
+                }
+
+                private void save(DocumentEvent documentEvent) {
+                    try {
+                        String schlachtruf = documentEvent.getDocument().getText(0,
+                                documentEvent.getDocument().getLength());
+                        gruppe.setSchlachtruf(schlachtruf);
+                        get().aendereGruppe(gruppe.getId(), gruppe.getName(), gruppe.getSchlachtruf(), cb -> {
+                        });
+                    } catch (BadLocationException e) {
+                        throw new RuntimeException(e.getMessage(), e);
+                    }
+                }
+            });
         }
         return jTextAreaSchlachtruf;
     }
@@ -256,4 +292,26 @@ public class TPGruppe extends JTabbedPane {
         return jTableZelt;
     }
 
+    private void setupTabTraversalKeys() {
+        KeyStroke ctrlTab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.CTRL_DOWN_MASK);
+        KeyStroke ctrlShiftTab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB,
+                KeyEvent.SHIFT_DOWN_MASK | KeyEvent.CTRL_DOWN_MASK);
+
+        // Remove ctrl-tab from normal focus traversal
+        Set<AWTKeyStroke> forwardKeys = new HashSet<>(
+                getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS));
+        forwardKeys.remove(ctrlTab);
+        setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, forwardKeys);
+
+        // Remove ctrl-shift-tab from normal focus traversal
+        Set<AWTKeyStroke> backwardKeys = new HashSet<>(
+                getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS));
+        backwardKeys.remove(ctrlShiftTab);
+        setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, backwardKeys);
+
+        // Add keys to the tab's input map
+        InputMap inputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        inputMap.put(ctrlTab, "navigateNext");
+        inputMap.put(ctrlShiftTab, "navigatePrevious");
+    }
 }

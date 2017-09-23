@@ -5,6 +5,7 @@ import com.google.common.eventbus.EventBus;
 import de.zlvp.entity.Gruppe;
 import de.zlvp.entity.Jahr;
 import de.zlvp.entity.Lager;
+import de.zlvp.entity.Lagerort;
 import de.zlvp.entity.Leiter;
 import de.zlvp.entity.Person;
 import de.zlvp.entity.Teilnehmer;
@@ -101,6 +102,46 @@ public class Events {
         });
     }
 
+    public void fireGruppeSaved(Gruppe gruppe, Lager srcLager, Lager destLager) {
+        bus.post(new GruppeSaved() {
+
+            @Override
+            public Gruppe get() {
+                return gruppe;
+            }
+
+            @Override
+            public Lager srcLager() {
+                return srcLager;
+            }
+
+            @Override
+            public Lager destLager() {
+                return destLager;
+            }
+
+            @Override
+            public String toString() {
+                return prettyPrint();
+            }
+        });
+    }
+
+    public void fireLagerSaved(Lager lager, Lagerort lagerort) {
+        bus.post(new LagerSaved() {
+            @Override
+            public Lager get() {
+                return lager;
+            }
+
+            @Override
+            public Lagerort lagerort() {
+                return lagerort;
+            }
+
+        });
+    }
+
     public static interface Aktualisieren {
     }
 
@@ -126,6 +167,24 @@ public class Events {
         default String prettyPrint() {
             return String.format("Teilnehmer: %s von %s nach %s", get(), srcGruppe(), destGruppe());
         };
+    }
+
+    public static interface GruppeSaved {
+        Gruppe get();
+
+        Lager srcLager();
+
+        Lager destLager();
+
+        default String prettyPrint() {
+            return String.format("Gruppe: %s von %s nach %s", get(), srcLager(), destLager());
+        };
+    }
+
+    public static interface LagerSaved {
+        Lager get();
+
+        Lagerort lagerort();
     }
 
     @FunctionalInterface

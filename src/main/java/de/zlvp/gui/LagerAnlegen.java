@@ -279,8 +279,8 @@ public class LagerAnlegen extends AbstractJInternalFrame {
     private void speichern() {
         Date start = (Date) getJFormattedTextFieldDatStart().getValue();
         Date stop = (Date) getJFormattedTextFieldDatStop().getValue();
-        String sName = getJTextFieldName().getText().toString().trim();
-        String sThema = getJTextFieldMotto().getText().toString().trim();
+        String sName = getJTextFieldName().getText();
+        String sThema = getJTextFieldMotto().getText();
         Lagerort lagerort = (Lagerort) getJComboBoxLagerort().getSelectedItem();
 
         get().speichereLager(null, sName, sThema, start, stop, jahrId, lagerort.getId(), cb -> {

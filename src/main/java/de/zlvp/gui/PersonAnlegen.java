@@ -406,16 +406,16 @@ public class PersonAnlegen extends AbstractJInternalFrame {
 
     private void speichern() {
         Geschlecht geschlecht = (Geschlecht) getJComboBoxGeschlecht().getSelectedItem();
-        String nachname = getJTextFieldName().getText().trim();
-        String vorname = getJTextFieldVorname().getText().trim();
-        String strasse = getJTextFieldStrasse().getText().trim();
-        String plz = getJTextFieldPLZ().getText().trim();
-        String ort = getJTextFieldOrt().getText().trim();
+        String nachname = getJTextFieldName().getText();
+        String vorname = getJTextFieldVorname().getText();
+        String strasse = getJTextFieldStrasse().getText();
+        String plz = getJTextFieldPLZ().getText();
+        String ort = getJTextFieldOrt().getText();
         Date gebtag = (Date) getJFormattedTextFieldGebDat().getValue();
-        String telnr = getJTextFieldTelNR().getText().trim();
-        String email = getJTextFieldEMail().getText().trim();
-        String handy = getJTextFieldHandy().getText().trim();
-        String nottel = getJTextFieldNottel().getText().trim();
+        String telnr = getJTextFieldTelNR().getText();
+        String email = getJTextFieldEMail().getText();
+        String handy = getJTextFieldHandy().getText();
+        String nottel = getJTextFieldNottel().getText();
 
         get().speicherePerson(null, geschlecht, vorname, nachname, strasse, plz, ort, gebtag, telnr, email, handy,
                 nottel, cb -> {

@@ -120,8 +120,10 @@ public class ControllerImpl implements Controller {
             lager.getGruppe().addAll(gruppeDao.getAllFromLager(lager.getId()));
             lager.setLagerort(lagerortDao.getFromLager(lager.getId()));
             for (Gruppe g : lager.getGruppe()) {
-                g.getLeiter().addAll(leiterDao.getAll(g.getOriginalId()));
-                g.getTeilnehmer().addAll(teilnehmerDao.getAll(g.getOriginalId()));
+                g.getLeiter().addAll(leiterDao.getAll(g.getId()));
+                g.getTeilnehmer().addAll(teilnehmerDao.getAll(g.getId()));
+                g.setLager(lager);
+                g.setChecked(true);
             }
         }
         callback.get(jahr);
@@ -155,16 +157,6 @@ public class ControllerImpl implements Controller {
     @Override
     public void getAllGruppen(AsyncCallback<List<Gruppe>> callback) {
         callback.get(gruppeDao.getAll());
-    }
-
-    @Override
-    public void getAllGruppenFromLager(int lagerId, AsyncCallback<List<Gruppe>> callback) {
-        List<Gruppe> allFromLager = gruppeDao.getAllFromLager(lagerId);
-        Lager lager = lagerDao.get(lagerId);
-        for (Gruppe gruppe : allFromLager) {
-            gruppe.setLager(lager);
-        }
-        callback.get(allFromLager);
     }
 
     @Override
@@ -244,9 +236,11 @@ public class ControllerImpl implements Controller {
     @Override
     public void getAllLegendaFromLagerort(int lagerortId, AsyncCallback<List<Legenda>> callback) {
         List<Legenda> legenda = legendaDao.getAllFromLagerort(lagerortId);
+        Lagerort lagerort = lagerortDao.get(lagerortId);
         for (Legenda l : legenda) {
             l.setLegendaTyp(legendatypDao.getFromLegenda(l.getId()));
             l.setAnrede(anredeDao.getAnredeFromLegenda(l.getId()));
+            l.setLagerOrt(lagerort);
         }
         callback.get(legenda);
     }
@@ -285,6 +279,13 @@ public class ControllerImpl implements Controller {
     public void speichereLager(Integer id, String name, String thema, Date start, Date stop, int jahrId, int lagerortId,
             AsyncCallback<Void> callback) {
         lagerDao.speichern(id, name, thema, start, stop, lagerortId, jahrId);
+        callback.get(null);
+    }
+
+    @Override
+    public void aendereLager(Integer id, String name, String thema, Date start, Date stop,
+            AsyncCallback<Void> callback) {
+        lagerDao.aendern(id, name, thema, start, stop);
         callback.get(null);
     }
 
@@ -418,18 +419,30 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void speichereGruppe(Integer id, Integer gruppeId, Integer lagerId, String name, String schlachtruf,
-            AsyncCallback<Void> callback) {
-        Gruppe gruppe = gruppeDao.speichereGruppe(gruppeId, name, schlachtruf);
-        // Assign Unsassigned Fall
-        if (id == null && gruppeId != null && lagerId != null) {
-            gruppeDao.speicherenLager(lagerId, gruppeId);
-            // Neu Anlegen Fall
-        } else if (id == null && gruppeId == null && lagerId != null) {
-            gruppeDao.speicherenLager(lagerId, gruppe.getId());
-        } else if (id != null && lagerId == null) {
-            gruppeDao.loeschen(id);
+    public void speichereGruppe(boolean add, Integer id, int lagerId, String name, String schlachtruf,
+            AsyncCallback<Gruppe> callback) {
+        Gruppe gruppe = gruppeDao.speichereGruppe(id, name, schlachtruf);
+        if (add) {
+            gruppeDao.speicherenZuLager(lagerId, gruppe.getId());
+        } else {
+            gruppeDao.loeschenVonLager(lagerId, id);
         }
+        callback.get(gruppe);
+        // // Assign Unsassigned Fall
+        // if (id == null && lagerId != null) {
+        // gruppeDao.speicherenZuLager(lagerId, id);
+        // // Neu Anlegen Fall
+        // } else if (id == null && lagerId != null) {
+        // gruppeDao.speicherenZuLager(lagerId, gruppe.getId());
+        // } else if (id != null && lagerId == null) {
+        // gruppeDao.loeschenVonLager(lagerId, id);
+        // }
+
+    }
+
+    @Override
+    public void aendereGruppe(int id, String name, String schlachtruf, AsyncCallback<Void> callback) {
+        gruppeDao.speichereGruppe(id, name, schlachtruf);
         callback.get(null);
     }
 
@@ -514,10 +527,9 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void verschiebeGruppe(int gruppenId, int lagerId, AsyncCallback<Void> callback) {
-        Gruppe gruppe = gruppeDao.getFromLager(gruppenId);
-        gruppeDao.loeschen(gruppenId);
-        gruppeDao.speicherenLager(lagerId, gruppe.getOriginalId());
+    public void verschiebeGruppe(int id, int srcLager, int destLager, AsyncCallback<Void> callback) {
+        gruppeDao.loeschenVonLager(srcLager, id);
+        gruppeDao.speicherenZuLager(destLager, id);
         callback.get(null);
     }
 

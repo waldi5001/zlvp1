@@ -2,20 +2,29 @@ package de.zlvp.gui;
 
 import static de.zlvp.Client.get;
 
+import java.awt.AWTKeyStroke;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.ItemEvent;
+import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeListener;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
+import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,6 +32,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DateFormatter;
 
 import de.javasoft.swing.JYTableScrollPane;
@@ -61,8 +74,6 @@ public class TPLager extends JTabbedPane {
     private JTextField jTextFieldThema;
     private JFormattedTextField jFormattedTextFieldDatumStart;
     private JFormattedTextField jFormattedTextFieldDatumStop;
-    private JPanel jPanel;
-    private JButton jButtonAendernDaten;
     private JPanel jPanel1;
     private JLabel jLabel4;
     private JLabel jLabel5;
@@ -115,11 +126,10 @@ public class TPLager extends JTabbedPane {
         tableBuilderProgramm = JTableBuilders.programm(lager);
         tableBuilderEssen = JTableBuilders.essen(lager);
         initialize();
-
+        setupTabTraversalKeys();
     }
 
     private void initialize() {
-        this.setSize(707, 489);
         this.addTab("Daten", null, getJPanelDaten());
         this.addTab("Staab", null, getJPanelStab());
         this.addTab("Gruppe", null, getJPanelGruppe());
@@ -257,7 +267,6 @@ public class TPLager extends JTabbedPane {
             jPanelDaten = new JPanel();
             jPanelDaten.setLayout(new BorderLayout());
             jPanelDaten.add(getJPanel1(), java.awt.BorderLayout.CENTER);
-            jPanelDaten.add(getJPanel(), java.awt.BorderLayout.SOUTH);
         }
         return jPanelDaten;
     }
@@ -266,6 +275,32 @@ public class TPLager extends JTabbedPane {
         if (jTextFieldName == null) {
             jTextFieldName = new JTextField();
             jTextFieldName.setText(lager.getName());
+            jTextFieldName.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void changedUpdate(DocumentEvent documentEvent) {
+                }
+
+                @Override
+                public void insertUpdate(DocumentEvent documentEvent) {
+                    save(documentEvent);
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent documentEvent) {
+                    save(documentEvent);
+                }
+
+                private void save(DocumentEvent documentEvent) {
+                    try {
+                        String name = documentEvent.getDocument().getText(0, documentEvent.getDocument().getLength());
+                        lager.setName(name);
+                        get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(),
+                                lager.getDatumStop(), result -> Events.get().fireLagerSaved(lager, null));
+                    } catch (BadLocationException e) {
+                        throw new RuntimeException(e.getMessage(), e);
+                    }
+                }
+            });
         }
         return jTextFieldName;
     }
@@ -274,6 +309,33 @@ public class TPLager extends JTabbedPane {
         if (jTextFieldThema == null) {
             jTextFieldThema = new JTextField();
             jTextFieldThema.setText(lager.getThema());
+            jTextFieldThema.getDocument().addDocumentListener(new DocumentListener() {
+                @Override
+                public void changedUpdate(DocumentEvent documentEvent) {
+                }
+
+                @Override
+                public void insertUpdate(DocumentEvent documentEvent) {
+                    save(documentEvent);
+                }
+
+                @Override
+                public void removeUpdate(DocumentEvent documentEvent) {
+                    save(documentEvent);
+                }
+
+                private void save(DocumentEvent documentEvent) {
+                    try {
+                        String thema = documentEvent.getDocument().getText(0, documentEvent.getDocument().getLength());
+                        lager.setThema(thema);
+                        get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(),
+                                lager.getDatumStop(), result -> {
+                                });
+                    } catch (BadLocationException e) {
+                        throw new RuntimeException(e.getMessage(), e);
+                    }
+                }
+            });
         }
         return jTextFieldThema;
     }
@@ -283,6 +345,13 @@ public class TPLager extends JTabbedPane {
             jFormattedTextFieldDatumStart = new JFormattedTextField(
                     new DateFormatter(DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN)));
             jFormattedTextFieldDatumStart.setValue(lager.getDatumStart());
+            PropertyChangeListener l = evt -> {
+                lager.setDatumStart((Date) evt.getNewValue());
+                get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(),
+                        lager.getDatumStop(), result -> {
+                        });
+            };
+            jFormattedTextFieldDatumStart.addPropertyChangeListener("value", l);
         }
         return jFormattedTextFieldDatumStart;
     }
@@ -292,35 +361,15 @@ public class TPLager extends JTabbedPane {
             jFormattedTextFieldDatumStop = new JFormattedTextField(
                     new DateFormatter(DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN)));
             jFormattedTextFieldDatumStop.setValue(lager.getDatumStop());
+            PropertyChangeListener l = evt -> {
+                lager.setDatumStop((Date) evt.getNewValue());
+                get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(),
+                        lager.getDatumStop(), result -> {
+                        });
+            };
+            jFormattedTextFieldDatumStop.addPropertyChangeListener("value", l);
         }
         return jFormattedTextFieldDatumStop;
-    }
-
-    private JPanel getJPanel() {
-        if (jPanel == null) {
-            jPanel = new JPanel();
-            jPanel.add(getJButtonAendernDaten(), null);
-        }
-        return jPanel;
-    }
-
-    private JButton getJButtonAendernDaten() {
-        if (jButtonAendernDaten == null) {
-            jButtonAendernDaten = new JButton();
-            jButtonAendernDaten.setText("Ändern");
-            jButtonAendernDaten.addActionListener(e -> {
-                String name = getJTextFieldName().getText().trim();
-                String motto = getJTextFieldThema().getText().trim();
-                Lagerort lagerort = (Lagerort) getJComboBoxLagerOrt().getSelectedItem();
-                Date start = (Date) getJFormattedTextFieldDatumStart().getValue();
-                Date stop = (Date) getJFormattedTextFieldDatumStop().getValue();
-
-                get().speichereLager(lager.getId(), name, motto, start, stop, lager.getJahr().getId(),
-                        lagerort.getOriginalId(), asyncCallback -> Events.get().fireAktualisieren());
-
-            });
-        }
-        return jButtonAendernDaten;
     }
 
     private JPanel getJPanel1() {
@@ -531,6 +580,14 @@ public class TPLager extends JTabbedPane {
     private JComboBox<Lagerort> getJComboBoxLagerOrt() {
         if (jComboBoxLagerOrt == null) {
             jComboBoxLagerOrt = comboboxBuilderLagerort.build();
+            jComboBoxLagerOrt.addItemListener(e -> {
+                if (e.getStateChange() == ItemEvent.SELECTED && jComboBoxLagerOrt.isPopupVisible()) {
+                    lager.setLagerort((Lagerort) e.getItem());
+                    get().speichereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(),
+                            lager.getDatumStop(), lager.getJahr().getId(), lager.getLagerort().getId(),
+                            cb -> Events.get().fireLagerSaved(lager, lager.getLagerort()));
+                }
+            });
         }
         return jComboBoxLagerOrt;
     }
@@ -542,8 +599,27 @@ public class TPLager extends JTabbedPane {
         return jPanelLegenda;
     }
 
-    public TPLager getTPLager() {
-        return this;
+    private void setupTabTraversalKeys() {
+        KeyStroke ctrlTab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.CTRL_DOWN_MASK);
+        KeyStroke ctrlShiftTab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB,
+                KeyEvent.SHIFT_DOWN_MASK | KeyEvent.CTRL_DOWN_MASK);
+
+        // Remove ctrl-tab from normal focus traversal
+        Set<AWTKeyStroke> forwardKeys = new HashSet<>(
+                getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS));
+        forwardKeys.remove(ctrlTab);
+        setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, forwardKeys);
+
+        // Remove ctrl-shift-tab from normal focus traversal
+        Set<AWTKeyStroke> backwardKeys = new HashSet<>(
+                getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS));
+        backwardKeys.remove(ctrlShiftTab);
+        setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, backwardKeys);
+
+        // Add keys to the tab's input map
+        InputMap inputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        inputMap.put(ctrlTab, "navigateNext");
+        inputMap.put(ctrlShiftTab, "navigatePrevious");
     }
 
 }

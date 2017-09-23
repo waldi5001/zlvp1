@@ -38,8 +38,6 @@ public interface Controller {
 
     void getAllGruppen(AsyncCallback<List<Gruppe>> callback);
 
-    void getAllGruppenFromLager(int lagerId, AsyncCallback<List<Gruppe>> callback);
-
     void getAllJahr(AsyncCallback<List<Jahr>> callback);
 
     void getAllLager(int jahrId, AsyncCallback<List<Lager>> callback);
@@ -90,11 +88,15 @@ public interface Controller {
 
     void loescheZeltverleih(int id, AsyncCallback<Void> callback);
 
-    void speichereGruppe(Integer id, Integer gruppeId, Integer lagerId, String name, String schlachtruf,
-            AsyncCallback<Void> callback);
+    void speichereGruppe(boolean add, Integer id, int lagerId, String name, String schlachtruf,
+            AsyncCallback<Gruppe> callback);
+
+    void aendereGruppe(int id, String name, String schlachtruf, AsyncCallback<Void> callback);
 
     void speichereLager(Integer id, String name, String thema, Date start, Date stop, int jahrId, int lagerortId,
             AsyncCallback<Void> callback);
+
+    void aendereLager(Integer id, String name, String thema, Date start, Date stop, AsyncCallback<Void> callback);
 
     void speichereLagerort(String lagerort, AsyncCallback<Void> callback);
 
@@ -151,7 +153,7 @@ public interface Controller {
             String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
             String telNr2, boolean delete, AsyncCallback<Void> callback);
 
-    void verschiebeGruppe(int gruppenId, int lagerId, AsyncCallback<Void> callback);
+    void verschiebeGruppe(int id, int srcLager, int destLager, AsyncCallback<Void> callback);
 
     void verschiebeLeiter(int personId, int srcGruppeId, int destGruppeId, AsyncCallback<Void> callback);
 
