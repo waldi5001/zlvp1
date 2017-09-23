@@ -428,16 +428,6 @@ public class ControllerImpl implements Controller {
             gruppeDao.loeschenVonLager(lagerId, id);
         }
         callback.get(gruppe);
-        // // Assign Unsassigned Fall
-        // if (id == null && lagerId != null) {
-        // gruppeDao.speicherenZuLager(lagerId, id);
-        // // Neu Anlegen Fall
-        // } else if (id == null && lagerId != null) {
-        // gruppeDao.speicherenZuLager(lagerId, gruppe.getId());
-        // } else if (id != null && lagerId == null) {
-        // gruppeDao.loeschenVonLager(lagerId, id);
-        // }
-
     }
 
     @Override
