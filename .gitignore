@@ -3,7 +3,7 @@ target
 .settings
 .classpath
 .project
-/zlvp.properties
+zlvp.properties
 /.springBeans
-/lib/
 id_rsa
+release.sh

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Etiketten" columnCount="3" printOrder="Horizontal" pageWidth="595" pageHeight="842" columnWidth="198" leftMargin="0" rightMargin="0" topMargin="14" bottomMargin="0" uuid="a7090279-be49-4b70-8872-12a6a3fa22c8">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="laid" class="java.lang.Integer" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[SELECT * FROM
+(
+	SELECT vorname, nachname, strasse, plz, p.ort
+	FROM Person p
+	INNER JOIN stGrLe ON stGrLe.person = p.peid
+	INNER JOIN gruppe g ON stGrLe.gruppe = g.grid
+	INNER JOIN stGrLa ON stGrLa.gruppe = g.grid
+	INNER JOIN lager l ON stGrLa.lager = l.laid
+	WHERE l.LaID = $P{laid}
+
+	UNION ALL
+
+	SELECT vorname, nachname, strasse, plz, p.ort
+	FROM Person p
+	INNER JOIN stLaSt ON stLaSt.person = p.peid
+	INNER JOIN lager l ON stLaSt.lager = l.laid
+	WHERE l.LaID = $P{laid}
+
+	UNION ALL
+
+	SELECT vorname, nachname, strasse, plz, p.ort
+	FROM Person p
+	INNER JOIN stTeGr ON stTeGr.person = p.peid
+	INNER JOIN Gruppe g ON stTeGr.gruppe = g.grid
+	INNER JOIN stGrLa ON stGrLa.gruppe = g.grid
+	INNER JOIN lager l ON stGrLa.lager = l.laid
+	WHERE l.Laid = $P{laid}
+) x ORDER BY nachname
+;]]>
+	</queryString>
+	<field name="vorname" class="java.lang.String"/>
+	<field name="nachname" class="java.lang.String"/>
+	<field name="strasse" class="java.lang.String"/>
+	<field name="plz" class="java.lang.String"/>
+	<field name="ort" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="102" splitType="Stretch">
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="18" y="23" width="167" height="18" uuid="b2251426-c39f-4b15-9be0-107a4aedb682"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vorname} + " " +$F{nachname}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="18" y="41" width="167" height="18" uuid="71ab62c4-c494-4bac-9df6-08d6ef6ca227"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{strasse}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement key="textField" x="18" y="59" width="167" height="18" uuid="b6e2684a-7615-4fac-b849-54d016ac2867"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{plz} + " " +$F{ort}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

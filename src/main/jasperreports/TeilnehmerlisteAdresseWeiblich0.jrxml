@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TeilnehmerlisteAdresseWeiblich0" pageWidth="802" pageHeight="535" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b0a1051e-bced-42b0-88d1-2fb6404b20b3">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="LaIDB" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT Person.Vorname, Person.Nachname, Person.GebDat, Person.Strasse, Person.PLZ, Person.Ort, Person.TelNr, Person.Email, Person.Nottel
+FROM Person INNER JOIN ((Gruppe INNER JOIN (Lager INNER JOIN stGrLa ON Lager.LaID = stGrLa.Lager) ON Gruppe.GrID = stGrLa.Gruppe) INNER JOIN stTeGr ON Gruppe.GrID = stTeGr.Gruppe) ON Person.PeID = stTeGr.Person
+WHERE Lager.LaID = $P{LaIDB} AND Person.Geschlecht = 2
+ORDER BY Person.Geschlecht, Person.Nachname;]]>
+	</queryString>
+	<field name="vorname" class="java.lang.String"/>
+	<field name="nachname" class="java.lang.String"/>
+	<field name="gebdat" class="java.sql.Date"/>
+	<field name="strasse" class="java.lang.String"/>
+	<field name="plz" class="java.lang.String"/>
+	<field name="ort" class="java.lang.String"/>
+	<field name="telnr" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="nottel" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<line>
+				<reportElement key="line-1" x="0" y="15" width="782" height="1" uuid="de07aabe-7338-47d9-b628-fc41f75e4a21"/>
+			</line>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-1" x="0" y="0" width="117" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="84521448-02e9-4f36-b219-b6d1813bb7d1"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nachname}+" "+$F{vorname}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd.MM.yy" isBlankWhenNull="false">
+				<reportElement key="textField-2" x="126" y="0" width="86" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="b58796ca-d618-4db5-be91-c1d9bdee80e9"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{gebdat}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-3" x="221" y="0" width="117" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="b423a312-e098-4e95-9eca-4ff8e7be54b4"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{strasse}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-4" x="347" y="0" width="150" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="59daa1fb-fe11-40b9-b249-461451afbc7d"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{plz} + " "+$F{ort}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField-5" x="506" y="0" width="132" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="bdf1a114-a0ee-49dc-abf6-9e0b1ee77d25"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{telnr}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement key="textField-6" x="649" y="0" width="132" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="44fe39c9-d33b-47a5-b758-90f1fff58bca"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nottel}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

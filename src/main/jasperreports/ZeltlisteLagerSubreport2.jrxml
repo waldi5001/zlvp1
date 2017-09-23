@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ZeltlisteLagerSubreport2" pageWidth="535" pageHeight="842" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="0e87b13b-e93d-4188-89d4-b62ebc477eb3">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="LaID" class="java.lang.Integer" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[SELECT l.name AS name2, z.bezeichnung, l.name FROM Jahr j
+INNER JOIN stLaJa ON stLaJa.jahr = j.jaid
+INNER JOIN lager l ON stLaJa.lager = l.laid
+INNER JOIN stLaZe ON stLaZe.lager = l.laid
+INNER JOIN zelt z ON stLaZe.zelt = z.zeid
+WHERE l.laid = $P{LaID}]]>
+	</queryString>
+	<field name="name2" class="java.lang.String"/>
+	<field name="bezeichnung" class="java.lang.String"/>
+	<field name="name" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="18" splitType="Stretch">
+			<staticText>
+				<reportElement key="staticText-1" x="0" y="1" width="41" height="17" uuid="e3c0fb0a-7b9a-40bf-bc77-e769b655075a"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="14" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Zelt]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-2" x="86" y="1" width="140" height="17" uuid="8b980e9a-2c1e-4433-87d9-22df0300f17f"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="14" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[aufgefall. Schäden:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="staticText-3" x="344" y="1" width="110" height="17" uuid="1ae2d842-168f-467e-a031-c6067f84c507"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="14" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Kommentar:]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement key="textField-1" x="8" y="0" width="76" height="17" uuid="f9815680-e0aa-4ebb-84fd-9d6b5a59dccf"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bezeichnung}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement key="line-2" stretchType="RelativeToBandHeight" x="95" y="0" width="1" height="17" uuid="5eaa96fe-8526-494a-b5e4-bcf49acdbfda"/>
+			</line>
+			<line>
+				<reportElement key="line-3" stretchType="RelativeToBandHeight" x="344" y="0" width="1" height="17" uuid="72b6c5da-b1d9-4e1d-8484-50aa9c70cf69"/>
+			</line>
+			<line>
+				<reportElement key="line-4" x="0" y="0" width="535" height="1" uuid="b51fcea0-4aaa-4941-b105-09793ccd4c2b"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

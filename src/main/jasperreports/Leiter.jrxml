@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="classic" columnCount="2" printOrder="Horizontal" pageWidth="535" pageHeight="802" columnWidth="263" columnSpacing="8" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="4e361bbf-5a0f-42c2-96d2-ff76e7a474c6">
+	<property name="ireport.scriptlethandling" value="0"/>
+	<property name="ireport.encoding" value="UTF-8"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<import value="net.sf.jasperreports.engine.*"/>
+	<import value="java.util.*"/>
+	<import value="net.sf.jasperreports.engine.data.*"/>
+	<parameter name="grid" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT DISTINCT Gruppe.GrID, Person.Vorname, Person.Nachname
+FROM Person INNER JOIN (Gruppe INNER JOIN stGrLe ON Gruppe.GrID = stGrLe.Gruppe) ON Person.PeID = stGrLe.Person
+WHERE (((Gruppe.GrID)=$P{grid}));]]>
+	</queryString>
+	<field name="grid" class="java.lang.Integer"/>
+	<field name="vorname" class="java.lang.String"/>
+	<field name="nachname" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="18" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" mode="Transparent" x="0" y="0" width="263" height="16" forecolor="#000000" backcolor="#CCCCCC" uuid="db887538-0b72-4265-9d1b-0a5e7a2c63d2"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Times New Roman" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Leiter:" + $F{vorname} + " "+$F{nachname}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
