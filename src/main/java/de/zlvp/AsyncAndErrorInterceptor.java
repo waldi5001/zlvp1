@@ -1,7 +1,6 @@
 package de.zlvp;
 
-import static javax.swing.SwingUtilities.invokeLater;
-
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 import org.aopalliance.intercept.MethodInterceptor;
@@ -22,17 +21,18 @@ public class AsyncAndErrorInterceptor implements MethodInterceptor {
             AsyncCallback<Object> originalCallback = (AsyncCallback<Object>) invocation
                     .getArguments()[invocation.getArguments().length - 1];
 
-            AsyncCallback<Object> edtCallback = result -> invokeLater(() -> {
-                originalCallback.get(result);
-            });
+            AsyncCallback<Object> edtCallback = new EDTCallback(originalCallback);
 
-            invocation.getArguments()[invocation.getArguments().length - 1] = edtCallback;
+            ProxyCallback proxy = new ProxyCallback();
+            invocation.getArguments()[invocation.getArguments().length - 1] = proxy;
 
             SwingWorker<Object, Void> sw = new SwingWorker<Object, Void>() {
                 @Override
                 protected Object doInBackground() {
                     try {
-                        return invocation.proceed();
+                        Object proceed = invocation.proceed();
+                        edtCallback.get(proxy.getControllerResult());
+                        return proceed;
                     } catch (Throwable e) {
                         handleThrowable(e);
                     }
@@ -53,6 +53,34 @@ public class AsyncAndErrorInterceptor implements MethodInterceptor {
             message = "Fatal: " + e.getClass();
         }
         DetailsDialog.showDialog(null, "Fehler", message, e);
+    }
+
+    private static class ProxyCallback implements AsyncCallback<Object> {
+        private Object controllerResult = null;
+
+        @Override
+        public void get(Object controllerResult) {
+            this.controllerResult = controllerResult;
+        }
+
+        public Object getControllerResult() {
+            return controllerResult;
+        }
+
+    }
+
+    private static class EDTCallback implements AsyncCallback<Object> {
+        private final AsyncCallback<Object> originalCallback;
+
+        public EDTCallback(AsyncCallback<Object> originalCallback) {
+            this.originalCallback = originalCallback;
+        }
+
+        @Override
+        public void get(Object result) {
+            SwingUtilities.invokeLater(() -> originalCallback.get(result));
+        }
+
     }
 
 }
