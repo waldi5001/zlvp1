@@ -52,7 +52,6 @@
 	<field name="telnr" class="java.lang.String"/>
 	<field name="email" class="java.lang.String"/>
 	<field name="gebdat" class="java.sql.Date"/>
-	<field name="vornamenachname" class="java.lang.String"/>
 	<field name="handy" class="java.lang.String"/>
 	<field name="nottel" class="java.lang.String"/>
 	<group name="typ">

@@ -24,7 +24,6 @@
 	<field name="ort" class="java.lang.String"/>
 	<field name="telnr" class="java.lang.String"/>
 	<field name="email" class="java.lang.String"/>
-	<field name="vornamenachname" class="java.lang.String"/>
 	<group name="detail2">
 		<groupExpression><![CDATA[]]></groupExpression>
 		<groupHeader>
