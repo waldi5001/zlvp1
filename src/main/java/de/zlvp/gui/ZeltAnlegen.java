@@ -171,20 +171,6 @@ public class ZeltAnlegen extends AbstractJInternalFrame {
         if (jTextFieldBezeichnung == null) {
             jTextFieldBezeichnung = new JTextField();
             jTextFieldBezeichnung.setText("BR-Z-");
-            jTextFieldBezeichnung.addFocusListener(new java.awt.event.FocusAdapter() {
-                @Override
-                public void focusLost(java.awt.event.FocusEvent e) {
-                    //
-                    // if
-                    // (z.zeltVorhanden(getJTextFieldBezeichnung().getText().trim()))
-                    // {
-                    // getJButtonSpeichern().setEnabled(false);
-                    // } else {
-                    // getJButtonSpeichern().setEnabled(true);
-                    // }
-
-                }
-            });
         }
         return jTextFieldBezeichnung;
     }
