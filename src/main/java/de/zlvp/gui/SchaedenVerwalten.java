@@ -229,7 +229,7 @@ public class SchaedenVerwalten extends AbstractJInternalFrame {
 
     private JTable getJTableSchaeden() {
         if (jTableSchaeden == null) {
-            jTableSchaeden = tableBuilder.build();
+            jTableSchaeden = tableBuilder.buildAndLoad();
             jTableSchaeden.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
                 public void mouseClicked(java.awt.event.MouseEvent e) {

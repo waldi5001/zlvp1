@@ -93,7 +93,7 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
 
     private JTable getJTable() {
         if (jTable == null) {
-            jTable = jTableBuilder.build();
+            jTable = jTableBuilder.buildAndLoad();
             jTable.getSelectionModel().addListSelectionListener(e -> {
                 ListSelectionModel lsm = (ListSelectionModel) e.getSource();
                 if (lsm.isSelectionEmpty()) {

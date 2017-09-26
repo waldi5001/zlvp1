@@ -21,7 +21,7 @@ public class LegendaVerwalten extends AbstractJInternalFrame {
     private void initialize() {
         this.setSize(580, 531);
         this.setTitle("Legenda für: " + lagerort.getName());
-        this.setContentPane(new LegendaVerwaltenPanel(lagerort));
+        this.setContentPane(new LegendaVerwaltenPanel(() -> lagerort));
     }
 
 }

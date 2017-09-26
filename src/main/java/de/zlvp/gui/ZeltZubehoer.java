@@ -199,7 +199,7 @@ public class ZeltZubehoer extends AbstractJInternalFrame {
 
     private JTable getJTable() {
         if (jTable == null) {
-            jTable = tableBuilder.build();
+            jTable = tableBuilder.buildAndLoad();
 
             jTable.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override

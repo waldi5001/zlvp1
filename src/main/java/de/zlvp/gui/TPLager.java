@@ -10,6 +10,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.KeyboardFocusManager;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
@@ -38,8 +40,11 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DateFormatter;
 
+import com.google.common.eventbus.Subscribe;
+
 import de.javasoft.swing.JYTableScrollPane;
 import de.zlvp.Events;
+import de.zlvp.Events.LagerSelected;
 import de.zlvp.entity.Essen;
 import de.zlvp.entity.Gruppe;
 import de.zlvp.entity.Lager;
@@ -107,24 +112,28 @@ public class TPLager extends JTabbedPane {
     private JButton jButtonLoeschenProgramm;
     private JButton jButtonLoeschenEssen;
 
-    public TPLager(Lager lager) {
-        this.lager = lager;
-        tableBuilderStab = JTableBuilders.stab(lager, get()::getAllPersons,
+    public TPLager() {
+        Events.bus().register(this);
+
+        tableBuilderStab = JTableBuilders.stab(() -> lager, get()::getAllPersons,
                 allStab -> get().getAllStab(lager.getId(), allStab));
-        tableBuilderMaterialwart = JTableBuilders.materialwart(lager, get()::getAllPersons,
+        tableBuilderMaterialwart = JTableBuilders.materialwart(() -> lager, get()::getAllPersons,
                 allMaterialwart -> get().getAllMaterialwart(lager.getId(), allMaterialwart));
-        tableBuilderZelt = JTableBuilders.zelt(lager, get()::getAllZelt,
+        tableBuilderZelt = JTableBuilders.zelteVonLager(() -> lager, get()::getAllZelt,
                 allZeltFromLager -> get().getAllZeltFromLager(lager.getId(), allZeltFromLager));
-        tableBuilderGruppe = JTableBuilders.gruppe(lager, getJCheckBoxAlleGruppenAnzeigen()::isSelected);
+        tableBuilderGruppe = JTableBuilders.gruppe(() -> lager, getJCheckBoxAlleGruppenAnzeigen()::isSelected,
+                cb -> cb.get(lager.getGruppe()));
         comboboxBuilderLagerort = JComboBoxBuilder.get(Lagerort.class, get()::getAllLagerort, () -> {
-            if (lager.getLagerort() != null) {
-                jComboBoxLagerOrt.setSelectedItem(lager.getLagerort());
-            } else {
-                jComboBoxLagerOrt.setSelectedIndex(-1);
+            if (lager != null) {
+                if (lager.getLagerort() != null) {
+                    jComboBoxLagerOrt.setSelectedItem(lager.getLagerort());
+                } else {
+                    jComboBoxLagerOrt.setSelectedIndex(-1);
+                }
             }
         });
-        tableBuilderProgramm = JTableBuilders.programm(lager);
-        tableBuilderEssen = JTableBuilders.essen(lager);
+        tableBuilderProgramm = JTableBuilders.programm(() -> lager, cb -> get().getAllProgramm(lager.getId(), cb));
+        tableBuilderEssen = JTableBuilders.essen(() -> lager, cb -> get().getAllEssen(lager.getId(), cb));
         initialize();
         setupTabTraversalKeys();
     }
@@ -274,7 +283,17 @@ public class TPLager extends JTabbedPane {
     private JTextField getJTextFieldName() {
         if (jTextFieldName == null) {
             jTextFieldName = new JTextField();
-            jTextFieldName.setText(lager.getName());
+            jTextFieldName.addFocusListener(new FocusAdapter() {
+                @Override
+                public void focusLost(FocusEvent e) {
+                    lager.setName(jTextFieldName.getText());
+                    get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(),
+                            lager.getDatumStop(), result -> {
+                                Events.get().fireLagerSaved(lager);
+                            });
+                }
+
+            });
             jTextFieldName.getDocument().addDocumentListener(new DocumentListener() {
                 @Override
                 public void changedUpdate(DocumentEvent documentEvent) {
@@ -294,8 +313,7 @@ public class TPLager extends JTabbedPane {
                     try {
                         String name = documentEvent.getDocument().getText(0, documentEvent.getDocument().getLength());
                         lager.setName(name);
-                        get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(),
-                                lager.getDatumStop(), result -> Events.get().fireLagerSaved(lager, null));
+                        Events.get().fireLagerSaved(lager);
                     } catch (BadLocationException e) {
                         throw new RuntimeException(e.getMessage(), e);
                     }
@@ -308,33 +326,16 @@ public class TPLager extends JTabbedPane {
     private JTextField getJTextFieldThema() {
         if (jTextFieldThema == null) {
             jTextFieldThema = new JTextField();
-            jTextFieldThema.setText(lager.getThema());
-            jTextFieldThema.getDocument().addDocumentListener(new DocumentListener() {
+            jTextFieldThema.addFocusListener(new FocusAdapter() {
                 @Override
-                public void changedUpdate(DocumentEvent documentEvent) {
+                public void focusLost(FocusEvent e) {
+                    lager.setThema(jTextFieldThema.getText());
+                    get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(),
+                            lager.getDatumStop(), result -> {
+                                Events.get().fireLagerSaved(lager);
+                            });
                 }
 
-                @Override
-                public void insertUpdate(DocumentEvent documentEvent) {
-                    save(documentEvent);
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent documentEvent) {
-                    save(documentEvent);
-                }
-
-                private void save(DocumentEvent documentEvent) {
-                    try {
-                        String thema = documentEvent.getDocument().getText(0, documentEvent.getDocument().getLength());
-                        lager.setThema(thema);
-                        get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(),
-                                lager.getDatumStop(), result -> {
-                                });
-                    } catch (BadLocationException e) {
-                        throw new RuntimeException(e.getMessage(), e);
-                    }
-                }
             });
         }
         return jTextFieldThema;
@@ -344,7 +345,6 @@ public class TPLager extends JTabbedPane {
         if (jFormattedTextFieldDatumStart == null) {
             jFormattedTextFieldDatumStart = new JFormattedTextField(
                     new DateFormatter(DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN)));
-            jFormattedTextFieldDatumStart.setValue(lager.getDatumStart());
             PropertyChangeListener l = evt -> {
                 lager.setDatumStart((Date) evt.getNewValue());
                 get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(),
@@ -360,7 +360,6 @@ public class TPLager extends JTabbedPane {
         if (jFormattedTextFieldDatumStop == null) {
             jFormattedTextFieldDatumStop = new JFormattedTextField(
                     new DateFormatter(DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN)));
-            jFormattedTextFieldDatumStop.setValue(lager.getDatumStop());
             PropertyChangeListener l = evt -> {
                 lager.setDatumStop((Date) evt.getNewValue());
                 get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(),
@@ -585,7 +584,7 @@ public class TPLager extends JTabbedPane {
                     lager.setLagerort((Lagerort) e.getItem());
                     get().speichereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(),
                             lager.getDatumStop(), lager.getJahr().getId(), lager.getLagerort().getId(),
-                            cb -> Events.get().fireLagerSaved(lager, lager.getLagerort()));
+                            cb -> Events.get().fireLagerSaved(lager));
                 }
             });
         }
@@ -594,7 +593,8 @@ public class TPLager extends JTabbedPane {
 
     private JPanel getJPanelLegenda() {
         if (jPanelLegenda == null) {
-            jPanelLegenda = new LegendaVerwaltenPanel(lager.getLagerort());
+            jPanelLegenda = new LegendaVerwaltenPanel(
+                    () -> lager == null ? new Lagerort(0, 0, "") : lager.getLagerort());
         }
         return jPanelLegenda;
     }
@@ -620,6 +620,23 @@ public class TPLager extends JTabbedPane {
         InputMap inputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         inputMap.put(ctrlTab, "navigateNext");
         inputMap.put(ctrlShiftTab, "navigatePrevious");
+    }
+
+    @Subscribe
+    private void aktualisiere(LagerSelected event) {
+        this.lager = event.get();
+        getJFormattedTextFieldDatumStart().setValue(lager.getDatumStart());
+        getJFormattedTextFieldDatumStop().setValue(lager.getDatumStop());
+        getJTextFieldThema().setText(lager.getThema());
+        getJTextFieldName().setText(lager.getName());
+
+        comboboxBuilderLagerort.refresh();
+        tableBuilderStab.refresh();
+        tableBuilderMaterialwart.refresh();
+        tableBuilderZelt.refresh();
+        tableBuilderGruppe.refresh();
+        tableBuilderProgramm.refresh();
+        tableBuilderEssen.refresh();
     }
 
 }

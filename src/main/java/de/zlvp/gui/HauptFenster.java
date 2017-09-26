@@ -5,6 +5,7 @@ import static javax.swing.DropMode.ON;
 import static javax.swing.tree.TreeSelectionModel.SINGLE_TREE_SELECTION;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -46,7 +47,12 @@ import de.zlvp.ui.TreePopup;
 
 public class HauptFenster extends AbstractJInternalFrame {
 
+    private static final String LAGER = "LAGER";
+    private static final String GRUPPE = "GRUPPE";
+
     private static final long serialVersionUID = 1L;
+
+    private JPanel jRightPane;
 
     private JPanel jContentPane;
 
@@ -83,6 +89,10 @@ public class HauptFenster extends AbstractJInternalFrame {
                 Events.get().fireDisableMenuItems();
             }
         });
+
+        getjRightPane().add(new TPLager(), LAGER);
+        getjRightPane().add(new TPGruppe(), GRUPPE);
+        this.getJSplitPane().setRightComponent(getjRightPane());
     }
 
     private JPanel getJContentPane() {
@@ -196,25 +206,16 @@ public class HauptFenster extends AbstractJInternalFrame {
 
                     if (anzahlElemente == 2) {
                         Events.get().fireLagerSelected((Lager) userObject);
-                        getJSplitPane().setRightComponent(new TPLager((Lager) userObject));
+                        ((CardLayout) getjRightPane().getLayout()).show(getjRightPane(), LAGER);
                     }
 
                     if (anzahlElemente == 3) {
                         Events.get().fireGruppeSelected((Gruppe) userObject);
-
-                        DefaultMutableTreeNode lagerNode = (DefaultMutableTreeNode) selectionPath.getParentPath()
-                                .getLastPathComponent();
-                        Lager lager = (Lager) lagerNode.getUserObject();
-
-                        getJSplitPane().setRightComponent(new TPGruppe(lager, ((Gruppe) userObject)));
+                        ((CardLayout) getjRightPane().getLayout()).show(getjRightPane(), GRUPPE);
                     }
 
                     if (anzahlElemente == 5) {
-                        DefaultMutableTreeNode lagerNode = (DefaultMutableTreeNode) selectionPath
-                                .getLastPathComponent();
-                        Person person = (Person) lagerNode.getUserObject();
-
-                        Events.get().firePersonSelected(person);
+                        Events.get().firePersonSelected((Person) userObject);
                     } else {
                         // getFensterKlasse().disableMenuItems();
                     }
@@ -412,5 +413,12 @@ public class HauptFenster extends AbstractJInternalFrame {
             }
         }
         return null;
+    }
+
+    public JPanel getjRightPane() {
+        if (jRightPane == null) {
+            jRightPane = new JPanel(new CardLayout());
+        }
+        return jRightPane;
     }
 }

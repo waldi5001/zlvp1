@@ -71,7 +71,7 @@ public class LagerinfoVerwalten extends AbstractJInternalFrame {
 
     private JTable getJTablePerson() {
         if (jTablePerson == null) {
-            jTablePerson = tableBuilder.build();
+            jTablePerson = tableBuilder.buildAndLoad();
         }
         return jTablePerson;
     }

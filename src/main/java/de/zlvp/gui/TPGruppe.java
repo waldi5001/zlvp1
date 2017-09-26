@@ -7,6 +7,8 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.KeyboardFocusManager;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,10 +27,12 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
+import com.google.common.eventbus.Subscribe;
+
 import de.javasoft.swing.JYTableScrollPane;
 import de.zlvp.Events;
+import de.zlvp.Events.GruppeSelected;
 import de.zlvp.entity.Gruppe;
-import de.zlvp.entity.Lager;
 import de.zlvp.entity.Leiter;
 import de.zlvp.entity.Teilnehmer;
 import de.zlvp.entity.Zelt;
@@ -69,21 +73,20 @@ public class TPGruppe extends JTabbedPane {
 
     private JTextArea jTextAreaSchlachtruf;
 
-    private final Gruppe gruppe;
+    private Gruppe gruppe;
 
     private JTableBuilder<Leiter> tableBuilderLeiter;
     private JTableBuilder<Teilnehmer> tableBuilderTeilnehmer;
     private JTableBuilder<Zelt> tableBuilderZelt;
 
-    public TPGruppe(Lager lager, Gruppe gruppe) {
-        super();
-        this.gruppe = gruppe;
-        this.gruppe.setLager(lager);
-        tableBuilderTeilnehmer = JTableBuilders.teilnehmer(gruppe, get()::getAllPersons,
+    public TPGruppe() {
+        Events.bus().register(this);
+
+        tableBuilderTeilnehmer = JTableBuilders.teilnehmer(() -> gruppe, get()::getAllPersons,
                 allTeilnehmer -> get().getAllTeilnehmer(gruppe.getId(), allTeilnehmer));
-        tableBuilderLeiter = JTableBuilders.leiter(gruppe, get()::getAllPersons,
+        tableBuilderLeiter = JTableBuilders.leiter(() -> gruppe, get()::getAllPersons,
                 allLeiter -> get().getAllLeiter(gruppe.getId(), allLeiter));
-        tableBuilderZelt = JTableBuilders.zelt(gruppe,
+        tableBuilderZelt = JTableBuilders.zelteVonGruppe(() -> gruppe,
                 allZelt -> get().getAllZeltFromLager(gruppe.getLager().getId(), allZelt),
                 allZeltFromGruppe -> get().getAllZeltFromGruppe(gruppe.getId(), allZeltFromGruppe));
         initialize();
@@ -157,7 +160,15 @@ public class TPGruppe extends JTabbedPane {
     private JTextField getJTextFieldName() {
         if (jTextFieldName == null) {
             jTextFieldName = new JTextField();
-            jTextFieldName.setText(gruppe.getName());
+            jTextFieldName.addFocusListener(new FocusAdapter() {
+                @Override
+                public void focusLost(FocusEvent e) {
+                    gruppe.setName(jTextFieldName.getText());
+                    get().aendereGruppe(gruppe.getId(), gruppe.getName(), gruppe.getSchlachtruf(), cb -> {
+                        Events.get().fireGruppeSaved(gruppe, null, null);
+                    });
+                }
+            });
             jTextFieldName.getDocument().addDocumentListener(new DocumentListener() {
                 @Override
                 public void changedUpdate(DocumentEvent documentEvent) {
@@ -177,9 +188,7 @@ public class TPGruppe extends JTabbedPane {
                     try {
                         String name = documentEvent.getDocument().getText(0, documentEvent.getDocument().getLength());
                         gruppe.setName(name);
-                        get().aendereGruppe(gruppe.getId(), gruppe.getName(), gruppe.getSchlachtruf(), cb -> {
-                            Events.get().fireGruppeSaved(gruppe, null, null);
-                        });
+                        Events.get().fireGruppeSaved(gruppe, null, null);
                     } catch (BadLocationException e) {
                         throw new RuntimeException(e.getMessage(), e);
                     }
@@ -253,32 +262,13 @@ public class TPGruppe extends JTabbedPane {
     private JTextArea getJTextAreaSchlachtruf() {
         if (jTextAreaSchlachtruf == null) {
             jTextAreaSchlachtruf = new JTextArea();
-            jTextAreaSchlachtruf.setText(gruppe.getSchlachtruf());
-            jTextAreaSchlachtruf.getDocument().addDocumentListener(new DocumentListener() {
+            jTextAreaSchlachtruf.addFocusListener(new FocusAdapter() {
                 @Override
-                public void changedUpdate(DocumentEvent documentEvent) {
-                }
-
-                @Override
-                public void insertUpdate(DocumentEvent documentEvent) {
-                    save(documentEvent);
-                }
-
-                @Override
-                public void removeUpdate(DocumentEvent documentEvent) {
-                    save(documentEvent);
-                }
-
-                private void save(DocumentEvent documentEvent) {
-                    try {
-                        String schlachtruf = documentEvent.getDocument().getText(0,
-                                documentEvent.getDocument().getLength());
-                        gruppe.setSchlachtruf(schlachtruf);
-                        get().aendereGruppe(gruppe.getId(), gruppe.getName(), gruppe.getSchlachtruf(), cb -> {
-                        });
-                    } catch (BadLocationException e) {
-                        throw new RuntimeException(e.getMessage(), e);
-                    }
+                public void focusLost(FocusEvent e) {
+                    gruppe.setSchlachtruf(jTextAreaSchlachtruf.getText());
+                    get().aendereGruppe(gruppe.getId(), gruppe.getName(), gruppe.getSchlachtruf(), cb -> {
+                        Events.get().fireGruppeSaved(gruppe, null, null);
+                    });
                 }
             });
         }
@@ -313,5 +303,15 @@ public class TPGruppe extends JTabbedPane {
         InputMap inputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         inputMap.put(ctrlTab, "navigateNext");
         inputMap.put(ctrlShiftTab, "navigatePrevious");
+    }
+
+    @Subscribe
+    private void aktualisiere(GruppeSelected event) {
+        gruppe = event.get();
+        getJTextFieldName().setText(event.get().getName());
+        getJTextAreaSchlachtruf().setText(event.get().getSchlachtruf());
+        tableBuilderLeiter.refresh();
+        tableBuilderTeilnehmer.refresh();
+        tableBuilderZelt.refresh();
     }
 }

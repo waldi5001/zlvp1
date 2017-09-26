@@ -61,6 +61,12 @@ public class JTableBuilder<E> {
         });
     }
 
+    public JTable buildAndLoad() {
+        JTable table = build();
+        refresh();
+        return table;
+    }
+
     public JTable build() {
         this.table = new JYTable();
         this.table.setCellSelectionEnabled(true);
@@ -77,8 +83,6 @@ public class JTableBuilder<E> {
                 break;
             }
         }
-
-        refresh();
 
         return this.table;
     }
