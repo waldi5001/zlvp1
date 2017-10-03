@@ -10,35 +10,35 @@ import de.zlvp.entity.Zelt;
 public class ZeltDao extends AbstractDao<Zelt> {
 
     private static final String findAll = "select z.* from zelt z order by z.bezeichnung;";
-    private static final String findAllFromLager = "select z.*,st.stlazeid from zelt z INNER JOIN stLaZe st ON z.zeid = st.zelt where st.lager = ? order by z.bezeichnung;";
-    private static final String findAllFromGruppe = "select z.*,st.stgrzeid from zelt z INNER JOIN stGrZe st ON z.zeid = st.zelt where st.gruppe = ? order by z.bezeichnung;";
+    private static final String findAllFromLager = "select z.* from zelt z INNER JOIN stLaZe st ON z.zeid = st.zelt where st.lager = ? order by z.bezeichnung;";
+    private static final String findAllFromGruppe = "select z.* from zelt z INNER JOIN stGrZe st ON z.zeid = st.zelt where st.gruppe = ? order by z.bezeichnung;";
 
     private static final String insert = "insert into zelt (bezeichnung,preis,angeschafft,waehrung) values (?,?,?,?)";
     private static final String update = "update zelt set bezeichnung = ?, preis = ?, angeschafft = ?, waehrung = ? where zeid = ?";
 
     private static final String addToLager = "insert into stlaze (lager,zelt) values (?,?)";
     private static final String addToGruppe = "insert into stgrze (gruppe,zelt) values (?,?)";
-    private static final String deleteFromLager = "delete from stlaze where stlazeid = ?";
-    private static final String deleteFromGruppe = "delete from stgrze where stgrzeid = ?";
+    private static final String deleteFromLager = "delete from stlaze where lager = ? and zelt = ?";
+    private static final String deleteFromGruppe = "delete from stgrze where gruppe = ? and zelt = ?";
 
     public List<Zelt> getAll() {
         return select(findAll,
-                rs -> new Zelt(rs.getInt("zeid"), rs.getInt("zeid"), rs.getString("bezeichnung"), rs.getDouble("preis"),
+                rs -> new Zelt(rs.getInt("zeid"), rs.getString("bezeichnung"), rs.getDouble("preis"),
                         rs.getDate("angeschafft"),
                         rs.getInt("waehrung") != 0 ? Waehrung.fromDbId(rs.getInt("waehrung")) : null));
     }
 
     public List<Zelt> getAllFromLager(int lagerId) {
         return select(findAllFromLager, ps -> ps.setInt(1, lagerId),
-                rs -> new Zelt(rs.getInt("stlazeid"), rs.getInt("zeid"), rs.getString("bezeichnung"),
-                        rs.getDouble("preis"), rs.getDate("angeschafft"),
+                rs -> new Zelt(rs.getInt("zeid"), rs.getString("bezeichnung"), rs.getDouble("preis"),
+                        rs.getDate("angeschafft"),
                         rs.getInt("waehrung") != 0 ? Waehrung.fromDbId(rs.getInt("waehrung")) : null));
     }
 
     public List<Zelt> getAllFromGruppe(int gruppeId) {
         return select(findAllFromGruppe, ps -> ps.setInt(1, gruppeId),
-                rs -> new Zelt(rs.getInt("stgrzeid"), rs.getInt("zeid"), rs.getString("bezeichnung"),
-                        rs.getDouble("preis"), rs.getDate("angeschafft"),
+                rs -> new Zelt(rs.getInt("zeid"), rs.getString("bezeichnung"), rs.getDouble("preis"),
+                        rs.getDate("angeschafft"),
                         rs.getInt("waehrung") != 0 ? Waehrung.fromDbId(rs.getInt("waehrung")) : null));
     }
 
@@ -91,11 +91,17 @@ public class ZeltDao extends AbstractDao<Zelt> {
         });
     }
 
-    public void loeschenZuLager(int zeltId) {
-        delete(deleteFromLager, ps -> ps.setInt(1, zeltId));
+    public void loeschenZuLager(int zeltId, int lagerId) {
+        delete(deleteFromLager, ps -> {
+            ps.setInt(1, lagerId);
+            ps.setInt(2, zeltId);
+        });
     }
 
-    public void loeschenZuGruppe(int zeltId) {
-        delete(deleteFromGruppe, ps -> ps.setInt(1, zeltId));
+    public void loeschenZuGruppe(int zeltId, int gruppeId) {
+        delete(deleteFromGruppe, ps -> {
+            ps.setInt(1, gruppeId);
+            ps.setInt(2, zeltId);
+        });
     }
 }

@@ -36,7 +36,7 @@ public class LegendaVerwaltenPanel extends JPanel {
         Events.bus().register(this);
 
         tableBuilderLegenda = JTableBuilders
-                .legenda(legendas -> get().getAllLegendaFromLagerort(lagerortCallabck.get().getOriginalId(), legendas));
+                .legenda(legendas -> get().getAllLegendaFromLagerort(lagerortCallabck.get().getId(), legendas));
 
         initialize();
     }
@@ -68,8 +68,8 @@ public class LegendaVerwaltenPanel extends JPanel {
             jButtonNeu = new JButton();
             jButtonNeu.setText("Neu");
             jButtonNeu.addActionListener(e -> {
-                get().speichereLegenda(null, lagerortCallabck.get().getOriginalId(), "Neu", "Neu", null, null, null,
-                        null, null, null, null, null, null, null, null, asyncCallback -> tableBuilderLegenda.refresh());
+                get().speichereLegenda(null, lagerortCallabck.get().getId(), "Neu", "Neu", null, null, null, null, null,
+                        null, null, null, null, null, null, asyncCallback -> tableBuilderLegenda.refresh());
             });
         }
         return jButtonNeu;
@@ -77,11 +77,13 @@ public class LegendaVerwaltenPanel extends JPanel {
 
     @Subscribe
     public void lagersaved(LagerSaved event) {
+        System.out.println("lagersaved" + event.get());
         tableBuilderLegenda.refresh();
     }
 
     @Subscribe
     public void lagerSelected(LagerSelected event) {
+        System.out.println("lagerSelected" + event.get());
         tableBuilderLegenda.refresh();
     }
 }

@@ -130,6 +130,10 @@ public class Events {
         bus.post((LagerSaved) () -> lager);
     }
 
+    public void fireLagerRenamed(Lager lager) {
+        bus.post((LagerRenamed) () -> lager);
+    }
+
     public static interface Aktualisieren {
     }
 
@@ -170,6 +174,10 @@ public class Events {
     }
 
     public static interface LagerSaved {
+        Lager get();
+    }
+
+    public static interface LagerRenamed {
         Lager get();
     }
 

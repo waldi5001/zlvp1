@@ -140,7 +140,7 @@ public class TPLager extends JTabbedPane {
 
     private void initialize() {
         this.addTab("Daten", null, getJPanelDaten());
-        this.addTab("Staab", null, getJPanelStab());
+        this.addTab("Stab", null, getJPanelStab());
         this.addTab("Gruppe", null, getJPanelGruppe());
         this.addTab("Materialwart", null, getJPanelMaterialwart());
         this.addTab("Zelte", null, getJPanelZelte());
@@ -313,7 +313,7 @@ public class TPLager extends JTabbedPane {
                     try {
                         String name = documentEvent.getDocument().getText(0, documentEvent.getDocument().getLength());
                         lager.setName(name);
-                        Events.get().fireLagerSaved(lager);
+                        Events.get().fireLagerRenamed(lager);
                     } catch (BadLocationException e) {
                         throw new RuntimeException(e.getMessage(), e);
                     }
@@ -593,8 +593,7 @@ public class TPLager extends JTabbedPane {
 
     private JPanel getJPanelLegenda() {
         if (jPanelLegenda == null) {
-            jPanelLegenda = new LegendaVerwaltenPanel(
-                    () -> lager == null ? new Lagerort(0, 0, "") : lager.getLagerort());
+            jPanelLegenda = new LegendaVerwaltenPanel(() -> lager == null ? new Lagerort(0, "") : lager.getLagerort());
         }
         return jPanelLegenda;
     }

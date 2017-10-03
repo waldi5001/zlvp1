@@ -28,12 +28,28 @@ public class Lager extends AbstractEntity {
     private Jahr jahr;
 
     private List<Gruppe> gruppe;
+    private List<Zelt> zelt;
+    private List<Materialwart> materialwart;
 
     public List<Gruppe> getGruppe() {
         if (gruppe == null) {
             gruppe = new ArrayList<>();
         }
         return gruppe;
+    }
+
+    public List<Zelt> getZelt() {
+        if (zelt == null) {
+            zelt = new ArrayList<>();
+        }
+        return zelt;
+    }
+
+    public List<Materialwart> getMaterialwart() {
+        if (materialwart == null) {
+            materialwart = new ArrayList<>();
+        }
+        return materialwart;
     }
 
     public String getName() {

@@ -106,9 +106,7 @@ public interface Controller {
 
     void speichereLeiter(boolean add, int personId, int gruppeId, AsyncCallback<Gruppe> callback);
 
-    void speichereMaterialwart(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
-            String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
-            String nottel, Integer lagerId, AsyncCallback<Void> callback);
+    void speichereMaterialwart(boolean add, Integer id, Integer lagerId, AsyncCallback<Lager> callback);
 
     void speicherePerson(Integer id, Geschlecht geschlecht, String vorname, String nachname, String strasse, String plz,
             String ort, Date gebtag, String telnr, String email, String handy, String nottel,
@@ -116,9 +114,7 @@ public interface Controller {
 
     void speichereSchaden(Integer id, int zeltId, Date datum, String schaden, AsyncCallback<Void> callback);
 
-    void speichereStab(Integer id, int personId, Geschlecht geschlecht, String vorname, String nachname, String strasse,
-            String plz, String ort, Date gebtag, String telnr, String email, String handy, String nottel,
-            Funktion funktion, int lagerId, AsyncCallback<Void> callback);
+    void speichereStab(Integer id, Funktion funktion, int lagerId, AsyncCallback<Lager> callback);
 
     void speichereTeilnehmer(boolean add, int personId, int gruppeId, AsyncCallback<Gruppe> callback);
 
@@ -133,9 +129,9 @@ public interface Controller {
     void speichereZeltverleih(Integer id, int zeltId, Date datum, String person, String bemerkung,
             AsyncCallback<Void> callback);
 
-    void speichereZeltZuGruppe(Integer id, int zeltId, Integer gruppeId, AsyncCallback<Void> callback);
+    void speichereZeltZuGruppe(boolean add, Integer id, Integer gruppeId, AsyncCallback<Gruppe> callback);
 
-    void speichereZeltZuLager(Integer id, int zeltId, Integer lagerId, AsyncCallback<Void> callback);
+    void speichereZeltZuLager(boolean add, Integer id, Integer lagerId, AsyncCallback<Lager> callback);
 
     void aenderePasswort(String user, char[] neuesPasswort, AsyncCallback<Void> callback);
 
@@ -149,9 +145,7 @@ public interface Controller {
 
     void loescheEssen(List<Integer> ids, AsyncCallback<Void> callback);
 
-    void speichereLagerinfo(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
-            String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
-            String telNr2, boolean delete, AsyncCallback<Void> callback);
+    void speichereLagerinfo(boolean add, Integer id, AsyncCallback<Void> callback);
 
     void verschiebeGruppe(int id, int srcLager, int destLager, AsyncCallback<Void> callback);
 

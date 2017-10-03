@@ -136,7 +136,12 @@ public class ControllerImpl implements Controller {
 
     @Override
     public void getAllStab(int lagerId, AsyncCallback<List<Stab>> callback) {
-        callback.get(stabDao.getAll(lagerId));
+        List<Stab> all = stabDao.getAll(lagerId);
+        Lager lager = lagerDao.get(lagerId);
+        for (Stab stab : all) {
+            stab.setLager(lager);
+        }
+        callback.get(all);
     }
 
     @Override
@@ -144,6 +149,7 @@ public class ControllerImpl implements Controller {
         List<Materialwart> all = materialwartDao.getAll(lagerId);
         Lager lager = lagerDao.get(lagerId);
         for (Materialwart mw : all) {
+            mw.setChecked(true);
             mw.setLager(lager);
         }
         callback.get(all);
@@ -196,19 +202,19 @@ public class ControllerImpl implements Controller {
     @Override
     public void getAllZeltFromLager(int lagerId, AsyncCallback<List<Zelt>> callback) {
         List<Zelt> allFromLager = zeltDao.getAllFromLager(lagerId);
-        Lager lager = lagerDao.get(lagerId);
         for (Zelt zelt : allFromLager) {
-            zelt.getLager().add(lager);
+            zelt.setLager(lagerDao.get(lagerId));
+            zelt.setChecked(true);
         }
         callback.get(allFromLager);
     }
 
     @Override
     public void getAllZeltFromGruppe(int gruppeId, AsyncCallback<List<Zelt>> callback) {
-        Gruppe gruppe = gruppeDao.get(gruppeId);
         List<Zelt> allFromGruppe = zeltDao.getAllFromGruppe(gruppeId);
         for (Zelt zelt : allFromGruppe) {
-            zelt.getGruppe().add(gruppe);
+            zelt.setGruppe(gruppeDao.get(gruppeId));
+            zelt.setChecked(true);
         }
         callback.get(allFromGruppe);
     }
@@ -313,23 +319,13 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void speichereStab(Integer id, int personId, Geschlecht geschlecht, String vorname, String nachname,
-            String strasse, String plz, String ort, Date gebtag, String telnr, String email, String handy,
-            String nottel, Funktion funktion, int lagerId, AsyncCallback<Void> callback) {
-        personDao.speichern(personId, vorname, nachname, gebtag, strasse, plz, ort, telnr, email, geschlecht, handy,
-                nottel);
-        // Wenn ein Stab ohne Funktion ausgewählt wird ignorieren.
-        if (id == null && funktion != REMOVE) {
-            // ansonsten anlegen
-            stabDao.speichern(id, lagerId, personId, funktion);
+    public void speichereStab(Integer id, Funktion funktion, int lagerId, AsyncCallback<Lager> callback) {
+        if (funktion == REMOVE) {
+            stabDao.loeschen(lagerId, id);
         } else {
-            if (funktion == REMOVE) {
-                stabDao.loeschen(id);
-            } else {
-                stabDao.speichern(id, lagerId, personId, funktion);
-            }
+            stabDao.speichern(lagerId, id, funktion);
         }
-        callback.get(null);
+        callback.get(lagerDao.get(lagerId));
     }
 
     @Override
@@ -340,24 +336,25 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void speichereZeltZuLager(Integer id, int zeltId, Integer lagerId, AsyncCallback<Void> callback) {
-        if (lagerId != null) {
-            zeltDao.speichernZuLager(zeltId, lagerId);
+    public void speichereZeltZuLager(boolean add, Integer id, Integer lagerId, AsyncCallback<Lager> callback) {
+        if (add) {
+            zeltDao.speichernZuLager(id, lagerId);
+            callback.get(lagerDao.get(lagerId));
         } else {
-            zeltDao.loeschenZuLager(id);
+            zeltDao.loeschenZuLager(id, lagerId);
+            callback.get(null);
         }
-        callback.get(null);
     }
 
     @Override
-    public void speichereZeltZuGruppe(Integer id, int zeltId, Integer gruppeId, AsyncCallback<Void> callback) {
-        if (gruppeId != null) {
-            // id ist von stLaZe gefüllt
-            zeltDao.speichernZuGruppe(zeltId, gruppeId);
+    public void speichereZeltZuGruppe(boolean add, Integer id, Integer gruppeId, AsyncCallback<Gruppe> callback) {
+        if (add) {
+            zeltDao.speichernZuGruppe(id, gruppeId);
+            callback.get(gruppeDao.get(gruppeId));
         } else {
-            zeltDao.loeschenZuGruppe(id);
+            zeltDao.loeschenZuGruppe(id, gruppeId);
+            callback.get(null);
         }
-        callback.get(null);
     }
 
     @Override
@@ -381,17 +378,14 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void speichereMaterialwart(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
-            String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
-            String nottel, Integer lagerId, AsyncCallback<Void> callback) {
-        personDao.speichern(personId, vorname, name, gebDat, strasse, plz, ort, telNr, email, geschlecht, handy,
-                nottel);
-        if (lagerId != null) {
-            materialwartDao.speichern(lagerId, personId);
-        } else if (id != null && lagerId == null) {
-            materialwartDao.loeschen(id);
+    public void speichereMaterialwart(boolean add, Integer id, Integer lagerId, AsyncCallback<Lager> callback) {
+        if (add) {
+            materialwartDao.speichern(lagerId, id);
+            callback.get(lagerDao.get(lagerId));
+        } else {
+            materialwartDao.loeschen(lagerId, id);
+            callback.get(null);
         }
-        callback.get(null);
     }
 
     @Override
@@ -503,14 +497,10 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void speichereLagerinfo(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
-            String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
-            String telNr2, boolean checked, AsyncCallback<Void> callback) {
-        personDao.speichern(personId, vorname, name, gebDat, strasse, plz, ort, telNr, email, geschlecht, handy,
-                telNr2);
-        if (checked) {
-            lagerinfoDao.speichereLagerinfo(personId);
-        } else if (id != null && !checked) {
+    public void speichereLagerinfo(boolean add, Integer id, AsyncCallback<Void> callback) {
+        if (add) {
+            lagerinfoDao.speichereLagerinfo(id);
+        } else {
             lagerinfoDao.loesche(id);
         }
         callback.get(null);

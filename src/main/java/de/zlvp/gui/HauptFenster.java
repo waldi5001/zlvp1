@@ -31,7 +31,7 @@ import de.zlvp.Client;
 import de.zlvp.Events;
 import de.zlvp.Events.Aktualisieren;
 import de.zlvp.Events.GruppeSaved;
-import de.zlvp.Events.LagerSaved;
+import de.zlvp.Events.LagerRenamed;
 import de.zlvp.Events.LeiterSaved;
 import de.zlvp.Events.TeilnehmerSaved;
 import de.zlvp.entity.AbstractEntity;
@@ -386,7 +386,7 @@ public class HauptFenster extends AbstractJInternalFrame {
 
     @Subscribe
     @SuppressWarnings("unchecked")
-    public void aktualisieren(LagerSaved event) {
+    public void aktualisieren(LagerRenamed event) {
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) getJTree().getModel().getRoot();
         Enumeration<DefaultMutableTreeNode> breadthFirstEnumeration = root.breadthFirstEnumeration();
         while (breadthFirstEnumeration.hasMoreElements()) {

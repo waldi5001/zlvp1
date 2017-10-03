@@ -8,9 +8,8 @@ public class Lagerort extends AbstractEntity {
         return getName();
     }
 
-    public Lagerort(int id, int lagerOrtId, String name) {
+    public Lagerort(int id, String name) {
         setId(id);
-        setOriginalId(lagerOrtId);
         this.name = name;
     }
 

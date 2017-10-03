@@ -519,7 +519,7 @@ public class FensterKlasse extends JFrame {
             jMenuItemTeStatistik = new JMenuItem();
             jMenuItemTeStatistik.setText("Statistik");
             jMenuItemTeStatistik.addActionListener(
-                    e -> Client.getReports().teilnehmerStatistik(SelectionContext.get().getPerson().getOriginalId()));
+                    e -> Client.getReports().teilnehmerStatistik(SelectionContext.get().getPerson().getId()));
         }
         return jMenuItemTeStatistik;
     }

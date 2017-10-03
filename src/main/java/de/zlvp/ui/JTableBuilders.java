@@ -51,83 +51,60 @@ public class JTableBuilders {
 
     public static JTableBuilder<Stab> stab(Callback<Lager> lagerCallback, Loader<Person> loaderPerson,
             Loader<Stab> loaderStab) {
-        return getWithCopy(Person.class, Stab.class, loaderPerson, loaderStab,
-                (s, t) -> s.getId().equals(t.getOriginalId()))//
-                        .set((person, val, index) -> {
-                            if (index == 0) {
-                                person.setName((String) val);
-                            } else if (index == 1) {
-                                person.setVorname((String) val);
-                            } else if (index == 2) {
-                                person.setStrasse((String) val);
-                            } else if (index == 3) {
-                                person.setPlz((String) val);
-                            } else if (index == 4) {
-                                person.setOrt((String) val);
-                            } else if (index == 5) {
-                                person.setGebDat((Date) val);
-                            } else if (index == 6) {
-                                person.setFunktion((Funktion) val);
-                            }
-                        })//
-                        .get((person, index) -> {
-                            if (index == 0) {
-                                return person.getName();
-                            } else if (index == 1) {
-                                return person.getVorname();
-                            } else if (index == 2) {
-                                return person.getStrasse();
-                            } else if (index == 3) {
-                                return person.getPlz();
-                            } else if (index == 4) {
-                                return person.getOrt();
-                            } else if (index == 5) {
-                                return person.getGebDat();
-                            } else if (index == 6) {
-                                return person.getFunktion() != null ? person.getFunktion().getBezeichnung() : null;
-                            }
-                            return null;
-                        })
-                        .save((s, cb) -> get().speichereStab(s.getId(), s.getOriginalId(), s.getGeschlecht(),
-                                s.getVorname(), s.getName(), s.getStrasse(), s.getPlz(), s.getOrt(), s.getGebDat(),
-                                s.getTelNr(), s.getEmail(), s.getHandy(), s.getTelNr(), s.getFunktion(),
-                                lagerCallback.get().getId(), cb))//
-                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Nachname").build())//
-                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Vorname").build())//
-                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Straße").build())//
-                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("PLZ").build())//
-                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Ort").build())//
-                        .addColumn(ColumnBuilder.get(Date.class).editable(false).add("Geburtsdatum").build())
-                        .addColumn(ColumnBuilder.get(Funktion.class).add("Funktion")
-                                .add(JComboBoxBuilder.get(Funktion.class, allFunktion -> {
-                                    allFunktion.get(asList(Funktion.values()));
-                                }).map(f -> f.getBezeichnung()).build()).desc().build());
+        return getWithCopy(Person.class, Stab.class, loaderPerson, loaderStab, (s, t) -> s.getId().equals(t.getId()))//
+                .set((person, val, index) -> {
+                    if (index == 6) {
+                        person.setFunktion((Funktion) val);
+                    }
+                })//
+                .get((person, index) -> {
+                    if (index == 0) {
+                        return person.getName();
+                    } else if (index == 1) {
+                        return person.getVorname();
+                    } else if (index == 2) {
+                        return person.getStrasse();
+                    } else if (index == 3) {
+                        return person.getPlz();
+                    } else if (index == 4) {
+                        return person.getOrt();
+                    } else if (index == 5) {
+                        return person.getGebDat();
+                    } else if (index == 6) {
+                        return person.getFunktion() != null ? person.getFunktion().getBezeichnung() : null;
+                    }
+                    return null;
+                })
+                .save((s, cb) -> get().speichereStab(s.getId(), s.getFunktion(),
+                        s.getFunktion() == Funktion.REMOVE ? s.getLager().getId() : lagerCallback.get().getId(),
+                        speichernCallback -> {
+                            s.setLager(speichernCallback);
+                            cb.get(null);
+                        }))//
+                .addColumn(ColumnBuilder.get(String.class).editable(false).add("Nachname").build())//
+                .addColumn(ColumnBuilder.get(String.class).editable(false).add("Vorname").build())//
+                .addColumn(ColumnBuilder.get(String.class).editable(false).add("Straße").build())//
+                .addColumn(ColumnBuilder.get(String.class).editable(false).add("PLZ").build())//
+                .addColumn(ColumnBuilder.get(String.class).editable(false).add("Ort").build())//
+                .addColumn(ColumnBuilder.get(Date.class).editable(false).add("Geburtsdatum").build())
+                .addColumn(ColumnBuilder.get(Funktion.class).add("Funktion")
+                        .add(JComboBoxBuilder.get(Funktion.class, allFunktion -> {
+                            allFunktion.get(asList(Funktion.values()));
+                        }).map(f -> f.getBezeichnung()).build()).desc().build());
     }
 
     public static JTableBuilder<Materialwart> materialwart(Callback<Lager> lagerCallback, Loader<Person> loaderPerson,
             Loader<Materialwart> allMateriealwart) {
         return getWithCopy(Person.class, Materialwart.class, loaderPerson, allMateriealwart,
-                (s, t) -> s.getId().equals(t.getOriginalId()))//
+                (s, t) -> s.getId().equals(t.getId()))//
                         .set((person, val, index) -> {
                             if (index == 0) {
-                                person.setLager((boolean) val == true ? lagerCallback.get() : null);
-                            } else if (index == 1) {
-                                person.setName((String) val);
-                            } else if (index == 2) {
-                                person.setVorname((String) val);
-                            } else if (index == 3) {
-                                person.setStrasse((String) val);
-                            } else if (index == 4) {
-                                person.setPlz((String) val);
-                            } else if (index == 5) {
-                                person.setOrt((String) val);
-                            } else if (index == 6) {
-                                person.setGebDat((Date) val);
+                                person.setChecked((boolean) val);
                             }
                         })//
                         .get((person, index) -> {
                             if (index == 0) {
-                                return person.getLager() != null;
+                                return person.isChecked();
                             } else if (index == 1) {
                                 return person.getName();
                             } else if (index == 2) {
@@ -143,10 +120,12 @@ public class JTableBuilders {
                             }
                             return null;
                         })
-                        .save((mw, cb) -> get().speichereMaterialwart(mw.getId(), mw.getOriginalId(),
-                                mw.getGeschlecht(), mw.getVorname(), mw.getName(), mw.getStrasse(), mw.getPlz(),
-                                mw.getOrt(), mw.getGebDat(), mw.getTelNr(), mw.getEmail(), mw.getHandy(), mw.getTelNr(),
-                                mw.getLager() != null ? mw.getLager().getId() : null, cb))//
+                        .save((mw, cb) -> get().speichereMaterialwart(mw.isChecked(), mw.getId(),
+                                mw.isChecked() ? lagerCallback.get().getId() : mw.getLager().getId(),
+                                gespeichertCallback -> {
+                                    mw.setLager(gespeichertCallback);
+                                    cb.get(null);
+                                }))//
                         .addColumn(Columns.CHECK)//
                         .addColumn(ColumnBuilder.get(String.class).editable(false).add("Nachname").build())//
                         .addColumn(ColumnBuilder.get(String.class).editable(false).add("Vorname").build())//
@@ -162,23 +141,23 @@ public class JTableBuilders {
                 (s, t) -> s.getBezeichnung().equals(t.getBezeichnung()))//
                         .set((zelt, val, index) -> {
                             if (index == 0) {
-                                if ((boolean) val) {
-                                    zelt.getLager().add(lagerCallback.get());
-                                } else {
-                                    zelt.getLager().clear();
-                                }
+                                zelt.setChecked((boolean) val);
                             }
                         })//
                         .get((zelt, index) -> {
                             if (index == 0) {
-                                return !zelt.getLager().isEmpty();
+                                return zelt.isChecked();
                             } else if (index == 1) {
                                 return zelt.getBezeichnung();
                             }
                             return null;
                         })
-                        .save((zelt, cb) -> get().speichereZeltZuLager(zelt.getId(), zelt.getOriginalId(),
-                                zelt.getLager().isEmpty() ? null : lagerCallback.get().getId(), cb))//
+                        .save((zelt, cb) -> get().speichereZeltZuLager(zelt.isChecked(), zelt.getId(),
+                                zelt.isChecked() ? lagerCallback.get().getId() : zelt.getLager().getId(),
+                                gespeichertCallback -> {
+                                    zelt.setLager(gespeichertCallback);
+                                    cb.get(null);
+                                }))//
                         .addColumn(Columns.CHECK)//
                         .addColumn(ColumnBuilder.get(String.class).editable(false).add("Bezeichnung").build());//
     }
@@ -223,23 +202,23 @@ public class JTableBuilders {
                 (s, t) -> s.getBezeichnung().equals(t.getBezeichnung()))//
                         .set((zelt, val, index) -> {
                             if (index == 0) {
-                                if ((boolean) val) {
-                                    zelt.getGruppe().add(gruppeCallback.get());
-                                } else {
-                                    zelt.getGruppe().clear();
-                                }
+                                zelt.setChecked((boolean) val);
                             }
                         })//
                         .get((zelt, index) -> {
                             if (index == 0) {
-                                return !zelt.getGruppe().isEmpty();
+                                return zelt.isChecked();
                             } else if (index == 1) {
                                 return zelt.getBezeichnung();
                             }
                             return null;
                         })
-                        .save((zelt, cb) -> get().speichereZeltZuGruppe(zelt.getId(), zelt.getOriginalId(),
-                                zelt.getGruppe().isEmpty() ? null : gruppeCallback.get().getId(), cb))//
+                        .save((zelt, cb) -> get().speichereZeltZuGruppe(zelt.isChecked(), zelt.getId(),
+                                zelt.isChecked() ? gruppeCallback.get().getId() : zelt.getGruppe().getId(),
+                                gespeichertCallback -> {
+                                    zelt.setGruppe(gespeichertCallback);
+                                    cb.get(null);
+                                }))//
                         .addColumn(Columns.CHECK)//
                         .addColumn(ColumnBuilder.get(String.class).editable(false).add("Bezeichnung").build());//
     }
@@ -256,6 +235,7 @@ public class JTableBuilders {
                 .set((gruppe, val, index) -> {
                     if (index == 0) {
                         gruppe.setChecked((boolean) val);
+                        // Kann man das nicht unten beim Save machen?
                         gruppe.setLager(lagerCallback.get());
                     }
                 })//
@@ -269,88 +249,64 @@ public class JTableBuilders {
                 })
                 .save((gruppe, cb) -> get().speichereGruppe(gruppe.isChecked(), gruppe.getId(),
                         gruppe.isChecked() ? lagerCallback.get().getId() : gruppe.getLager().getId(), gruppe.getName(),
-                        gruppe.getSchlachtruf(),
-                        gespeichertCallback -> Events.get().fireGruppeSaved(gespeichertCallback,
-                                gruppe.isChecked() ? null : gruppe.getLager(),
-                                gruppe.isChecked() ? lagerCallback.get() : null)))//
+                        gruppe.getSchlachtruf(), gespeichertCallback -> {
+                            Events.get().fireGruppeSaved(gespeichertCallback,
+                                    gruppe.isChecked() ? null : gruppe.getLager(),
+                                    gruppe.isChecked() ? lagerCallback.get() : null);
+                            cb.get(null);
+                        }))//
                 .addColumn(Columns.CHECK)//
                 .addColumn(ColumnBuilder.get(String.class).editable(false).add("Bezeichnung").build());//
     }
 
     public static JTableBuilder<Leiter> leiter(Callback<Gruppe> gruppeCallback, Loader<Person> loaderPerson,
             Loader<Leiter> allLeiter) {
-        return getWithCopy(Person.class, Leiter.class, loaderPerson, allLeiter,
-                (s, t) -> s.getId().equals(t.getOriginalId()))//
-                        .set((person, val, index) -> {
-                            if (index == 0) {
-                                person.setChecked((boolean) val);
-                            } else if (index == 1) {
-                                person.setName((String) val);
-                            } else if (index == 2) {
-                                person.setVorname((String) val);
-                            } else if (index == 3) {
-                                person.setStrasse((String) val);
-                            } else if (index == 4) {
-                                person.setPlz((String) val);
-                            } else if (index == 5) {
-                                person.setOrt((String) val);
-                            } else if (index == 6) {
-                                person.setGebDat((Date) val);
-                            }
-                        })//
-                        .get((person, index) -> {
-                            if (index == 0) {
-                                return person.isChecked();
-                            } else if (index == 1) {
-                                return person.getName();
-                            } else if (index == 2) {
-                                return person.getVorname();
-                            } else if (index == 3) {
-                                return person.getStrasse();
-                            } else if (index == 4) {
-                                return person.getPlz();
-                            } else if (index == 5) {
-                                return person.getOrt();
-                            } else if (index == 6) {
-                                return person.getGebDat();
-                            }
-                            return null;
-                        })
-                        .save((le, cb) -> get().speichereLeiter(le.isChecked(), le.getOriginalId(),
-                                le.isChecked() ? gruppeCallback.get().getId() : le.getGruppe().getId(),
-                                gespeichertCallback -> {
-                                    Events.get().fireLeiterSaved(le, le.isChecked() ? null : gruppeCallback.get(),
-                                            le.isChecked() ? gruppeCallback.get() : null);
-                                    le.setGruppe(gespeichertCallback);
-                                }))//
-                        .addColumn(Columns.CHECK)//
-                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Nachname").build())//
-                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Vorname").build())//
-                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Straße").build())//
-                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("PLZ").build())//
-                        .addColumn(ColumnBuilder.get(String.class).editable(false).add("Ort").build())//
-                        .addColumn(ColumnBuilder.get(Date.class).editable(false).add("Geburtsdatum").build());//
+        return getWithCopy(Person.class, Leiter.class, loaderPerson, allLeiter, (s, t) -> s.getId().equals(t.getId()))//
+                .set((person, val, index) -> {
+                    if (index == 0) {
+                        person.setChecked((boolean) val);
+                    }
+                })//
+                .get((person, index) -> {
+                    if (index == 0) {
+                        return person.isChecked();
+                    } else if (index == 1) {
+                        return person.getName();
+                    } else if (index == 2) {
+                        return person.getVorname();
+                    } else if (index == 3) {
+                        return person.getStrasse();
+                    } else if (index == 4) {
+                        return person.getPlz();
+                    } else if (index == 5) {
+                        return person.getOrt();
+                    } else if (index == 6) {
+                        return person.getGebDat();
+                    }
+                    return null;
+                }).save((le, cb) -> get().speichereLeiter(le.isChecked(), le.getId(),
+                        le.isChecked() ? gruppeCallback.get().getId() : le.getGruppe().getId(), gespeichertCallback -> {
+                            Events.get().fireLeiterSaved(le, le.isChecked() ? null : gruppeCallback.get(),
+                                    le.isChecked() ? gruppeCallback.get() : null);
+                            le.setGruppe(gespeichertCallback);
+                            cb.get(null);
+                        }))//
+                .addColumn(Columns.CHECK)//
+                .addColumn(ColumnBuilder.get(String.class).editable(false).add("Nachname").build())//
+                .addColumn(ColumnBuilder.get(String.class).editable(false).add("Vorname").build())//
+                .addColumn(ColumnBuilder.get(String.class).editable(false).add("Straße").build())//
+                .addColumn(ColumnBuilder.get(String.class).editable(false).add("PLZ").build())//
+                .addColumn(ColumnBuilder.get(String.class).editable(false).add("Ort").build())//
+                .addColumn(ColumnBuilder.get(Date.class).editable(false).add("Geburtsdatum").build());//
     }
 
     public static JTableBuilder<Teilnehmer> teilnehmer(Callback<Gruppe> gruppeCallback, Loader<Person> loaderPerson,
             Loader<Teilnehmer> allTeilnehmer) {
         return getWithCopy(Person.class, Teilnehmer.class, loaderPerson, allTeilnehmer,
-                (s, t) -> s.getId().equals(t.getOriginalId()))//
+                (s, t) -> s.getId().equals(t.getId()))//
                         .set((person, val, index) -> {
                             if (index == 0) {
                                 person.setChecked((boolean) val);
-                            } else if (index == 1) {
-                                person.setName((String) val);
-                            } else if (index == 2) {
-                                person.setVorname((String) val);
-                            } else if (index == 3) {
-                                person.setStrasse((String) val);
-                            } else if (index == 4) {
-                                person.setPlz((String) val);
-                            } else if (index == 5) {
-                                person.setOrt((String) val);
-                            } else if (index == 6) {
-                                person.setGebDat((Date) val);
                             }
                         })//
                         .get((person, index) -> {
@@ -371,12 +327,13 @@ public class JTableBuilders {
                             }
                             return null;
                         })
-                        .save((te, cb) -> get().speichereTeilnehmer(te.isChecked(), te.getOriginalId(),
+                        .save((te, cb) -> get().speichereTeilnehmer(te.isChecked(), te.getId(),
                                 te.isChecked() ? gruppeCallback.get().getId() : te.getGruppe().getId(),
                                 gespeichertCallback -> {
                                     Events.get().fireTeilnehmerSaved(te, te.isChecked() ? null : gruppeCallback.get(),
                                             te.isChecked() ? gruppeCallback.get() : null);
                                     te.setGruppe(gespeichertCallback);
+                                    cb.get(null);
                                 }))//
                         .addColumn(Columns.CHECK)//
                         .addColumn(ColumnBuilder.get(String.class).editable(false).add("Nachname").build())//
@@ -542,22 +499,10 @@ public class JTableBuilders {
 
     public static JTableBuilder<Lagerinfo> lagerinfo(Loader<Person> loaderPerson, Loader<Lagerinfo> allLagerinfo) {
         return getWithCopy(Person.class, Lagerinfo.class, loaderPerson, allLagerinfo,
-                (s, t) -> s.getId().equals(t.getOriginalId()))//
+                (s, t) -> s.getId().equals(t.getId()))//
                         .set((li, val, index) -> {
                             if (index == 0) {
                                 li.setChecked((boolean) val);
-                            } else if (index == 1) {
-                                li.setName((String) val);
-                            } else if (index == 2) {
-                                li.setVorname((String) val);
-                            } else if (index == 3) {
-                                li.setStrasse((String) val);
-                            } else if (index == 4) {
-                                li.setPlz((String) val);
-                            } else if (index == 5) {
-                                li.setOrt((String) val);
-                            } else if (index == 6) {
-                                li.setGebDat((Date) val);
                             }
                         })//
                         .get((li, index) -> {
@@ -577,11 +522,7 @@ public class JTableBuilders {
                                 return li.getGebDat();
                             }
                             return null;
-                        })
-                        .save((li, cb) -> get().speichereLagerinfo(li.getId(), li.getOriginalId(), li.getGeschlecht(),
-                                li.getVorname(), li.getName(), li.getStrasse(), li.getPlz(), li.getOrt(),
-                                li.getGebDat(), li.getTelNr(), li.getEmail(), li.getHandy(), li.getTelNr(),
-                                li.isChecked(), cb))
+                        }).save((li, cb) -> get().speichereLagerinfo(li.isChecked(), li.getId(), cb))
                         .addColumn(Columns.CHECK)//
                         .addColumn(ColumnBuilder.get(String.class).editable(false).add("Nachname").build())//
                         .addColumn(ColumnBuilder.get(String.class).editable(false).add("Vorname").build())//

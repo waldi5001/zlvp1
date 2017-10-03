@@ -8,7 +8,7 @@ public class GruppeDao extends AbstractDao<Gruppe> {
     private static final String find = "select g.* from gruppe g where grid = ?";
     private static final String findAll = "SELECT grid, name, schlachtruf FROM gruppe ORDER BY name;";
     private static final String findAllUnassigned = "select g.* from gruppe g where not exists (select gruppe from stgrla st where g.grid = st.gruppe) ORDER BY g.name";
-    private static final String findAllFromLager = "select g.*, st.stgrlaid from gruppe g inner join stgrla st on g.grid = st.gruppe where st.lager = ? ORDER BY g.name";
+    private static final String findAllFromLager = "select g.* from gruppe g inner join stgrla st on g.grid = st.gruppe where st.lager = ? ORDER BY g.name";
 
     private static final String insertGruppeZuLager = "INSERT INTO stGrLaT (lager,gruppe) values (?,?)";
     private static final String deleteGruppeZuLager = "delete from stGrLaT where lager = ? and gruppe = ?";

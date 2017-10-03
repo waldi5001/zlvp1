@@ -4,27 +4,15 @@ import java.util.Date;
 
 public class Teilnehmer extends Person {
 
-    public Teilnehmer(Integer id, Geschlecht geschlecht, int personId, String vorname, String name, String strasse,
-            String sPLZ, String ort, Date daGebDat, String handy, String telNr, String email) {
-        super(id, geschlecht, vorname, name, strasse, sPLZ, ort, daGebDat, handy, telNr, email, null);
-        setOriginalId(personId);
+    public Teilnehmer(Integer id, Geschlecht geschlecht, String vorname, String name, String strasse, String sPLZ,
+            String ort, Date daGebDat, String handy, String telNr, String email, String nottel) {
+        super(id, geschlecht, vorname, name, strasse, sPLZ, ort, daGebDat, handy, telNr, email, nottel);
     }
 
     public Teilnehmer(Person person) {
-        super(null, person.getGeschlecht(), person.getVorname(), person.getName(), person.getStrasse(), person.getPlz(),
-                person.getOrt(), person.getGebDat(), person.getHandy(), person.getTelNr(), person.getEmail(),
-                person.getNottel());
-        setOriginalId(person.getId());
-    }
-
-    private boolean checked = false;
-
-    public void setChecked(boolean checked) {
-        this.checked = checked;
-    }
-
-    public boolean isChecked() {
-        return checked;
+        super(person.getId(), person.getGeschlecht(), person.getVorname(), person.getName(), person.getStrasse(),
+                person.getPlz(), person.getOrt(), person.getGebDat(), person.getHandy(), person.getTelNr(),
+                person.getEmail(), person.getNottel());
     }
 
     private Gruppe gruppe;
