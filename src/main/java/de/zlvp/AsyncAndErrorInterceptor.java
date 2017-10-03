@@ -67,6 +67,11 @@ public class AsyncAndErrorInterceptor implements MethodInterceptor {
             return controllerResult;
         }
 
+        @Override
+        public String toString() {
+            return "AsyncCallback@" + Integer.toHexString(hashCode());
+        }
+
     }
 
     private static class EDTCallback implements AsyncCallback<Object> {
