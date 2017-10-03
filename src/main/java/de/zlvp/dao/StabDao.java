@@ -41,10 +41,7 @@ public class StabDao extends AbstractDao<Stab> {
     }
 
     public void loeschen(int lagerId, int personId) {
-        delete(deleteStab, ps -> {
-            ps.setInt(1, lagerId);
-            ps.setInt(2, personId);
-        });
+        jdbc.update(deleteStab, lagerId, personId);
     }
 
 }

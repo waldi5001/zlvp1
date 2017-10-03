@@ -27,10 +27,7 @@ public class MaterialwartDao extends AbstractDao<Materialwart> {
     }
 
     public void loeschen(int lagerId, int personid) {
-        delete(delete, ps -> {
-            ps.setInt(1, lagerId);
-            ps.setInt(2, personid);
-        });
+        jdbc.update(delete, lagerId, personid);
     }
 
 }

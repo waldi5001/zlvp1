@@ -28,11 +28,8 @@ public class TeilnehmerDao extends AbstractDao<Teilnehmer> {
         });
     }
 
-    public void loesche(int personId, int gruppeId) {
-        delete(deleteTeilnehmer, ps -> {
-            ps.setInt(1, gruppeId);
-            ps.setInt(2, personId);
-        });
+    public void loeschen(int personId, int gruppeId) {
+        jdbc.update(deleteTeilnehmer, gruppeId, personId);
     }
 
     public Teilnehmer get(int id) {

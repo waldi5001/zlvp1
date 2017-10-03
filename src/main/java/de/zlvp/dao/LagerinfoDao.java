@@ -23,7 +23,7 @@ public class LagerinfoDao extends AbstractDao<Lagerinfo> {
         insertOrUpdate(insertLagerinfo, ps -> ps.setInt(1, personId));
     }
 
-    public void loesche(int id) {
-        delete(deleteLagerinfo, ps -> ps.setInt(1, id));
+    public void loeschen(int id) {
+        jdbc.update(deleteLagerinfo, id);
     }
 }

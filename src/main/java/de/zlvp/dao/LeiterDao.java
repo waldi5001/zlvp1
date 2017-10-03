@@ -27,11 +27,8 @@ public class LeiterDao extends AbstractDao<Leiter> {
         });
     }
 
-    public void loesche(int gruppeId, int personId) {
-        delete(deleteLeiter, ps -> {
-            ps.setInt(1, gruppeId);
-            ps.setInt(2, personId);
-        });
+    public void loeschen(int gruppeId, int personId) {
+        jdbc.update(deleteLeiter, gruppeId, personId);
     }
 
 }

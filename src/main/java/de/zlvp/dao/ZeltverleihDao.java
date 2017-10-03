@@ -38,7 +38,7 @@ public class ZeltverleihDao extends AbstractDao<Zeltverleih> {
     }
 
     public void loeschen(int id) {
-        delete(deleteVerleih, ps -> ps.setInt(1, id));
+        jdbc.update(deleteVerleih, id);
     }
 
 }

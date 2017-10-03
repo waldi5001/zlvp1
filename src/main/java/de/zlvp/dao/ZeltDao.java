@@ -92,16 +92,10 @@ public class ZeltDao extends AbstractDao<Zelt> {
     }
 
     public void loeschenZuLager(int zeltId, int lagerId) {
-        delete(deleteFromLager, ps -> {
-            ps.setInt(1, lagerId);
-            ps.setInt(2, zeltId);
-        });
+        jdbc.update(deleteFromLager, lagerId, zeltId);
     }
 
     public void loeschenZuGruppe(int zeltId, int gruppeId) {
-        delete(deleteFromGruppe, ps -> {
-            ps.setInt(1, gruppeId);
-            ps.setInt(2, zeltId);
-        });
+        jdbc.update(deleteFromGruppe, gruppeId, zeltId);
     }
 }

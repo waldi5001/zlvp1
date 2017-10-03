@@ -27,7 +27,7 @@ public class ZeltdetailBezeichnungDao extends AbstractDao<ZeltdetailBezeichnung>
     }
 
     public void loeschen(int id) {
-        delete(delete, ps -> ps.setInt(1, id));
+        jdbc.update(delete, id);
     }
 
 }

@@ -33,8 +33,8 @@ public class SchadenDao extends AbstractDao<Schaden> {
         }
     }
 
-    public void loeschen(Integer id) {
-        delete(deleteSchaden, ps -> ps.setInt(1, id));
+    public void loeschen(int id) {
+        jdbc.update(deleteSchaden, id);
     }
 
 }

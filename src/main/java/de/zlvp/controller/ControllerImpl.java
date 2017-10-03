@@ -149,8 +149,8 @@ public class ControllerImpl implements Controller {
         List<Materialwart> all = materialwartDao.getAll(lagerId);
         Lager lager = lagerDao.get(lagerId);
         for (Materialwart mw : all) {
-            mw.setChecked(true);
             mw.setLager(lager);
+            mw.setChecked(true);
         }
         callback.get(all);
     }
@@ -436,7 +436,7 @@ public class ControllerImpl implements Controller {
             leiterDao.speichere(gruppeId, personId);
             callback.get(gruppeDao.get(gruppeId));
         } else {
-            leiterDao.loesche(gruppeId, personId);
+            leiterDao.loeschen(gruppeId, personId);
             callback.get(null);
         }
     }
@@ -447,7 +447,7 @@ public class ControllerImpl implements Controller {
             teilnehmerDao.speichere(personId, gruppeId);
             callback.get(gruppeDao.get(gruppeId));
         } else {
-            teilnehmerDao.loesche(personId, gruppeId);
+            teilnehmerDao.loeschen(personId, gruppeId);
             callback.get(null);
         }
     }
@@ -501,7 +501,7 @@ public class ControllerImpl implements Controller {
         if (add) {
             lagerinfoDao.speichereLagerinfo(id);
         } else {
-            lagerinfoDao.loesche(id);
+            lagerinfoDao.loeschen(id);
         }
         callback.get(null);
     }
@@ -515,14 +515,14 @@ public class ControllerImpl implements Controller {
 
     @Override
     public void verschiebeLeiter(int personId, int srcGruppeId, int destGruppeId, AsyncCallback<Void> callback) {
-        leiterDao.loesche(srcGruppeId, personId);
+        leiterDao.loeschen(srcGruppeId, personId);
         leiterDao.speichere(destGruppeId, personId);
         callback.get(null);
     }
 
     @Override
     public void verschiebeTeilnehmer(int personId, int srcGruppeId, int destGruppeId, AsyncCallback<Void> callback) {
-        teilnehmerDao.loesche(personId, srcGruppeId);
+        teilnehmerDao.loeschen(personId, srcGruppeId);
         teilnehmerDao.speichere(personId, destGruppeId);
         callback.get(null);
     }

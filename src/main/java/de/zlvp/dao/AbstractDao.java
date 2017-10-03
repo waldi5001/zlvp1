@@ -37,10 +37,6 @@ public class AbstractDao<R> {
         return generatedKeyHolder.getKeyList().isEmpty() ? null : generatedKeyHolder.getKeys();
     }
 
-    protected void delete(String sql, StatementSetter psSetter) {
-        jdbc.update(sql, (PreparedStatementSetter) ps -> psSetter.setValue(ps));
-    }
-
     protected R selectOne(String sql, StatementSetter psSetter, RSE<R> rse) {
         return jdbc.query(sql, (PreparedStatementSetter) ps -> psSetter.setValue(ps), (ResultSetExtractor<R>) rs -> {
             if (rs.next()) {
