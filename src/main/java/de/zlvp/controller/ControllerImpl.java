@@ -130,11 +130,6 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void getAllLager(int jahrId, AsyncCallback<List<Lager>> callback) {
-        callback.get(lagerDao.getAll(jahrId));
-    }
-
-    @Override
     public void getAllStab(int lagerId, AsyncCallback<List<Stab>> callback) {
         List<Stab> all = stabDao.getAll(lagerId);
         Lager lager = lagerDao.get(lagerId);

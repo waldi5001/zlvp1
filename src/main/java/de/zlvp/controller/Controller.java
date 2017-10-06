@@ -40,8 +40,6 @@ public interface Controller {
 
     void getAllJahr(AsyncCallback<List<Jahr>> callback);
 
-    void getAllLager(int jahrId, AsyncCallback<List<Lager>> callback);
-
     void getAllLagerinfo(AsyncCallback<List<Lagerinfo>> callback);
 
     void getAllLagerort(AsyncCallback<List<Lagerort>> callback);
