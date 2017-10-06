@@ -251,10 +251,10 @@ public class HauptFenster extends AbstractJInternalFrame {
 
         DefaultMutableTreeNode currentNode = root.getNextNode();
         do {
-            if (currentNode.getLevel() == level) {
+            if (currentNode != null && currentNode.getLevel() == level) {
                 tree.expandPath(new TreePath(currentNode.getPath()));
             }
-            currentNode = currentNode.getNextNode();
+            currentNode = currentNode != null ? currentNode.getNextNode() : null;
         } while (currentNode != null);
     }
 
