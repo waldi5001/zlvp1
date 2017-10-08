@@ -47,6 +47,7 @@ import de.zlvp.ui.TreePopup;
 
 public class HauptFenster extends AbstractJInternalFrame {
 
+    private static final String EMPTY = "EMPTY";
     private static final String LAGER = "LAGER";
     private static final String GRUPPE = "GRUPPE";
 
@@ -90,6 +91,7 @@ public class HauptFenster extends AbstractJInternalFrame {
             }
         });
 
+        getjRightPane().add(new JPanel(), EMPTY);
         getjRightPane().add(new TPLager(), LAGER);
         getjRightPane().add(new TPGruppe(), GRUPPE);
         this.getJSplitPane().setRightComponent(getjRightPane());
@@ -202,22 +204,18 @@ public class HauptFenster extends AbstractJInternalFrame {
 
                     if (anzahlElemente == 1) {
                         Events.get().fireJahrSelected((Jahr) userObject);
-                    }
-
-                    if (anzahlElemente == 2) {
+                        ((CardLayout) getjRightPane().getLayout()).show(getjRightPane(), EMPTY);
+                    } else if (anzahlElemente == 2) {
                         Events.get().fireLagerSelected((Lager) userObject);
                         ((CardLayout) getjRightPane().getLayout()).show(getjRightPane(), LAGER);
-                    }
-
-                    if (anzahlElemente == 3) {
+                    } else if (anzahlElemente == 3) {
                         Events.get().fireGruppeSelected((Gruppe) userObject);
                         ((CardLayout) getjRightPane().getLayout()).show(getjRightPane(), GRUPPE);
-                    }
-
-                    if (anzahlElemente == 5) {
+                    } else if (anzahlElemente == 5) {
                         Events.get().firePersonSelected((Person) userObject);
+                        ((CardLayout) getjRightPane().getLayout()).show(getjRightPane(), EMPTY);
                     } else {
-                        // getFensterKlasse().disableMenuItems();
+                        ((CardLayout) getjRightPane().getLayout()).show(getjRightPane(), EMPTY);
                     }
                 }
 
