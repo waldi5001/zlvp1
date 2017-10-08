@@ -118,8 +118,6 @@ public class FensterKlasse extends JFrame {
 
     private JDesktopPane jDesktopPane;
 
-    private JMenuItem jMenuItemZeltAnlegen;
-
     private JMenuItem jMenuItemOeffnen;
 
     private JMenu jMenuAendern;
@@ -179,6 +177,8 @@ public class FensterKlasse extends JFrame {
     private JMenuItem jMenuItemReportOeffnen;
 
     private JMenuItem jMenuItemLegendatyp;
+
+    private JMenuItem jMenuItemZelt;
 
     public FensterKlasse() {
         super();
@@ -255,6 +255,7 @@ public class FensterKlasse extends JFrame {
             jMenuAnlegen.add(getJMenuItemPerson());
             jMenuAnlegen.add(getJMenuItemLagerOrt());
             jMenuAnlegen.add(getJMenuItemLegendatyp());
+            jMenuAnlegen.add(getJMenuItemZelt());
         }
         return jMenuAnlegen;
     }
@@ -406,17 +407,6 @@ public class FensterKlasse extends JFrame {
         return jDesktopPane;
     }
 
-    private JMenuItem getJMenuItemZeltAnlegen() {
-        if (jMenuItemZeltAnlegen == null) {
-            jMenuItemZeltAnlegen = new JMenuItem();
-            jMenuItemZeltAnlegen.setText("Zelt anlegen");
-            jMenuItemZeltAnlegen.addActionListener(e -> {
-                new ZeltAnlegen();
-            });
-        }
-        return jMenuItemZeltAnlegen;
-    }
-
     private JMenuItem getJMenuItemOeffnen() {
         if (jMenuItemOeffnen == null) {
             jMenuItemOeffnen = new JMenuItem();
@@ -449,7 +439,6 @@ public class FensterKlasse extends JFrame {
             jMenuMaterial = new JMenu();
             jMenuMaterial.setText("Material");
             jMenuMaterial.setEnabled(false);
-            jMenuMaterial.add(getJMenuItemZeltAnlegen());
             jMenuMaterial.add(getJMenuItemZelteVerwalten());
             jMenuMaterial.add(getJMenuItemBezLöschen());
         }
@@ -1028,6 +1017,21 @@ public class FensterKlasse extends JFrame {
             });
         }
         return jMenuItemLegendatyp;
+    }
+
+    private JMenuItem getJMenuItemZelt() {
+        if (jMenuItemZelt == null) {
+            jMenuItemZelt = new JMenuItem();
+            jMenuItemZelt.setText("Zelt");
+            jMenuItemZelt.addActionListener(e -> {
+                String zeltBezeichnung = JOptionPane.showInputDialog("Zeltbezeichnung eingeben", "BR-Z-");
+                if (zeltBezeichnung != null && !zeltBezeichnung.isEmpty()) {
+                    get().speichereZelt(null, zeltBezeichnung, null, 0, null, cb -> {
+                    });
+                }
+            });
+        }
+        return jMenuItemZelt;
     }
 
     private JMenuItem getJMenuItemPersonenVonLager() {
