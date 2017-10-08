@@ -478,8 +478,9 @@ public class JTableBuilders {
                 })
                 .save((lg, cb) -> get().speichereLegenda(lg.getId(), lg.getLagerOrt().getId(), lg.getName(),
                         lg.getVorname(), lg.getFirma(), lg.getStrasse(), lg.getPlz(), lg.getOrt(),
-                        lg.getLegendaTyp().getId(), lg.getAnrede().getId(), lg.getStrasse(), lg.getFax(), lg.getHandy(),
-                        lg.getEmail(), lg.getBemerkung(), cb))//
+                        lg.getLegendaTyp() != null ? lg.getLegendaTyp().getId() : null,
+                        lg.getAnrede() != null ? lg.getAnrede().getId() : null, lg.getStrasse(), lg.getFax(),
+                        lg.getHandy(), lg.getEmail(), lg.getBemerkung(), cb))//
                 .addColumn(ColumnBuilder.get(Legendatyp.class)
                         .add(JComboBoxBuilder.get(Legendatyp.class, get()::getAllLegendatyp).build()).add("Typ").desc()
                         .build())//

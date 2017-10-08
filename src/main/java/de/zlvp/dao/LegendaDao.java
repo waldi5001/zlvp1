@@ -67,7 +67,11 @@ public class LegendaDao extends AbstractDao<Legenda> {
             });
         } else {
             insertOrUpdate(updateLegenda, ps -> {
-                ps.setInt(1, legendatypId);
+                if (legendatypId == null) {
+                    ps.setNull(1, Types.INTEGER);
+                } else {
+                    ps.setInt(1, legendatypId);
+                }
                 ps.setString(2, nachname);
                 ps.setString(3, vorname);
                 ps.setString(4, strasse);
@@ -77,7 +81,11 @@ public class LegendaDao extends AbstractDao<Legenda> {
                 ps.setString(8, handy);
                 ps.setString(9, fax);
                 ps.setString(10, email);
-                ps.setInt(11, anredeId);
+                if (anredeId == null) {
+                    ps.setNull(11, Types.INTEGER);
+                } else {
+                    ps.setInt(11, anredeId);
+                }
                 ps.setString(12, firma);
                 ps.setString(13, bemerkung);
                 ps.setInt(14, id);
