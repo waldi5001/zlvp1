@@ -303,6 +303,12 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
+    public void speichereAnrede(String anrede, AsyncCallback<Void> callback) {
+        anredeDao.speichereAnrede(anrede);
+        callback.get(null);
+    }
+
+    @Override
     public void speichereLegenda(Integer id, int lagerortId, String nachname, String vorname, String firma,
             String strasse, String plz, String ort, Integer legendatypId, Integer anredeId, String tel, String fax,
             String handy, String email, String bemerkung, AsyncCallback<Void> callback) {

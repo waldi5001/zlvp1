@@ -180,6 +180,8 @@ public class FensterKlasse extends JFrame {
 
     private JMenuItem jMenuItemZelt;
 
+    private JMenuItem jMenuItemAnrede;
+
     public FensterKlasse() {
         super();
 
@@ -256,6 +258,7 @@ public class FensterKlasse extends JFrame {
             jMenuAnlegen.add(getJMenuItemLagerOrt());
             jMenuAnlegen.add(getJMenuItemLegendatyp());
             jMenuAnlegen.add(getJMenuItemZelt());
+            jMenuAnlegen.add(getJMenuItemAnrede());
         }
         return jMenuAnlegen;
     }
@@ -1032,6 +1035,21 @@ public class FensterKlasse extends JFrame {
             });
         }
         return jMenuItemZelt;
+    }
+
+    private JMenuItem getJMenuItemAnrede() {
+        if (jMenuItemAnrede == null) {
+            jMenuItemAnrede = new JMenuItem();
+            jMenuItemAnrede.setText("Legenda Anrede");
+            jMenuItemAnrede.addActionListener(e -> {
+                String anrede = JOptionPane.showInputDialog("Legenda Anrede eingeben");
+                if (anrede != null && !anrede.isEmpty()) {
+                    get().speichereAnrede(anrede, cb -> {
+                    });
+                }
+            });
+        }
+        return jMenuItemAnrede;
     }
 
     private JMenuItem getJMenuItemPersonenVonLager() {

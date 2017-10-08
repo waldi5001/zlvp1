@@ -100,6 +100,8 @@ public interface Controller {
 
     void speichereLegendatyp(String legendatyp, AsyncCallback<Void> callback);
 
+    void speichereAnrede(String anrede, AsyncCallback<Void> callback);
+
     void speichereLegenda(Integer id, int lagerortId, String nachname, String vorname, String firma, String strasse,
             String plz, String ort, Integer legendatypId, Integer anredeId, String tel, String fax, String handy,
             String email, String bemerkung, AsyncCallback<Void> callback);
