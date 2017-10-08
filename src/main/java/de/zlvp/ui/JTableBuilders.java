@@ -75,8 +75,13 @@ public class JTableBuilders {
                     }
                     return null;
                 })
+                // s.getFunktion() == Funktion.REMOVE && s.getLager() == null =
+                // Es wird ein leerer Eintrag bei der Funktion ausgewählt obwohl
+                // die Person noch kein Stab war.
                 .save((s, cb) -> get().speichereStab(s.getId(), s.getFunktion(),
-                        s.getFunktion() == Funktion.REMOVE ? s.getLager().getId() : lagerCallback.get().getId(),
+                        s.getFunktion() == Funktion.REMOVE
+                                ? s.getLager() == null ? lagerCallback.get().getId() : s.getLager().getId()
+                                : lagerCallback.get().getId(),
                         speichernCallback -> {
                             s.setLager(speichernCallback);
                             cb.get(null);
