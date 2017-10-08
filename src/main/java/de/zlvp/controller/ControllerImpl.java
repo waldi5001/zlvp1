@@ -297,6 +297,12 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
+    public void speichereLegendatyp(String legendatyp, AsyncCallback<Void> callback) {
+        legendatypDao.speichern(legendatyp);
+        callback.get(null);
+    }
+
+    @Override
     public void speichereLegenda(Integer id, int lagerortId, String nachname, String vorname, String firma,
             String strasse, String plz, String ort, Integer legendatypId, Integer anredeId, String tel, String fax,
             String handy, String email, String bemerkung, AsyncCallback<Void> callback) {

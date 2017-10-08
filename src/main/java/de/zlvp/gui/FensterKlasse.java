@@ -178,6 +178,8 @@ public class FensterKlasse extends JFrame {
 
     private JMenuItem jMenuItemReportOeffnen;
 
+    private JMenuItem jMenuItemLegendatyp;
+
     public FensterKlasse() {
         super();
 
@@ -252,6 +254,7 @@ public class FensterKlasse extends JFrame {
             jMenuAnlegen.setEnabled(false);
             jMenuAnlegen.add(getJMenuItemPerson());
             jMenuAnlegen.add(getJMenuItemLagerOrt());
+            jMenuAnlegen.add(getJMenuItemLegendatyp());
         }
         return jMenuAnlegen;
     }
@@ -1010,6 +1013,21 @@ public class FensterKlasse extends JFrame {
             });
         }
         return jMenuItemLagerOrt;
+    }
+
+    private JMenuItem getJMenuItemLegendatyp() {
+        if (jMenuItemLegendatyp == null) {
+            jMenuItemLegendatyp = new JMenuItem();
+            jMenuItemLegendatyp.setText("Legendatyp");
+            jMenuItemLegendatyp.addActionListener(e -> {
+                String lgendatyp = JOptionPane.showInputDialog("Neuen Legendatyp eingeben");
+                if (lgendatyp != null && !lgendatyp.isEmpty()) {
+                    get().speichereLegendatyp(lgendatyp, cb -> {
+                    });
+                }
+            });
+        }
+        return jMenuItemLegendatyp;
     }
 
     private JMenuItem getJMenuItemPersonenVonLager() {
