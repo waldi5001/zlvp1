@@ -13,12 +13,13 @@ public class TeilnehmerDao extends AbstractDao<Teilnehmer> {
     private static final String insertTeilnehmer = "INSERT INTO stTeGr (gruppe,person) VALUES (?,?)";
     private static final String deleteTeilnehmer = "DELETE FROM stTeGr WHERE gruppe = ? AND person = ?";
 
+    private RSE<Teilnehmer> rse = rs -> new Teilnehmer(rs.getInt("peid"), Geschlecht.fromDbId(rs.getInt("geschlecht")),
+            rs.getString("vorname"), rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"),
+            rs.getString("ort"), rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"),
+            rs.getString("email"), rs.getString("nottel"));
+
     public List<Teilnehmer> getAll(final int gruppe) {
-        return select(findAllTeilnehmerFromGruppe, ps -> ps.setInt(1, gruppe),
-                rs -> new Teilnehmer(rs.getInt("peid"), Geschlecht.fromDbId(rs.getInt("geschlecht")),
-                        rs.getString("vorname"), rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"),
-                        rs.getString("ort"), rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"),
-                        rs.getString("email"), rs.getString("nottel")));
+        return select(findAllTeilnehmerFromGruppe, ps -> ps.setInt(1, gruppe), rse);
     }
 
     public void speichere(int personId, int gruppeId) {
@@ -33,11 +34,7 @@ public class TeilnehmerDao extends AbstractDao<Teilnehmer> {
     }
 
     public Teilnehmer get(int id) {
-        return selectOne(findTeilnehmer, ps -> ps.setInt(1, id),
-                rs -> new Teilnehmer(rs.getInt("peid"), Geschlecht.fromDbId(rs.getInt("geschlecht")),
-                        rs.getString("vorname"), rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"),
-                        rs.getString("ort"), rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"),
-                        rs.getString("email"), rs.getString("nottel")));
+        return selectOne(findTeilnehmer, ps -> ps.setInt(1, id), rse);
     }
 
 }

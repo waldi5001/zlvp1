@@ -12,7 +12,7 @@ public class StabDao extends AbstractDao<Stab> {
     private static final String selectOne = "SELECT stlastid FROM stLaSt where lager = ? and person = ?";
 
     private static final String updateFunktion = "UPDATE stLaSt SET Funktion = ? WHERE lager = ? AND person = ?";
-    private static final String insertStab = "INSERT INTO stLaSt (lager, person, funktion) VALUES (?,?,?);";
+    private static final String insertStab = "INSERT INTO stLaSt (lager, person, funktion) VALUES (?,?,?)";
     private static final String deleteStab = "DELETE FROM stLaSt WHERE lager = ? AND person = ?";
 
     public List<Stab> getAll(int lagerId) {

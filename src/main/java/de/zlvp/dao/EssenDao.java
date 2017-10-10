@@ -40,9 +40,7 @@ public class EssenDao extends AbstractDao<Essen> {
     }
 
     public void loescheEssen(int essenID) {
-        insertOrUpdate(deleteEssen, ps -> {
-            ps.setInt(1, essenID);
-        });
+        jdbc.update(deleteEssen, essenID);
     }
 
 }

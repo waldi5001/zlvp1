@@ -9,7 +9,7 @@ public class LeiterDao extends AbstractDao<Leiter> {
 
     private static final String findAllLeiterFromGruppe = "SELECT p.* FROM Person p INNER JOIN stGrLe ON p.PeID = stGrLe.Person WHERE stGrLe.gruppe = ? order by p.nachname, p.vorname";
 
-    private static final String insertLeiter = "INSERT INTO stGrLe (gruppe,person) VALUES (?,?);";
+    private static final String insertLeiter = "INSERT INTO stGrLe (gruppe,person) VALUES (?,?)";
     private static final String deleteLeiter = "DELETE FROM stGrLe WHERE gruppe = ? and person = ?";
 
     public List<Leiter> getAll(int gruppe) {

@@ -40,9 +40,7 @@ public class ProgrammDao extends AbstractDao<Programm> {
     }
 
     public void loescheProgramm(int programmId) {
-        insertOrUpdate(deleteProgramm, ps -> {
-            ps.setInt(1, programmId);
-        });
+        jdbc.update(deleteProgramm, programmId);
     }
 
 }

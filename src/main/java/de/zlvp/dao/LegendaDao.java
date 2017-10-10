@@ -19,8 +19,7 @@ public class LegendaDao extends AbstractDao<Legenda> {
 
     private static final String updateLegenda = "UPDATE legenda "
             + "SET typ = ?,  name = ?,  vorname = ?,  strasse = ?,  plz = ?,  ort = ?, "
-            + " tel = ?,  handy = ?,  fax = ?,  email = ?,  anrede = ?,  firma = ?,  bemerkung = ? "
-            + "where lgid = ?;";
+            + " tel = ?,  handy = ?,  fax = ?,  email = ?,  anrede = ?,  firma = ?,  bemerkung = ? " + "where lgid = ?";
 
     public List<Legenda> getAllFromLagerort(int lagerortId) {
         return select(findAllFromLagerort, ps -> ps.setInt(1, lagerortId), rs -> {
@@ -91,7 +90,6 @@ public class LegendaDao extends AbstractDao<Legenda> {
                 ps.setInt(14, id);
             });
         }
-
     }
 
 }
