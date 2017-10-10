@@ -262,12 +262,22 @@ public class ControllerImpl implements Controller {
 
     @Override
     public void getAllSchaeden(Integer id, AsyncCallback<List<Schaden>> callback) {
-        callback.get(schadenDao.getAllFromZelt(id));
+        List<Schaden> allFromZelt = schadenDao.getAllFromZelt(id);
+        Zelt zelt = zeltDao.get(id);
+        for (Schaden schaden : allFromZelt) {
+            schaden.setZelt(zelt);
+        }
+        callback.get(allFromZelt);
     }
 
     @Override
     public void getAllZeltverleih(Integer id, AsyncCallback<List<Zeltverleih>> callback) {
-        callback.get(zeltverleihDao.getAllFromZelt(id));
+        List<Zeltverleih> allFromZelt = zeltverleihDao.getAllFromZelt(id);
+        Zelt zelt = zeltDao.get(id);
+        for (Zeltverleih zeltverleih : allFromZelt) {
+            zeltverleih.setZelt(zelt);
+        }
+        callback.get(allFromZelt);
     }
 
     @Override
@@ -396,20 +406,26 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void loescheSchaden(Integer id, AsyncCallback<Void> callback) {
-        schadenDao.loeschen(id);
+    public void loescheSchaeden(List<Integer> ids, AsyncCallback<Void> callback) {
+        for (Integer id : ids) {
+            schadenDao.loeschen(id);
+        }
         callback.get(null);
     }
 
     @Override
-    public void loescheZeltverleih(int id, AsyncCallback<Void> callback) {
-        zeltverleihDao.loeschen(id);
+    public void loescheZeltverleihe(List<Integer> ids, AsyncCallback<Void> callback) {
+        for (Integer id : ids) {
+            zeltverleihDao.loeschen(id);
+        }
         callback.get(null);
     }
 
     @Override
-    public void loescheZeltdetail(int id, AsyncCallback<Void> callback) {
-        zeltdetailDao.loeschen(id);
+    public void loescheZeltdetails(List<Integer> ids, AsyncCallback<Void> callback) {
+        for (Integer id : ids) {
+            zeltdetailDao.loeschen(id);
+        }
         callback.get(null);
     }
 

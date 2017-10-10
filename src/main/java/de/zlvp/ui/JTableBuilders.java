@@ -28,6 +28,7 @@ import de.zlvp.entity.Stab;
 import de.zlvp.entity.Teilnehmer;
 import de.zlvp.entity.Waehrung;
 import de.zlvp.entity.Zelt;
+import de.zlvp.entity.Zeltverleih;
 import de.zlvp.ui.JTableBuilder.ColumnBuilder;
 import de.zlvp.ui.JTableBuilder.Columns;
 import de.zlvp.ui.JTableBuilder.Loader;
@@ -540,15 +541,55 @@ public class JTableBuilders {
 
     public static JTableBuilder<Schaden> schaden(Loader<Schaden> loader) {
         return JTableBuilder.get(Schaden.class, loader)//
-                .get((s, index) -> {
+                .set((s, val, index) -> {
+                    if (index == 0) {
+                        s.setDatum((Date) val);
+                    } else if (index == 1) {
+                        s.setSchaden((String) val);
+                    }
+                }).get((s, index) -> {
                     if (index == 0) {
                         return s.getDatum();
                     } else if (index == 1) {
                         return s.getSchaden();
                     }
                     return null;
-                }).addColumn(ColumnBuilder.get(Date.class).add("Datum").preferredWidth(70).build())//
-                .addColumn(ColumnBuilder.get(String.class).add("Schaden").preferredWidth(270).build());//
+                })//
+                .save((s, cb) -> get().speichereSchaden(s.getId(), s.getZelt().getId(), s.getDatum(), s.getSchaden(),
+                        cb))//
+                .delete((schaeden, cb) -> get().loescheSchaeden(schaeden.stream().map(p -> p.getId()).collect(toList()),
+                        cb))
+                .addColumn(ColumnBuilder.get(Date.class).add("Datum").preferredWidth(70).build())//
+                .addColumn(ColumnBuilder.get(String.class).add("Schaden").multiline().preferredWidth(270).build());//
+    }
+
+    public static JTableBuilder<Zeltverleih> zeltverleih(Loader<Zeltverleih> loader) {
+        return JTableBuilder.get(Zeltverleih.class, loader)//
+                .set((zv, val, index) -> {
+                    if (index == 0) {
+                        zv.setDatum((Date) val);
+                    } else if (index == 1) {
+                        zv.setPerson((String) val);
+                    } else if (index == 2) {
+                        zv.setBemerkung((String) val);
+                    }
+                }).get((zv, index) -> {
+                    if (index == 0) {
+                        return zv.getDatum();
+                    } else if (index == 1) {
+                        return zv.getPerson();
+                    } else if (index == 2) {
+                        return zv.getBemerkung();
+                    }
+                    return null;
+                })//
+                .save((zv, cb) -> get().speichereZeltverleih(zv.getId(), zv.getZelt().getId(), zv.getDatum(),
+                        zv.getPerson(), zv.getBemerkung(), cb))//
+                .delete((zvs, cb) -> get().loescheZeltverleihe(zvs.stream().map(zv -> zv.getId()).collect(toList()),
+                        cb))
+                .addColumn(ColumnBuilder.get(Date.class).add("Datum").preferredWidth(30).build())//
+                .addColumn(ColumnBuilder.get(String.class).add("Person").build())//
+                .addColumn(ColumnBuilder.get(String.class).add("Bemerkung").multiline().build());//
     }
 
     private static String getWochentag(Date datum) {

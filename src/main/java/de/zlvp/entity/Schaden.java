@@ -13,6 +13,7 @@ public class Schaden extends AbstractEntity {
         setId(id);
     }
 
+    private Zelt zelt;
     private Date datum;
     private String schaden;
 
@@ -24,9 +25,24 @@ public class Schaden extends AbstractEntity {
         return schaden;
     }
 
+    public Zelt getZelt() {
+        return zelt;
+    }
+
+    public void setZelt(Zelt zelt) {
+        this.zelt = zelt;
+    }
+
+    public void setDatum(Date datum) {
+        this.datum = datum;
+    }
+
+    public void setSchaden(String schaden) {
+        this.schaden = schaden;
+    }
+
     @Override
     public String getBezeichnung() {
         return format("%s: %s", dateToString(getDatum()), getSchaden());
     }
-
 }

@@ -78,13 +78,13 @@ public interface Controller {
 
     void getJahr(int jahrId, AsyncCallback<Jahr> callback);
 
-    void loescheSchaden(Integer id, AsyncCallback<Void> callback);
+    void loescheSchaeden(List<Integer> ids, AsyncCallback<Void> callback);
 
-    void loescheZeltdetail(int id, AsyncCallback<Void> callback);
+    void loescheZeltdetails(List<Integer> ids, AsyncCallback<Void> callback);
 
     void loescheZeltdetailBezeichnung(int id, AsyncCallback<Void> callback);
 
-    void loescheZeltverleih(int id, AsyncCallback<Void> callback);
+    void loescheZeltverleihe(List<Integer> ids, AsyncCallback<Void> callback);
 
     void speichereGruppe(boolean add, Integer id, int lagerId, String name, String schlachtruf,
             AsyncCallback<Gruppe> callback);

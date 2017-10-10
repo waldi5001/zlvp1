@@ -3,12 +3,9 @@ package de.zlvp.gui;
 import static de.zlvp.Client.get;
 
 import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
@@ -20,23 +17,21 @@ import de.zlvp.ui.JTableBuilders;
 
 public class ZeltVerwalten extends AbstractJInternalFrame {
 
-    private static final long serialVersionUID = 2547154648280401084L;
+    private static final long serialVersionUID = 1L;
 
     private JPanel jContentPane;
 
     private JPanel jPanel;
 
-    private JPanel jPanel1;
-
     private JTable jTable;
 
     private JPanel jPanel3;
 
+    private JButton jButtonSchaeden;
+
+    private JButton jButtonVerleih;
+
     private JButton jButtonDetailAendern;
-
-    private JButton jButtonAbbrechen;
-
-    private JScrollPane jScrollPane;
 
     private JTableBuilder<Zelt> jTableBuilder;
 
@@ -71,24 +66,10 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
         if (jPanel == null) {
             jPanel = new JPanel();
             jPanel.setLayout(new BorderLayout());
-            jPanel.add(getJPanel1(), java.awt.BorderLayout.CENTER);
-            jPanel.add(getJPanel3(), java.awt.BorderLayout.SOUTH);
+            jPanel.add(new JYTableScrollPane(getJTable()), java.awt.BorderLayout.CENTER);
+            jPanel.add(getJPanelButtons(), java.awt.BorderLayout.SOUTH);
         }
         return jPanel;
-    }
-
-    private JPanel getJPanel1() {
-        if (jPanel1 == null) {
-            GridBagConstraints gridBagConstraints11 = new GridBagConstraints();
-            gridBagConstraints11.fill = java.awt.GridBagConstraints.BOTH;
-            gridBagConstraints11.weighty = 1.0;
-            gridBagConstraints11.insets = new java.awt.Insets(10, 10, 0, 10);
-            gridBagConstraints11.weightx = 1.0;
-            jPanel1 = new JPanel();
-            jPanel1.setLayout(new GridBagLayout());
-            jPanel1.add(getJScrollPane(), gridBagConstraints11);
-        }
-        return jPanel1;
     }
 
     private JTable getJTable() {
@@ -111,13 +92,12 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
         return jTable;
     }
 
-    private JPanel getJPanel3() {
+    private JPanel getJPanelButtons() {
         if (jPanel3 == null) {
             jPanel3 = new JPanel();
-            jPanel3.add(getJButtonDetailAendern(), null);
-            jPanel3.add(getJButtonSchaeden(), null);
-            jPanel3.add(getJButtonVerleih(), null);
-            jPanel3.add(getJButtonAbbrechen(), null);
+            jPanel3.add(getJButtonDetailAendern());
+            jPanel3.add(getJButtonSchaeden());
+            jPanel3.add(getJButtonVerleih());
         }
         return jPanel3;
     }
@@ -133,26 +113,6 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
         }
         return jButtonDetailAendern;
     }
-
-    private JButton getJButtonAbbrechen() {
-        if (jButtonAbbrechen == null) {
-            jButtonAbbrechen = new JButton();
-            jButtonAbbrechen.setText("Abbrechen");
-            jButtonAbbrechen.addActionListener(e -> setVisible(false));
-        }
-        return jButtonAbbrechen;
-    }
-
-    private JScrollPane getJScrollPane() {
-        if (jScrollPane == null) {
-            jScrollPane = new JYTableScrollPane(getJTable());
-        }
-        return jScrollPane;
-    }
-
-    private JButton jButtonSchaeden;
-
-    private JButton jButtonVerleih;
 
     private JButton getJButtonSchaeden() {
         if (jButtonSchaeden == null) {
