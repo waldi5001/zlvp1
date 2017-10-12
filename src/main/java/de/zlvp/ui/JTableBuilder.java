@@ -1,34 +1,26 @@
 package de.zlvp.ui;
 
-import java.awt.Component;
-import java.awt.event.MouseEvent;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.EventObject;
 import java.util.List;
 import java.util.Locale;
 
 import javax.swing.DefaultCellEditor;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
 import javax.swing.JTable;
 import javax.swing.SortOrder;
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
-import javax.swing.text.DateFormatter;
-import javax.swing.text.MaskFormatter;
+
+import org.jdesktop.swingx.table.DatePickerCellEditor;
+import org.jfree.ui.DateCellRenderer;
 
 import de.javasoft.swing.JYTable;
 import de.javasoft.swing.JYTableHeader;
 import de.javasoft.swing.jytable.renderer.CellLayoutHint;
 import de.javasoft.swing.jytable.sort.JYTableSortController;
-import de.javasoft.swing.table.ObjectTableCellEditor;
 import de.zlvp.controller.AsyncCallback;
 
 public class JTableBuilder<E> {
@@ -70,9 +62,9 @@ public class JTableBuilder<E> {
     public JTable build() {
         this.table = new JYTable();
         this.table.setCellSelectionEnabled(true);
+        this.table.setSurrendersFocusOnKeystroke(true);
         JYTableHeader header = (JYTableHeader) table.getTableHeader();
         CellLayoutHint hint = header.getCellLayoutHint();
-
         header.setCellLayoutHint(
                 new CellLayoutHint(hint.sortMarkerPosition, SwingConstants.CENTER, hint.verticalAlignment));
 
@@ -139,8 +131,11 @@ public class JTableBuilder<E> {
             }
 
             if (column.getClazz() == Date.class) {
-                tableColumn.setCellEditor(new DateFormateTableCellEditor());
-                tableColumn.setCellRenderer(new DateTableCellRenderer());
+                DatePickerCellEditor dateCellEditor = new DatePickerCellEditor(
+                        DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN));
+                tableColumn.setCellEditor(dateCellEditor);
+                tableColumn.setCellRenderer(
+                        new DateCellRenderer(DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN)));
             }
 
             if (column.getSortOrder() != null) {
@@ -395,93 +390,6 @@ public class JTableBuilder<E> {
         public static Column<Boolean> CHECK = ColumnBuilder.get(Boolean.class).add("").desc().width(150).build();
         public static Column<String> WOCHENTAG = ColumnBuilder.get(String.class).add("Tag").editable(false).width(50)
                 .build();
-    }
-
-    private static class DoublClickTableCellEditor extends ObjectTableCellEditor {
-
-        private static final long serialVersionUID = 1L;
-
-        public DoublClickTableCellEditor(TableCellEditor arg0) {
-            super(arg0);
-        }
-
-        @Override
-        public boolean isCellEditable(EventObject anEvent) {
-            if (anEvent instanceof MouseEvent) {
-                return ((MouseEvent) anEvent).getClickCount() >= 2;
-            }
-            return false;
-        }
-    }
-
-    private static class DateFormateTableCellEditor extends DefaultCellEditor {
-
-        private static final long serialVersionUID = 1L;
-
-        private final JFormattedTextField textField;
-
-        public DateFormateTableCellEditor() {
-            super(new JCheckBox());
-            this.textField = new JFormattedTextField(
-                    new DateFormatter(DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN)));
-        }
-
-        private MaskFormatter createMaskFormatter() {
-            try {
-                MaskFormatter mf = new MaskFormatter("##.##.##");
-                mf.setValueContainsLiteralCharacters(false);
-                return mf;
-            } catch (ParseException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
-        }
-
-        @Override
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row,
-                int column) {
-            textField.setValue(value);
-            return textField;
-        }
-
-        @Override
-        public Object getCellEditorValue() {
-            String text = textField.getText();
-            if (!text.contains(".")) {
-                MaskFormatter maskFormatter = createMaskFormatter();
-                try {
-                    String formatted = maskFormatter.valueToString(text);
-                    return new DateFormatter(DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN))
-                            .stringToValue(formatted);
-                } catch (ParseException e) {
-                    throw new RuntimeException(e.getMessage(), e);
-                }
-            }
-            return textField.getValue();
-        }
-
-        @Override
-        public boolean isCellEditable(EventObject anEvent) {
-            if (anEvent instanceof MouseEvent) {
-                return ((MouseEvent) anEvent).getClickCount() >= 2;
-            }
-            return false;
-        }
-    }
-
-    private static class DateTableCellRenderer extends DefaultTableCellRenderer {
-
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        protected void setValue(Object value) {
-            try {
-                setText(new DateFormatter(DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN))
-                        .valueToString(value));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-
     }
 
 }
