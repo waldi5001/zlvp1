@@ -77,13 +77,11 @@ public class LegendaVerwaltenPanel extends JPanel {
 
     @Subscribe
     public void lagersaved(LagerSaved event) {
-        System.out.println("lagersaved" + event.get());
         tableBuilderLegenda.refresh();
     }
 
     @Subscribe
     public void lagerSelected(LagerSelected event) {
-        System.out.println("lagerSelected" + event.get());
         tableBuilderLegenda.refresh();
     }
 }
