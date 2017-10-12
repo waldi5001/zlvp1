@@ -12,15 +12,14 @@
 	<parameter name="jaid" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[SELECT an.anrede AS anredebez, lt.typ AS typbez, lg.*
-FROM jahr j INNER JOIN stlaja ON stlaja.jahr=j.jaid
-INNER JOIN Lager l ON stlaja.lager = l.laid
-INNER JOIN stlalo ON stlalo.lager=l.laid
-INNER JOIN lagerort lo ON stlalo.lagerort=lo.loid
-INNER JOIN stlolg ON lo.loid = stlolg.lagerort
-INNER JOIN legenda lg ON lg.lgid = stlolg.legenda
-INNER JOIN legendatyp lt ON lg.typ = lt.tyid
-INNER JOIN anrede an ON lg.anrede = an.anid
-WHERE j.jaid = $P{jaid}]]>
+from legenda lg
+left join anrede an on lg.anrede = an.anid
+left join legendatyp lt on lg.typ = lt.tyid
+inner join lagerort lo on lg.lagerort_id = lo.loid
+inner join stlalo la_lo on lo.loid = la_lo.lager
+inner join lager la on la_lo.lager = la.laid
+inner join stlaja la_ja on la.laid = la_ja.lager
+where la_ja.jahr = $P{jaid}]]>
 	</queryString>
 	<field name="anredebez" class="java.lang.String"/>
 	<field name="typbez" class="java.lang.String"/>
