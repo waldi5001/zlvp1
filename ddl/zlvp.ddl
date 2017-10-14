@@ -3,9 +3,9 @@
 --
 
 -- Dumped from database version 9.4.12
--- Dumped by pg_dump version 9.5.7
+-- Dumped by pg_dump version 9.5.9
 
--- Started on 2017-08-30 08:45:42 CEST
+-- Started on 2017-10-14 14:22:48 CEST
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -16,14 +16,14 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 2342 (class 1262 OID 16889)
--- Name: zlvp; Type: DATABASE; Schema: -; Owner: -
+-- TOC entry 2293 (class 1262 OID 25568)
+-- Name: zlvpTest; Type: DATABASE; Schema: -; Owner: -
 --
 
-CREATE DATABASE zlvp WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'de_DE.UTF-8' LC_CTYPE = 'de_DE.UTF-8';
+CREATE DATABASE "zlvpTest" WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'de_DE.UTF-8' LC_CTYPE = 'de_DE.UTF-8';
 
 
-\connect zlvp
+\connect "zlvp"
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -42,7 +42,7 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- TOC entry 2344 (class 0 OID 0)
+-- TOC entry 2295 (class 0 OID 0)
 -- Dependencies: 1
 -- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
 --
@@ -55,7 +55,7 @@ SET search_path = public, pg_catalog;
 SET default_with_oids = false;
 
 --
--- TOC entry 173 (class 1259 OID 16890)
+-- TOC entry 173 (class 1259 OID 25569)
 -- Name: persont; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -76,7 +76,7 @@ CREATE TABLE persont (
 
 
 --
--- TOC entry 174 (class 1259 OID 16898)
+-- TOC entry 174 (class 1259 OID 25575)
 -- Name: Person_PeID_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -89,7 +89,7 @@ CREATE SEQUENCE "Person_PeID_seq"
 
 
 --
--- TOC entry 2345 (class 0 OID 0)
+-- TOC entry 2296 (class 0 OID 0)
 -- Dependencies: 174
 -- Name: Person_PeID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -98,7 +98,7 @@ ALTER SEQUENCE "Person_PeID_seq" OWNED BY persont.peid;
 
 
 --
--- TOC entry 175 (class 1259 OID 16900)
+-- TOC entry 175 (class 1259 OID 25577)
 -- Name: anrede; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -109,7 +109,7 @@ CREATE TABLE anrede (
 
 
 --
--- TOC entry 176 (class 1259 OID 16903)
+-- TOC entry 176 (class 1259 OID 25580)
 -- Name: anrede_anid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -122,7 +122,7 @@ CREATE SEQUENCE anrede_anid_seq
 
 
 --
--- TOC entry 2346 (class 0 OID 0)
+-- TOC entry 2297 (class 0 OID 0)
 -- Dependencies: 176
 -- Name: anrede_anid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -131,7 +131,7 @@ ALTER SEQUENCE anrede_anid_seq OWNED BY anrede.anid;
 
 
 --
--- TOC entry 177 (class 1259 OID 16905)
+-- TOC entry 177 (class 1259 OID 25582)
 -- Name: essen; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -146,7 +146,7 @@ CREATE TABLE essen (
 
 
 --
--- TOC entry 178 (class 1259 OID 16911)
+-- TOC entry 178 (class 1259 OID 25588)
 -- Name: essen_EsID_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -159,7 +159,7 @@ CREATE SEQUENCE "essen_EsID_seq"
 
 
 --
--- TOC entry 2347 (class 0 OID 0)
+-- TOC entry 2298 (class 0 OID 0)
 -- Dependencies: 178
 -- Name: essen_EsID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -168,7 +168,7 @@ ALTER SEQUENCE "essen_EsID_seq" OWNED BY essen.esid;
 
 
 --
--- TOC entry 179 (class 1259 OID 16913)
+-- TOC entry 179 (class 1259 OID 25590)
 -- Name: funktion; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -179,7 +179,7 @@ CREATE TABLE funktion (
 
 
 --
--- TOC entry 180 (class 1259 OID 16916)
+-- TOC entry 180 (class 1259 OID 25593)
 -- Name: funktionen_fuid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -192,7 +192,7 @@ CREATE SEQUENCE funktionen_fuid_seq
 
 
 --
--- TOC entry 2348 (class 0 OID 0)
+-- TOC entry 2299 (class 0 OID 0)
 -- Dependencies: 180
 -- Name: funktionen_fuid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -201,7 +201,7 @@ ALTER SEQUENCE funktionen_fuid_seq OWNED BY funktion.fuid;
 
 
 --
--- TOC entry 181 (class 1259 OID 16918)
+-- TOC entry 181 (class 1259 OID 25595)
 -- Name: geschlecht; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -212,7 +212,7 @@ CREATE TABLE geschlecht (
 
 
 --
--- TOC entry 182 (class 1259 OID 16921)
+-- TOC entry 182 (class 1259 OID 25598)
 -- Name: geschlecht_geid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -225,7 +225,7 @@ CREATE SEQUENCE geschlecht_geid_seq
 
 
 --
--- TOC entry 2349 (class 0 OID 0)
+-- TOC entry 2300 (class 0 OID 0)
 -- Dependencies: 182
 -- Name: geschlecht_geid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -234,7 +234,7 @@ ALTER SEQUENCE geschlecht_geid_seq OWNED BY geschlecht.geid;
 
 
 --
--- TOC entry 183 (class 1259 OID 16923)
+-- TOC entry 183 (class 1259 OID 25600)
 -- Name: gruppe; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -246,7 +246,7 @@ CREATE TABLE gruppe (
 
 
 --
--- TOC entry 184 (class 1259 OID 16929)
+-- TOC entry 184 (class 1259 OID 25606)
 -- Name: gruppe_GrID_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -259,7 +259,7 @@ CREATE SEQUENCE "gruppe_GrID_seq"
 
 
 --
--- TOC entry 2350 (class 0 OID 0)
+-- TOC entry 2301 (class 0 OID 0)
 -- Dependencies: 184
 -- Name: gruppe_GrID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -268,7 +268,7 @@ ALTER SEQUENCE "gruppe_GrID_seq" OWNED BY gruppe.grid;
 
 
 --
--- TOC entry 185 (class 1259 OID 16931)
+-- TOC entry 185 (class 1259 OID 25608)
 -- Name: jahr; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -279,7 +279,7 @@ CREATE TABLE jahr (
 
 
 --
--- TOC entry 186 (class 1259 OID 16934)
+-- TOC entry 186 (class 1259 OID 25611)
 -- Name: jahr_JaID_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -292,7 +292,7 @@ CREATE SEQUENCE "jahr_JaID_seq"
 
 
 --
--- TOC entry 2351 (class 0 OID 0)
+-- TOC entry 2302 (class 0 OID 0)
 -- Dependencies: 186
 -- Name: jahr_JaID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -301,7 +301,7 @@ ALTER SEQUENCE "jahr_JaID_seq" OWNED BY jahr.jaid;
 
 
 --
--- TOC entry 187 (class 1259 OID 16936)
+-- TOC entry 187 (class 1259 OID 25613)
 -- Name: lager; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -316,7 +316,7 @@ CREATE TABLE lager (
 
 
 --
--- TOC entry 188 (class 1259 OID 16942)
+-- TOC entry 188 (class 1259 OID 25619)
 -- Name: lager_LaID_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -329,7 +329,7 @@ CREATE SEQUENCE "lager_LaID_seq"
 
 
 --
--- TOC entry 2352 (class 0 OID 0)
+-- TOC entry 2303 (class 0 OID 0)
 -- Dependencies: 188
 -- Name: lager_LaID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -338,7 +338,7 @@ ALTER SEQUENCE "lager_LaID_seq" OWNED BY lager.laid;
 
 
 --
--- TOC entry 189 (class 1259 OID 16944)
+-- TOC entry 189 (class 1259 OID 25621)
 -- Name: lagerinfo; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -349,7 +349,7 @@ CREATE TABLE lagerinfo (
 
 
 --
--- TOC entry 190 (class 1259 OID 16947)
+-- TOC entry 190 (class 1259 OID 25624)
 -- Name: lagerinfo_liid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -362,7 +362,7 @@ CREATE SEQUENCE lagerinfo_liid_seq
 
 
 --
--- TOC entry 2353 (class 0 OID 0)
+-- TOC entry 2304 (class 0 OID 0)
 -- Dependencies: 190
 -- Name: lagerinfo_liid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -371,7 +371,7 @@ ALTER SEQUENCE lagerinfo_liid_seq OWNED BY lagerinfo.liid;
 
 
 --
--- TOC entry 191 (class 1259 OID 16949)
+-- TOC entry 191 (class 1259 OID 25626)
 -- Name: lagerort; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -382,7 +382,7 @@ CREATE TABLE lagerort (
 
 
 --
--- TOC entry 192 (class 1259 OID 16952)
+-- TOC entry 192 (class 1259 OID 25629)
 -- Name: lagerort_loid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -395,7 +395,7 @@ CREATE SEQUENCE lagerort_loid_seq
 
 
 --
--- TOC entry 2354 (class 0 OID 0)
+-- TOC entry 2305 (class 0 OID 0)
 -- Dependencies: 192
 -- Name: lagerort_loid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -404,7 +404,7 @@ ALTER SEQUENCE lagerort_loid_seq OWNED BY lagerort.loid;
 
 
 --
--- TOC entry 193 (class 1259 OID 16954)
+-- TOC entry 193 (class 1259 OID 25631)
 -- Name: legenda; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -422,12 +422,13 @@ CREATE TABLE legenda (
     email character varying(20),
     anrede integer,
     firma character varying(50),
-    bemerkung text
+    bemerkung text,
+    lagerort_id integer NOT NULL
 );
 
 
 --
--- TOC entry 194 (class 1259 OID 16960)
+-- TOC entry 194 (class 1259 OID 25637)
 -- Name: legenda_lgid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -440,7 +441,7 @@ CREATE SEQUENCE legenda_lgid_seq
 
 
 --
--- TOC entry 2355 (class 0 OID 0)
+-- TOC entry 2306 (class 0 OID 0)
 -- Dependencies: 194
 -- Name: legenda_lgid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -449,7 +450,7 @@ ALTER SEQUENCE legenda_lgid_seq OWNED BY legenda.lgid;
 
 
 --
--- TOC entry 195 (class 1259 OID 16962)
+-- TOC entry 195 (class 1259 OID 25639)
 -- Name: legendatyp; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -460,7 +461,7 @@ CREATE TABLE legendatyp (
 
 
 --
--- TOC entry 196 (class 1259 OID 16965)
+-- TOC entry 196 (class 1259 OID 25642)
 -- Name: legendatyp_tyid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -473,7 +474,7 @@ CREATE SEQUENCE legendatyp_tyid_seq
 
 
 --
--- TOC entry 2356 (class 0 OID 0)
+-- TOC entry 2307 (class 0 OID 0)
 -- Dependencies: 196
 -- Name: legendatyp_tyid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
@@ -482,7 +483,7 @@ ALTER SEQUENCE legendatyp_tyid_seq OWNED BY legendatyp.tyid;
 
 
 --
--- TOC entry 232 (class 1259 OID 17405)
+-- TOC entry 197 (class 1259 OID 25644)
 -- Name: person; Type: VIEW; Schema: public; Owner: -
 --
 
@@ -533,7 +534,7 @@ CREATE VIEW person AS
 
 
 --
--- TOC entry 197 (class 1259 OID 16972)
+-- TOC entry 198 (class 1259 OID 25649)
 -- Name: programm; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -548,7 +549,7 @@ CREATE TABLE programm (
 
 
 --
--- TOC entry 198 (class 1259 OID 16978)
+-- TOC entry 199 (class 1259 OID 25655)
 -- Name: programm_PrID_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -561,8 +562,8 @@ CREATE SEQUENCE "programm_PrID_seq"
 
 
 --
--- TOC entry 2357 (class 0 OID 0)
--- Dependencies: 198
+-- TOC entry 2308 (class 0 OID 0)
+-- Dependencies: 199
 -- Name: programm_PrID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -570,7 +571,7 @@ ALTER SEQUENCE "programm_PrID_seq" OWNED BY programm.prid;
 
 
 --
--- TOC entry 199 (class 1259 OID 16980)
+-- TOC entry 200 (class 1259 OID 25657)
 -- Name: schaeden; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -583,7 +584,7 @@ CREATE TABLE schaeden (
 
 
 --
--- TOC entry 200 (class 1259 OID 16986)
+-- TOC entry 201 (class 1259 OID 25663)
 -- Name: schäden_scid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -596,8 +597,8 @@ CREATE SEQUENCE "schäden_scid_seq"
 
 
 --
--- TOC entry 2358 (class 0 OID 0)
--- Dependencies: 200
+-- TOC entry 2309 (class 0 OID 0)
+-- Dependencies: 201
 -- Name: schäden_scid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -605,37 +606,34 @@ ALTER SEQUENCE "schäden_scid_seq" OWNED BY schaeden.scid;
 
 
 --
--- TOC entry 201 (class 1259 OID 16988)
+-- TOC entry 202 (class 1259 OID 25665)
 -- Name: stgrlat; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE stgrlat (
     lager integer,
-    gruppe integer,
-    stgrlaid integer NOT NULL
+    gruppe integer
 );
 
 
 --
--- TOC entry 202 (class 1259 OID 16991)
+-- TOC entry 203 (class 1259 OID 25668)
 -- Name: stlaja; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE stlaja (
     lager integer,
-    jahr integer,
-    stlajaid integer NOT NULL
+    jahr integer
 );
 
 
 --
--- TOC entry 203 (class 1259 OID 16994)
+-- TOC entry 222 (class 1259 OID 27224)
 -- Name: stgrla; Type: VIEW; Schema: public; Owner: -
 --
 
 CREATE VIEW stgrla AS
  SELECT stgrlat.gruppe,
-    stgrlat.stgrlaid,
         CASE
             WHEN (has_table_privilege('stgrlat'::text, 'select'::text) = true) THEN stgrlat.lager
             WHEN (stgrlat.lager < ( SELECT min(l.laid) AS min
@@ -655,192 +653,55 @@ CREATE VIEW stgrla AS
 
 
 --
--- TOC entry 204 (class 1259 OID 16999)
--- Name: stgrla_stGrLaID_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE "stgrla_stGrLaID_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- TOC entry 2359 (class 0 OID 0)
--- Dependencies: 204
--- Name: stgrla_stGrLaID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE "stgrla_stGrLaID_seq" OWNED BY stgrlat.stgrlaid;
-
-
---
--- TOC entry 205 (class 1259 OID 17001)
+-- TOC entry 204 (class 1259 OID 25678)
 -- Name: stgrle; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE stgrle (
-    stgrle integer NOT NULL,
     person integer,
     gruppe integer
 );
 
 
 --
--- TOC entry 206 (class 1259 OID 17004)
--- Name: stgrle_stGrLe_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE "stgrle_stGrLe_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- TOC entry 2360 (class 0 OID 0)
--- Dependencies: 206
--- Name: stgrle_stGrLe_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE "stgrle_stGrLe_seq" OWNED BY stgrle.stgrle;
-
-
---
--- TOC entry 207 (class 1259 OID 17006)
+-- TOC entry 205 (class 1259 OID 25683)
 -- Name: stgrze; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE stgrze (
-    stgrzeid integer NOT NULL,
     gruppe integer,
     zelt integer
 );
 
 
 --
--- TOC entry 208 (class 1259 OID 17009)
--- Name: stgrze_stgrzeid_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE stgrze_stgrzeid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- TOC entry 2361 (class 0 OID 0)
--- Dependencies: 208
--- Name: stgrze_stgrzeid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE stgrze_stgrzeid_seq OWNED BY stgrze.stgrzeid;
-
-
---
--- TOC entry 209 (class 1259 OID 17011)
--- Name: stlaja_stLaJaID_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE "stlaja_stLaJaID_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- TOC entry 2362 (class 0 OID 0)
--- Dependencies: 209
--- Name: stlaja_stLaJaID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE "stlaja_stLaJaID_seq" OWNED BY stlaja.stlajaid;
-
-
---
--- TOC entry 210 (class 1259 OID 17013)
+-- TOC entry 206 (class 1259 OID 25690)
 -- Name: stlalo; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE stlalo (
-    stlaloid integer NOT NULL,
     lager integer,
     lagerort integer
 );
 
 
 --
--- TOC entry 211 (class 1259 OID 17016)
--- Name: stlalo_stlaloid_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE stlalo_stlaloid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- TOC entry 2363 (class 0 OID 0)
--- Dependencies: 211
--- Name: stlalo_stlaloid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE stlalo_stlaloid_seq OWNED BY stlalo.stlaloid;
-
-
---
--- TOC entry 212 (class 1259 OID 17018)
+-- TOC entry 207 (class 1259 OID 25695)
 -- Name: stlama; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE stlama (
-    stlamaid integer NOT NULL,
-    pe integer,
-    la integer
+    person_id integer NOT NULL,
+    lager_id integer NOT NULL
 );
 
 
 --
--- TOC entry 213 (class 1259 OID 17021)
--- Name: stlama_stlamaid_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE stlama_stlamaid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- TOC entry 2364 (class 0 OID 0)
--- Dependencies: 213
--- Name: stlama_stlamaid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE stlama_stlamaid_seq OWNED BY stlama.stlamaid;
-
-
---
--- TOC entry 214 (class 1259 OID 17023)
+-- TOC entry 208 (class 1259 OID 25700)
 -- Name: stlast; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE stlast (
-    stlastid integer NOT NULL,
     lager integer NOT NULL,
     person integer NOT NULL,
     funktion integer NOT NULL
@@ -848,141 +709,40 @@ CREATE TABLE stlast (
 
 
 --
--- TOC entry 215 (class 1259 OID 17026)
--- Name: stlast_stLaStID_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE "stlast_stLaStID_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- TOC entry 2365 (class 0 OID 0)
--- Dependencies: 215
--- Name: stlast_stLaStID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE "stlast_stLaStID_seq" OWNED BY stlast.stlastid;
-
-
---
--- TOC entry 216 (class 1259 OID 17028)
+-- TOC entry 209 (class 1259 OID 25705)
 -- Name: stlaze; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE stlaze (
-    stlazeid integer NOT NULL,
     lager integer,
     zelt integer
 );
 
 
 --
--- TOC entry 2366 (class 0 OID 0)
--- Dependencies: 216
--- Name: COLUMN stlaze.stlazeid; Type: COMMENT; Schema: public; Owner: -
---
-
-COMMENT ON COLUMN stlaze.stlazeid IS '
-';
-
-
---
--- TOC entry 217 (class 1259 OID 17031)
--- Name: stlaze_stLaZeID_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE "stlaze_stLaZeID_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- TOC entry 2367 (class 0 OID 0)
--- Dependencies: 217
--- Name: stlaze_stLaZeID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE "stlaze_stLaZeID_seq" OWNED BY stlaze.stlazeid;
-
-
---
--- TOC entry 218 (class 1259 OID 17033)
+-- TOC entry 210 (class 1259 OID 25710)
 -- Name: stlolg; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE stlolg (
-    stlolgid integer NOT NULL,
     lagerort integer,
     legenda integer
 );
 
 
 --
--- TOC entry 219 (class 1259 OID 17036)
--- Name: stlolg_stlolgid_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE stlolg_stlolgid_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- TOC entry 2368 (class 0 OID 0)
--- Dependencies: 219
--- Name: stlolg_stlolgid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE stlolg_stlolgid_seq OWNED BY stlolg.stlolgid;
-
-
---
--- TOC entry 220 (class 1259 OID 17038)
+-- TOC entry 211 (class 1259 OID 25715)
 -- Name: sttegr; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE sttegr (
     person integer,
-    gruppe integer,
-    sttegrid integer NOT NULL
+    gruppe integer
 );
 
 
 --
--- TOC entry 221 (class 1259 OID 17041)
--- Name: sttegr_stTeGrID_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE "sttegr_stTeGrID_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- TOC entry 2369 (class 0 OID 0)
--- Dependencies: 221
--- Name: sttegr_stTeGrID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE "sttegr_stTeGrID_seq" OWNED BY sttegr.sttegrid;
-
-
---
--- TOC entry 222 (class 1259 OID 17043)
+-- TOC entry 212 (class 1259 OID 25720)
 -- Name: waehrung; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -993,7 +753,7 @@ CREATE TABLE waehrung (
 
 
 --
--- TOC entry 223 (class 1259 OID 17046)
+-- TOC entry 213 (class 1259 OID 25723)
 -- Name: waehrung_waid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1006,8 +766,8 @@ CREATE SEQUENCE waehrung_waid_seq
 
 
 --
--- TOC entry 2370 (class 0 OID 0)
--- Dependencies: 223
+-- TOC entry 2310 (class 0 OID 0)
+-- Dependencies: 213
 -- Name: waehrung_waid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -1015,7 +775,7 @@ ALTER SEQUENCE waehrung_waid_seq OWNED BY waehrung.waid;
 
 
 --
--- TOC entry 224 (class 1259 OID 17048)
+-- TOC entry 214 (class 1259 OID 25725)
 -- Name: zdbez; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1026,7 +786,7 @@ CREATE TABLE zdbez (
 
 
 --
--- TOC entry 225 (class 1259 OID 17054)
+-- TOC entry 215 (class 1259 OID 25731)
 -- Name: zdbez_zdbid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1039,8 +799,8 @@ CREATE SEQUENCE zdbez_zdbid_seq
 
 
 --
--- TOC entry 2371 (class 0 OID 0)
--- Dependencies: 225
+-- TOC entry 2311 (class 0 OID 0)
+-- Dependencies: 215
 -- Name: zdbez_zdbid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -1048,7 +808,7 @@ ALTER SEQUENCE zdbez_zdbid_seq OWNED BY zdbez.zdbid;
 
 
 --
--- TOC entry 226 (class 1259 OID 17056)
+-- TOC entry 216 (class 1259 OID 25733)
 -- Name: zelt; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1062,7 +822,7 @@ CREATE TABLE zelt (
 
 
 --
--- TOC entry 227 (class 1259 OID 17062)
+-- TOC entry 217 (class 1259 OID 25739)
 -- Name: zelt_ZeID_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1075,8 +835,8 @@ CREATE SEQUENCE "zelt_ZeID_seq"
 
 
 --
--- TOC entry 2372 (class 0 OID 0)
--- Dependencies: 227
+-- TOC entry 2312 (class 0 OID 0)
+-- Dependencies: 217
 -- Name: zelt_ZeID_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -1084,7 +844,7 @@ ALTER SEQUENCE "zelt_ZeID_seq" OWNED BY zelt.zeid;
 
 
 --
--- TOC entry 228 (class 1259 OID 17064)
+-- TOC entry 218 (class 1259 OID 25741)
 -- Name: zeltdetail; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1098,7 +858,7 @@ CREATE TABLE zeltdetail (
 
 
 --
--- TOC entry 229 (class 1259 OID 17067)
+-- TOC entry 219 (class 1259 OID 25744)
 -- Name: zeltdetail_zdid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1111,8 +871,8 @@ CREATE SEQUENCE zeltdetail_zdid_seq
 
 
 --
--- TOC entry 2373 (class 0 OID 0)
--- Dependencies: 229
+-- TOC entry 2313 (class 0 OID 0)
+-- Dependencies: 219
 -- Name: zeltdetail_zdid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -1120,7 +880,7 @@ ALTER SEQUENCE zeltdetail_zdid_seq OWNED BY zeltdetail.zdid;
 
 
 --
--- TOC entry 230 (class 1259 OID 17069)
+-- TOC entry 220 (class 1259 OID 25746)
 -- Name: zverleih; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1134,7 +894,7 @@ CREATE TABLE zverleih (
 
 
 --
--- TOC entry 231 (class 1259 OID 17075)
+-- TOC entry 221 (class 1259 OID 25752)
 -- Name: zverleih_zvid_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1147,8 +907,8 @@ CREATE SEQUENCE zverleih_zvid_seq
 
 
 --
--- TOC entry 2374 (class 0 OID 0)
--- Dependencies: 231
+-- TOC entry 2314 (class 0 OID 0)
+-- Dependencies: 221
 -- Name: zverleih_zvid_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
@@ -1156,7 +916,7 @@ ALTER SEQUENCE zverleih_zvid_seq OWNED BY zverleih.zvid;
 
 
 --
--- TOC entry 2072 (class 2604 OID 17077)
+-- TOC entry 2052 (class 2604 OID 25754)
 -- Name: anid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1164,7 +924,7 @@ ALTER TABLE ONLY anrede ALTER COLUMN anid SET DEFAULT nextval('anrede_anid_seq':
 
 
 --
--- TOC entry 2073 (class 2604 OID 17078)
+-- TOC entry 2053 (class 2604 OID 25755)
 -- Name: esid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1172,7 +932,7 @@ ALTER TABLE ONLY essen ALTER COLUMN esid SET DEFAULT nextval('"essen_EsID_seq"':
 
 
 --
--- TOC entry 2074 (class 2604 OID 17079)
+-- TOC entry 2054 (class 2604 OID 25756)
 -- Name: fuid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1180,7 +940,7 @@ ALTER TABLE ONLY funktion ALTER COLUMN fuid SET DEFAULT nextval('funktionen_fuid
 
 
 --
--- TOC entry 2075 (class 2604 OID 17080)
+-- TOC entry 2055 (class 2604 OID 25757)
 -- Name: geid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1188,7 +948,7 @@ ALTER TABLE ONLY geschlecht ALTER COLUMN geid SET DEFAULT nextval('geschlecht_ge
 
 
 --
--- TOC entry 2076 (class 2604 OID 17081)
+-- TOC entry 2056 (class 2604 OID 25758)
 -- Name: grid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1196,7 +956,7 @@ ALTER TABLE ONLY gruppe ALTER COLUMN grid SET DEFAULT nextval('"gruppe_GrID_seq"
 
 
 --
--- TOC entry 2077 (class 2604 OID 17082)
+-- TOC entry 2057 (class 2604 OID 25759)
 -- Name: jaid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1204,7 +964,7 @@ ALTER TABLE ONLY jahr ALTER COLUMN jaid SET DEFAULT nextval('"jahr_JaID_seq"'::r
 
 
 --
--- TOC entry 2078 (class 2604 OID 17083)
+-- TOC entry 2058 (class 2604 OID 25760)
 -- Name: laid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1212,7 +972,7 @@ ALTER TABLE ONLY lager ALTER COLUMN laid SET DEFAULT nextval('"lager_LaID_seq"':
 
 
 --
--- TOC entry 2079 (class 2604 OID 17084)
+-- TOC entry 2059 (class 2604 OID 25761)
 -- Name: liid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1220,7 +980,7 @@ ALTER TABLE ONLY lagerinfo ALTER COLUMN liid SET DEFAULT nextval('lagerinfo_liid
 
 
 --
--- TOC entry 2080 (class 2604 OID 17085)
+-- TOC entry 2060 (class 2604 OID 25762)
 -- Name: loid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1228,7 +988,7 @@ ALTER TABLE ONLY lagerort ALTER COLUMN loid SET DEFAULT nextval('lagerort_loid_s
 
 
 --
--- TOC entry 2081 (class 2604 OID 17086)
+-- TOC entry 2061 (class 2604 OID 25763)
 -- Name: lgid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1236,7 +996,7 @@ ALTER TABLE ONLY legenda ALTER COLUMN lgid SET DEFAULT nextval('legenda_lgid_seq
 
 
 --
--- TOC entry 2082 (class 2604 OID 17087)
+-- TOC entry 2062 (class 2604 OID 25764)
 -- Name: tyid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1244,7 +1004,7 @@ ALTER TABLE ONLY legendatyp ALTER COLUMN tyid SET DEFAULT nextval('legendatyp_ty
 
 
 --
--- TOC entry 2071 (class 2604 OID 17088)
+-- TOC entry 2051 (class 2604 OID 25765)
 -- Name: peid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1252,7 +1012,7 @@ ALTER TABLE ONLY persont ALTER COLUMN peid SET DEFAULT nextval('"Person_PeID_seq
 
 
 --
--- TOC entry 2083 (class 2604 OID 17089)
+-- TOC entry 2063 (class 2604 OID 25766)
 -- Name: prid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1260,7 +1020,7 @@ ALTER TABLE ONLY programm ALTER COLUMN prid SET DEFAULT nextval('"programm_PrID_
 
 
 --
--- TOC entry 2084 (class 2604 OID 17090)
+-- TOC entry 2064 (class 2604 OID 25767)
 -- Name: scid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1268,87 +1028,7 @@ ALTER TABLE ONLY schaeden ALTER COLUMN scid SET DEFAULT nextval('"schäden_scid_
 
 
 --
--- TOC entry 2085 (class 2604 OID 17091)
--- Name: stgrlaid; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY stgrlat ALTER COLUMN stgrlaid SET DEFAULT nextval('"stgrla_stGrLaID_seq"'::regclass);
-
-
---
--- TOC entry 2087 (class 2604 OID 17092)
--- Name: stgrle; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY stgrle ALTER COLUMN stgrle SET DEFAULT nextval('"stgrle_stGrLe_seq"'::regclass);
-
-
---
--- TOC entry 2088 (class 2604 OID 17093)
--- Name: stgrzeid; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY stgrze ALTER COLUMN stgrzeid SET DEFAULT nextval('stgrze_stgrzeid_seq'::regclass);
-
-
---
--- TOC entry 2086 (class 2604 OID 17094)
--- Name: stlajaid; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY stlaja ALTER COLUMN stlajaid SET DEFAULT nextval('"stlaja_stLaJaID_seq"'::regclass);
-
-
---
--- TOC entry 2089 (class 2604 OID 17095)
--- Name: stlaloid; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY stlalo ALTER COLUMN stlaloid SET DEFAULT nextval('stlalo_stlaloid_seq'::regclass);
-
-
---
--- TOC entry 2090 (class 2604 OID 17096)
--- Name: stlamaid; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY stlama ALTER COLUMN stlamaid SET DEFAULT nextval('stlama_stlamaid_seq'::regclass);
-
-
---
--- TOC entry 2091 (class 2604 OID 17097)
--- Name: stlastid; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY stlast ALTER COLUMN stlastid SET DEFAULT nextval('"stlast_stLaStID_seq"'::regclass);
-
-
---
--- TOC entry 2092 (class 2604 OID 17098)
--- Name: stlazeid; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY stlaze ALTER COLUMN stlazeid SET DEFAULT nextval('"stlaze_stLaZeID_seq"'::regclass);
-
-
---
--- TOC entry 2093 (class 2604 OID 17099)
--- Name: stlolgid; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY stlolg ALTER COLUMN stlolgid SET DEFAULT nextval('stlolg_stlolgid_seq'::regclass);
-
-
---
--- TOC entry 2094 (class 2604 OID 17100)
--- Name: sttegrid; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY sttegr ALTER COLUMN sttegrid SET DEFAULT nextval('"sttegr_stTeGrID_seq"'::regclass);
-
-
---
--- TOC entry 2095 (class 2604 OID 17101)
+-- TOC entry 2065 (class 2604 OID 25778)
 -- Name: waid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1356,7 +1036,7 @@ ALTER TABLE ONLY waehrung ALTER COLUMN waid SET DEFAULT nextval('waehrung_waid_s
 
 
 --
--- TOC entry 2096 (class 2604 OID 17102)
+-- TOC entry 2066 (class 2604 OID 25779)
 -- Name: zdbid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1364,7 +1044,7 @@ ALTER TABLE ONLY zdbez ALTER COLUMN zdbid SET DEFAULT nextval('zdbez_zdbid_seq':
 
 
 --
--- TOC entry 2097 (class 2604 OID 17103)
+-- TOC entry 2067 (class 2604 OID 25780)
 -- Name: zeid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1372,7 +1052,7 @@ ALTER TABLE ONLY zelt ALTER COLUMN zeid SET DEFAULT nextval('"zelt_ZeID_seq"'::r
 
 
 --
--- TOC entry 2098 (class 2604 OID 17104)
+-- TOC entry 2068 (class 2604 OID 25781)
 -- Name: zdid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1380,7 +1060,7 @@ ALTER TABLE ONLY zeltdetail ALTER COLUMN zdid SET DEFAULT nextval('zeltdetail_zd
 
 
 --
--- TOC entry 2099 (class 2604 OID 17105)
+-- TOC entry 2069 (class 2604 OID 25782)
 -- Name: zvid; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1388,7 +1068,7 @@ ALTER TABLE ONLY zverleih ALTER COLUMN zvid SET DEFAULT nextval('zverleih_zvid_s
 
 
 --
--- TOC entry 2105 (class 2606 OID 17107)
+-- TOC entry 2075 (class 2606 OID 25784)
 -- Name: anrede_anrede_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1397,7 +1077,7 @@ ALTER TABLE ONLY anrede
 
 
 --
--- TOC entry 2107 (class 2606 OID 17109)
+-- TOC entry 2077 (class 2606 OID 25786)
 -- Name: anrede_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1406,7 +1086,7 @@ ALTER TABLE ONLY anrede
 
 
 --
--- TOC entry 2109 (class 2606 OID 17111)
+-- TOC entry 2079 (class 2606 OID 25788)
 -- Name: essen_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1415,7 +1095,7 @@ ALTER TABLE ONLY essen
 
 
 --
--- TOC entry 2111 (class 2606 OID 17113)
+-- TOC entry 2081 (class 2606 OID 25790)
 -- Name: funktionen_name_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1424,7 +1104,7 @@ ALTER TABLE ONLY funktion
 
 
 --
--- TOC entry 2113 (class 2606 OID 17115)
+-- TOC entry 2083 (class 2606 OID 25792)
 -- Name: funktionen_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1433,7 +1113,7 @@ ALTER TABLE ONLY funktion
 
 
 --
--- TOC entry 2115 (class 2606 OID 17117)
+-- TOC entry 2085 (class 2606 OID 25794)
 -- Name: geschlecht_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1442,7 +1122,7 @@ ALTER TABLE ONLY geschlecht
 
 
 --
--- TOC entry 2117 (class 2606 OID 17119)
+-- TOC entry 2087 (class 2606 OID 25796)
 -- Name: gruppe_name_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1451,7 +1131,7 @@ ALTER TABLE ONLY gruppe
 
 
 --
--- TOC entry 2119 (class 2606 OID 17121)
+-- TOC entry 2089 (class 2606 OID 25798)
 -- Name: gruppe_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1460,7 +1140,7 @@ ALTER TABLE ONLY gruppe
 
 
 --
--- TOC entry 2121 (class 2606 OID 17123)
+-- TOC entry 2091 (class 2606 OID 25800)
 -- Name: jahr_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1469,7 +1149,7 @@ ALTER TABLE ONLY jahr
 
 
 --
--- TOC entry 2123 (class 2606 OID 17125)
+-- TOC entry 2093 (class 2606 OID 25802)
 -- Name: lager_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1478,7 +1158,7 @@ ALTER TABLE ONLY lager
 
 
 --
--- TOC entry 2125 (class 2606 OID 17127)
+-- TOC entry 2095 (class 2606 OID 25804)
 -- Name: lagerinfo_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1487,7 +1167,7 @@ ALTER TABLE ONLY lagerinfo
 
 
 --
--- TOC entry 2127 (class 2606 OID 17129)
+-- TOC entry 2097 (class 2606 OID 25806)
 -- Name: lagerort_lagerort_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1496,7 +1176,7 @@ ALTER TABLE ONLY lagerort
 
 
 --
--- TOC entry 2129 (class 2606 OID 17131)
+-- TOC entry 2099 (class 2606 OID 25808)
 -- Name: lagerort_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1505,7 +1185,7 @@ ALTER TABLE ONLY lagerort
 
 
 --
--- TOC entry 2131 (class 2606 OID 17133)
+-- TOC entry 2101 (class 2606 OID 25810)
 -- Name: legenda_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1514,7 +1194,7 @@ ALTER TABLE ONLY legenda
 
 
 --
--- TOC entry 2133 (class 2606 OID 17135)
+-- TOC entry 2103 (class 2606 OID 25812)
 -- Name: legenda_typ_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1523,7 +1203,7 @@ ALTER TABLE ONLY legenda
 
 
 --
--- TOC entry 2135 (class 2606 OID 17137)
+-- TOC entry 2105 (class 2606 OID 25814)
 -- Name: legendatyp_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1532,7 +1212,7 @@ ALTER TABLE ONLY legendatyp
 
 
 --
--- TOC entry 2137 (class 2606 OID 17139)
+-- TOC entry 2107 (class 2606 OID 25816)
 -- Name: legendatyp_typ_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1541,7 +1221,7 @@ ALTER TABLE ONLY legendatyp
 
 
 --
--- TOC entry 2101 (class 2606 OID 17141)
+-- TOC entry 2071 (class 2606 OID 25818)
 -- Name: person_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1550,7 +1230,7 @@ ALTER TABLE ONLY persont
 
 
 --
--- TOC entry 2103 (class 2606 OID 17143)
+-- TOC entry 2073 (class 2606 OID 25820)
 -- Name: persont_vorname_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1559,7 +1239,7 @@ ALTER TABLE ONLY persont
 
 
 --
--- TOC entry 2139 (class 2606 OID 17149)
+-- TOC entry 2109 (class 2606 OID 25822)
 -- Name: programm_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1568,7 +1248,7 @@ ALTER TABLE ONLY programm
 
 
 --
--- TOC entry 2141 (class 2606 OID 17151)
+-- TOC entry 2111 (class 2606 OID 25824)
 -- Name: schäden_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1577,16 +1257,7 @@ ALTER TABLE ONLY schaeden
 
 
 --
--- TOC entry 2143 (class 2606 OID 17153)
--- Name: stgrla_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY stgrlat
-    ADD CONSTRAINT stgrla_pkey PRIMARY KEY (stgrlaid);
-
-
---
--- TOC entry 2145 (class 2606 OID 17155)
+-- TOC entry 2113 (class 2606 OID 25828)
 -- Name: stgrlat_lager_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1595,7 +1266,7 @@ ALTER TABLE ONLY stgrlat
 
 
 --
--- TOC entry 2151 (class 2606 OID 17157)
+-- TOC entry 2117 (class 2606 OID 25830)
 -- Name: stgrle_person_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1604,16 +1275,7 @@ ALTER TABLE ONLY stgrle
 
 
 --
--- TOC entry 2153 (class 2606 OID 17159)
--- Name: stgrle_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY stgrle
-    ADD CONSTRAINT stgrle_pkey PRIMARY KEY (stgrle);
-
-
---
--- TOC entry 2155 (class 2606 OID 17161)
+-- TOC entry 2119 (class 2606 OID 25834)
 -- Name: stgrze_gruppe_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1622,16 +1284,7 @@ ALTER TABLE ONLY stgrze
 
 
 --
--- TOC entry 2157 (class 2606 OID 17163)
--- Name: stgrze_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY stgrze
-    ADD CONSTRAINT stgrze_pkey PRIMARY KEY (stgrzeid);
-
-
---
--- TOC entry 2147 (class 2606 OID 17165)
+-- TOC entry 2115 (class 2606 OID 25838)
 -- Name: stlaja_lager_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1640,16 +1293,7 @@ ALTER TABLE ONLY stlaja
 
 
 --
--- TOC entry 2149 (class 2606 OID 17167)
--- Name: stlaja_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY stlaja
-    ADD CONSTRAINT stlaja_pkey PRIMARY KEY (stlajaid);
-
-
---
--- TOC entry 2159 (class 2606 OID 17169)
+-- TOC entry 2121 (class 2606 OID 25842)
 -- Name: stlalo_lager_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1658,34 +1302,16 @@ ALTER TABLE ONLY stlalo
 
 
 --
--- TOC entry 2161 (class 2606 OID 17171)
--- Name: stlalo_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY stlalo
-    ADD CONSTRAINT stlalo_pkey PRIMARY KEY (stlaloid);
-
-
---
--- TOC entry 2163 (class 2606 OID 17173)
--- Name: stlama_pe_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- TOC entry 2123 (class 2606 OID 27230)
+-- Name: stlama_primary_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY stlama
-    ADD CONSTRAINT stlama_pe_key UNIQUE (pe, la);
+    ADD CONSTRAINT stlama_primary_key PRIMARY KEY (person_id, lager_id);
 
 
 --
--- TOC entry 2165 (class 2606 OID 17175)
--- Name: stlama_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY stlama
-    ADD CONSTRAINT stlama_pkey PRIMARY KEY (stlamaid);
-
-
---
--- TOC entry 2167 (class 2606 OID 17177)
+-- TOC entry 2125 (class 2606 OID 25850)
 -- Name: stlast_lager_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1694,16 +1320,7 @@ ALTER TABLE ONLY stlast
 
 
 --
--- TOC entry 2169 (class 2606 OID 17179)
--- Name: stlast_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY stlast
-    ADD CONSTRAINT stlast_pkey PRIMARY KEY (stlastid);
-
-
---
--- TOC entry 2171 (class 2606 OID 17181)
+-- TOC entry 2127 (class 2606 OID 25854)
 -- Name: stlaze_lager_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1712,16 +1329,7 @@ ALTER TABLE ONLY stlaze
 
 
 --
--- TOC entry 2173 (class 2606 OID 17183)
--- Name: stlaze_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY stlaze
-    ADD CONSTRAINT stlaze_pkey PRIMARY KEY (stlazeid);
-
-
---
--- TOC entry 2175 (class 2606 OID 17185)
+-- TOC entry 2129 (class 2606 OID 25858)
 -- Name: stlolg_lagerort_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1730,16 +1338,7 @@ ALTER TABLE ONLY stlolg
 
 
 --
--- TOC entry 2177 (class 2606 OID 17187)
--- Name: stlolg_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY stlolg
-    ADD CONSTRAINT stlolg_pkey PRIMARY KEY (stlolgid);
-
-
---
--- TOC entry 2179 (class 2606 OID 17189)
+-- TOC entry 2131 (class 2606 OID 25862)
 -- Name: sttegr_person_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1748,16 +1347,7 @@ ALTER TABLE ONLY sttegr
 
 
 --
--- TOC entry 2181 (class 2606 OID 17191)
--- Name: sttegr_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY sttegr
-    ADD CONSTRAINT sttegr_pkey PRIMARY KEY (sttegrid);
-
-
---
--- TOC entry 2183 (class 2606 OID 17193)
+-- TOC entry 2133 (class 2606 OID 25866)
 -- Name: waehrung_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1766,7 +1356,7 @@ ALTER TABLE ONLY waehrung
 
 
 --
--- TOC entry 2185 (class 2606 OID 17195)
+-- TOC entry 2135 (class 2606 OID 25868)
 -- Name: zdbez_bezeichnung_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1775,7 +1365,7 @@ ALTER TABLE ONLY zdbez
 
 
 --
--- TOC entry 2187 (class 2606 OID 17197)
+-- TOC entry 2137 (class 2606 OID 25870)
 -- Name: zdbez_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1784,7 +1374,7 @@ ALTER TABLE ONLY zdbez
 
 
 --
--- TOC entry 2189 (class 2606 OID 17199)
+-- TOC entry 2139 (class 2606 OID 25872)
 -- Name: zelt_bezeichnung_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1793,7 +1383,7 @@ ALTER TABLE ONLY zelt
 
 
 --
--- TOC entry 2191 (class 2606 OID 17201)
+-- TOC entry 2141 (class 2606 OID 25874)
 -- Name: zelt_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1802,7 +1392,7 @@ ALTER TABLE ONLY zelt
 
 
 --
--- TOC entry 2193 (class 2606 OID 17203)
+-- TOC entry 2143 (class 2606 OID 25876)
 -- Name: zeltdetail_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1811,7 +1401,7 @@ ALTER TABLE ONLY zeltdetail
 
 
 --
--- TOC entry 2195 (class 2606 OID 17205)
+-- TOC entry 2145 (class 2606 OID 25878)
 -- Name: zverleih_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1820,7 +1410,7 @@ ALTER TABLE ONLY zverleih
 
 
 --
--- TOC entry 2197 (class 2606 OID 17206)
+-- TOC entry 2147 (class 2606 OID 25879)
 -- Name: essen_Lager_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1829,7 +1419,7 @@ ALTER TABLE ONLY essen
 
 
 --
--- TOC entry 2198 (class 2606 OID 17211)
+-- TOC entry 2148 (class 2606 OID 25884)
 -- Name: lagerinfo_person_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1838,7 +1428,7 @@ ALTER TABLE ONLY lagerinfo
 
 
 --
--- TOC entry 2199 (class 2606 OID 17216)
+-- TOC entry 2149 (class 2606 OID 25889)
 -- Name: legenda_anrede_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1847,7 +1437,16 @@ ALTER TABLE ONLY legenda
 
 
 --
--- TOC entry 2200 (class 2606 OID 17221)
+-- TOC entry 2151 (class 2606 OID 27214)
+-- Name: legenda_lagerort_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY legenda
+    ADD CONSTRAINT legenda_lagerort_fkey FOREIGN KEY (lagerort_id) REFERENCES lagerort(loid);
+
+
+--
+-- TOC entry 2150 (class 2606 OID 25894)
 -- Name: legenda_typ_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1856,7 +1455,7 @@ ALTER TABLE ONLY legenda
 
 
 --
--- TOC entry 2196 (class 2606 OID 17226)
+-- TOC entry 2146 (class 2606 OID 25899)
 -- Name: person_geschlecht_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1865,7 +1464,7 @@ ALTER TABLE ONLY persont
 
 
 --
--- TOC entry 2201 (class 2606 OID 17231)
+-- TOC entry 2152 (class 2606 OID 25904)
 -- Name: programm_Lager_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1874,7 +1473,7 @@ ALTER TABLE ONLY programm
 
 
 --
--- TOC entry 2202 (class 2606 OID 17236)
+-- TOC entry 2153 (class 2606 OID 25909)
 -- Name: schäden_zeid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1883,7 +1482,7 @@ ALTER TABLE ONLY schaeden
 
 
 --
--- TOC entry 2203 (class 2606 OID 17241)
+-- TOC entry 2154 (class 2606 OID 25914)
 -- Name: stgrla_Gruppe_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1892,7 +1491,7 @@ ALTER TABLE ONLY stgrlat
 
 
 --
--- TOC entry 2204 (class 2606 OID 17246)
+-- TOC entry 2155 (class 2606 OID 25919)
 -- Name: stgrla_Lager_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1901,7 +1500,7 @@ ALTER TABLE ONLY stgrlat
 
 
 --
--- TOC entry 2207 (class 2606 OID 17251)
+-- TOC entry 2158 (class 2606 OID 25924)
 -- Name: stgrle_Gruppe_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1910,7 +1509,7 @@ ALTER TABLE ONLY stgrle
 
 
 --
--- TOC entry 2208 (class 2606 OID 17256)
+-- TOC entry 2159 (class 2606 OID 25929)
 -- Name: stgrle_person_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1919,7 +1518,7 @@ ALTER TABLE ONLY stgrle
 
 
 --
--- TOC entry 2209 (class 2606 OID 17261)
+-- TOC entry 2160 (class 2606 OID 25934)
 -- Name: stgrze_gruppe_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1928,7 +1527,7 @@ ALTER TABLE ONLY stgrze
 
 
 --
--- TOC entry 2210 (class 2606 OID 17266)
+-- TOC entry 2161 (class 2606 OID 25939)
 -- Name: stgrze_zelt_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1937,7 +1536,7 @@ ALTER TABLE ONLY stgrze
 
 
 --
--- TOC entry 2205 (class 2606 OID 17271)
+-- TOC entry 2156 (class 2606 OID 25944)
 -- Name: stlaja_Jahr_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1946,7 +1545,7 @@ ALTER TABLE ONLY stlaja
 
 
 --
--- TOC entry 2206 (class 2606 OID 17276)
+-- TOC entry 2157 (class 2606 OID 25949)
 -- Name: stlaja_Lager_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1955,7 +1554,7 @@ ALTER TABLE ONLY stlaja
 
 
 --
--- TOC entry 2211 (class 2606 OID 17281)
+-- TOC entry 2162 (class 2606 OID 25954)
 -- Name: stlalo_lager_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1964,7 +1563,7 @@ ALTER TABLE ONLY stlalo
 
 
 --
--- TOC entry 2212 (class 2606 OID 17286)
+-- TOC entry 2163 (class 2606 OID 25959)
 -- Name: stlalo_lagerort_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1973,25 +1572,25 @@ ALTER TABLE ONLY stlalo
 
 
 --
--- TOC entry 2213 (class 2606 OID 17291)
+-- TOC entry 2164 (class 2606 OID 25964)
 -- Name: stlama_la_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY stlama
-    ADD CONSTRAINT stlama_la_fkey FOREIGN KEY (la) REFERENCES lager(laid);
+    ADD CONSTRAINT stlama_la_fkey FOREIGN KEY (lager_id) REFERENCES lager(laid);
 
 
 --
--- TOC entry 2214 (class 2606 OID 17296)
+-- TOC entry 2165 (class 2606 OID 25969)
 -- Name: stlama_pe_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY stlama
-    ADD CONSTRAINT stlama_pe_fkey FOREIGN KEY (pe) REFERENCES persont(peid);
+    ADD CONSTRAINT stlama_pe_fkey FOREIGN KEY (person_id) REFERENCES persont(peid);
 
 
 --
--- TOC entry 2215 (class 2606 OID 17301)
+-- TOC entry 2166 (class 2606 OID 25974)
 -- Name: stlast_Lager_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2000,7 +1599,7 @@ ALTER TABLE ONLY stlast
 
 
 --
--- TOC entry 2216 (class 2606 OID 17306)
+-- TOC entry 2167 (class 2606 OID 25979)
 -- Name: stlast_funktion_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2009,7 +1608,7 @@ ALTER TABLE ONLY stlast
 
 
 --
--- TOC entry 2217 (class 2606 OID 17311)
+-- TOC entry 2168 (class 2606 OID 25984)
 -- Name: stlast_person_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2018,7 +1617,7 @@ ALTER TABLE ONLY stlast
 
 
 --
--- TOC entry 2218 (class 2606 OID 17316)
+-- TOC entry 2169 (class 2606 OID 25989)
 -- Name: stlaze_Lager_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2027,7 +1626,7 @@ ALTER TABLE ONLY stlaze
 
 
 --
--- TOC entry 2219 (class 2606 OID 17321)
+-- TOC entry 2170 (class 2606 OID 25994)
 -- Name: stlaze_Zelt_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2036,7 +1635,7 @@ ALTER TABLE ONLY stlaze
 
 
 --
--- TOC entry 2220 (class 2606 OID 17410)
+-- TOC entry 2171 (class 2606 OID 25999)
 -- Name: stlolg_legenda_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2045,7 +1644,7 @@ ALTER TABLE ONLY stlolg
 
 
 --
--- TOC entry 2221 (class 2606 OID 17326)
+-- TOC entry 2172 (class 2606 OID 26004)
 -- Name: sttegr_Gruppe_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2054,7 +1653,7 @@ ALTER TABLE ONLY sttegr
 
 
 --
--- TOC entry 2222 (class 2606 OID 17331)
+-- TOC entry 2173 (class 2606 OID 26009)
 -- Name: sttegr_person_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2063,7 +1662,7 @@ ALTER TABLE ONLY sttegr
 
 
 --
--- TOC entry 2223 (class 2606 OID 17336)
+-- TOC entry 2174 (class 2606 OID 26014)
 -- Name: zelt_waehrung_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2072,7 +1671,7 @@ ALTER TABLE ONLY zelt
 
 
 --
--- TOC entry 2224 (class 2606 OID 17341)
+-- TOC entry 2175 (class 2606 OID 26019)
 -- Name: zeltdetail_bezeichnung_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2081,7 +1680,7 @@ ALTER TABLE ONLY zeltdetail
 
 
 --
--- TOC entry 2225 (class 2606 OID 17346)
+-- TOC entry 2176 (class 2606 OID 26024)
 -- Name: zeltdetail_zelt_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2090,7 +1689,7 @@ ALTER TABLE ONLY zeltdetail
 
 
 --
--- TOC entry 2226 (class 2606 OID 17351)
+-- TOC entry 2177 (class 2606 OID 26029)
 -- Name: zverleih_ze_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2098,7 +1697,7 @@ ALTER TABLE ONLY zverleih
     ADD CONSTRAINT zverleih_ze_fkey FOREIGN KEY (ze) REFERENCES zelt(zeid);
 
 
--- Completed on 2017-08-30 08:45:58 CEST
+-- Completed on 2017-10-14 14:23:08 CEST
 
 --
 -- PostgreSQL database dump complete
