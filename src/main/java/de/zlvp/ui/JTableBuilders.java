@@ -381,7 +381,7 @@ public class JTableBuilders {
                         p.getMorgen(), p.getMittag(), p.getAbend(), cb))//
                 .delete((programms, cb) -> get()
                         .loescheProgramm(programms.stream().map(p -> p.getId()).collect(toList()), cb))//
-                .addColumn(ColumnBuilder.get(Date.class).add("Datum").width(100).build())//
+                .addColumn(ColumnBuilder.get(Date.class).add("Datum").width(110).build())//
                 .addColumn(Columns.WOCHENTAG)//
                 .addColumn(ColumnBuilder.get(String.class).add("Morgen").multiline().build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Mittag").multiline().build())//
@@ -418,7 +418,7 @@ public class JTableBuilders {
                 .save((e, cb) -> get().speichereEssen(lagerCallback.get().getId(), e.getId(), e.getDatum(),
                         e.getMorgen(), e.getMittag(), e.getAbend(), cb))//
                 .delete((es, cb) -> get().loescheEssen(es.stream().map(p -> p.getId()).collect(toList()), cb))//
-                .addColumn(ColumnBuilder.get(Date.class).add("Datum").width(100).build())//
+                .addColumn(ColumnBuilder.get(Date.class).add("Datum").width(110).build())//
                 .addColumn(Columns.WOCHENTAG)//
                 .addColumn(ColumnBuilder.get(String.class).add("Morgen").multiline().build())//
                 .addColumn(ColumnBuilder.get(String.class).add("Mittag").multiline().build())//
