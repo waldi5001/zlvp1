@@ -14,7 +14,7 @@ public class ZeltverleihDao extends AbstractDao<Zeltverleih> {
 
     public List<Zeltverleih> getAllFromZelt(int zeltId) {
         return select(findAllFromZelt, ps -> ps.setInt(1, zeltId), rs -> {
-            return new Zeltverleih(rs.getInt("zvid"), rs.getDate("datum"), rs.getString("person"),
+            return new Zeltverleih(rs.getInt("zvid"), new Date(rs.getDate("datum").getTime()), rs.getString("person"),
                     rs.getString("bemerkung"));
         });
     }

@@ -1,5 +1,6 @@
 package de.zlvp.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import de.zlvp.entity.Funktion;
@@ -19,8 +20,9 @@ public class StabDao extends AbstractDao<Stab> {
         return select(allStabFromLager, ps -> ps.setInt(1, lagerId),
                 rs -> new Stab(rs.getInt("peid"), Geschlecht.fromDbId(rs.getInt("geschlecht")),
                         Funktion.fromDbId(rs.getInt("funktion")), rs.getString("vorname"), rs.getString("nachname"),
-                        rs.getString("strasse"), rs.getString("plz"), rs.getString("ort"), rs.getDate("gebDat"),
-                        rs.getString("handy"), rs.getString("telnr"), rs.getString("email"), rs.getString("nottel")));
+                        rs.getString("strasse"), rs.getString("plz"), rs.getString("ort"),
+                        new Date(rs.getDate("gebDat").getTime()), rs.getString("handy"), rs.getString("telnr"),
+                        rs.getString("email"), rs.getString("nottel")));
     }
 
     public void speichern(int lagerId, int personId, Funktion funktion) {

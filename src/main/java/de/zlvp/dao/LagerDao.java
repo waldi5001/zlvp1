@@ -16,7 +16,7 @@ public class LagerDao extends AbstractDao<Lager> {
     private static final String insertJahr = "INSERT INTO stLaJa (lager, jahr) VALUES (?, ?)";
 
     private RSE<Lager> rse = rs -> new Lager(rs.getInt("laid"), rs.getString("name"), rs.getString("thema"),
-            rs.getDate("datumStart"), rs.getDate("datumStop"));
+            new Date(rs.getDate("datumStart").getTime()), new Date(rs.getDate("datumStop").getTime()));
 
     public List<Lager> getAll(int jahrId) {
         return select(findAllFromJahr, ps -> ps.setInt(1, jahrId), rse);

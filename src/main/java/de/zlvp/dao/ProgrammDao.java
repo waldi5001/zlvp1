@@ -13,8 +13,9 @@ public class ProgrammDao extends AbstractDao<Programm> {
     private static final String deleteProgramm = "delete from programm WHERE prid = ?";
 
     public List<Programm> getAllFromLager(final int lagerId) {
-        return select(allProgrammFromLager, ps -> ps.setInt(1, lagerId), rs -> new Programm(rs.getInt("prid"),
-                rs.getString("vormittag"), rs.getString("nachmittag"), rs.getString("nacht"), rs.getDate("datum")));
+        return select(allProgrammFromLager, ps -> ps.setInt(1, lagerId),
+                rs -> new Programm(rs.getInt("prid"), rs.getString("vormittag"), rs.getString("nachmittag"),
+                        rs.getString("nacht"), new Date(rs.getDate("datum").getTime())));
     }
 
     public void speichereProgramm(int lagerID, final Date datum, final String morgen, final String mittag,

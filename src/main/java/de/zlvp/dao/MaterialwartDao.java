@@ -1,5 +1,6 @@
 package de.zlvp.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import de.zlvp.entity.Geschlecht;
@@ -15,8 +16,8 @@ public class MaterialwartDao extends AbstractDao<Materialwart> {
         return select(findAll, ps -> ps.setInt(1, lagerId),
                 rs -> new Materialwart(rs.getInt("peid"), Geschlecht.fromDbId(rs.getInt("geschlecht")),
                         rs.getString("vorname"), rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"),
-                        rs.getString("ort"), rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"),
-                        rs.getString("email"), rs.getString("nottel")));
+                        rs.getString("ort"), new Date(rs.getDate("gebDat").getTime()), rs.getString("handy"),
+                        rs.getString("telnr"), rs.getString("email"), rs.getString("nottel")));
     }
 
     public void speichern(Integer lagerId, int personId) {

@@ -22,8 +22,8 @@ public class PersonDao extends AbstractDao<Person> {
     private RSE<Person> rse = rs -> {
         return new Person(rs.getInt("peid"), Geschlecht.fromDbId(rs.getInt("geschlecht")), rs.getString("vorname"),
                 rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"), rs.getString("ort"),
-                rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"), rs.getString("email"),
-                rs.getString("nottel"));
+                new Date(rs.getDate("gebDat").getTime()), rs.getString("handy"), rs.getString("telnr"),
+                rs.getString("email"), rs.getString("nottel"));
     };
 
     public List<Person> getAll() {

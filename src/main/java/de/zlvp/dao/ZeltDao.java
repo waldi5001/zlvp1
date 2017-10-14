@@ -23,7 +23,8 @@ public class ZeltDao extends AbstractDao<Zelt> {
     private static final String deleteFromGruppe = "delete from stgrze where gruppe = ? and zelt = ?";
 
     private RSE<Zelt> rse = rs -> new Zelt(rs.getInt("zeid"), rs.getString("bezeichnung"), rs.getDouble("preis"),
-            rs.getDate("angeschafft"), rs.getInt("waehrung") != 0 ? Waehrung.fromDbId(rs.getInt("waehrung")) : null);
+            new Date(rs.getDate("angeschafft").getTime()),
+            rs.getInt("waehrung") != 0 ? Waehrung.fromDbId(rs.getInt("waehrung")) : null);
 
     public Zelt get(Integer id) {
         return selectOne(find, ps -> ps.setInt(1, id), rse);

@@ -13,8 +13,9 @@ public class EssenDao extends AbstractDao<Essen> {
     private static final String deleteEssen = "delete from Essen WHERE EsID = ?";
 
     public List<Essen> getAllFromLager(final int lagerId) {
-        return select(allEssenFromLager, ps -> ps.setInt(1, lagerId), rs -> new Essen(rs.getInt("esid"),
-                rs.getString("morgen"), rs.getString("mittag"), rs.getString("abend"), rs.getDate("datum")));
+        return select(allEssenFromLager, ps -> ps.setInt(1, lagerId),
+                rs -> new Essen(rs.getInt("esid"), rs.getString("morgen"), rs.getString("mittag"),
+                        rs.getString("abend"), new Date(rs.getDate("datum").getTime())));
     }
 
     public void speichereEssen(int lagerID, final Date datum, final String morgen, final String mittag,

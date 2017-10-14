@@ -1,5 +1,6 @@
 package de.zlvp.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import de.zlvp.entity.Geschlecht;
@@ -15,7 +16,7 @@ public class TeilnehmerDao extends AbstractDao<Teilnehmer> {
 
     private RSE<Teilnehmer> rse = rs -> new Teilnehmer(rs.getInt("peid"), Geschlecht.fromDbId(rs.getInt("geschlecht")),
             rs.getString("vorname"), rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"),
-            rs.getString("ort"), rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"),
+            rs.getString("ort"), new Date(rs.getDate("gebDat").getTime()), rs.getString("handy"), rs.getString("telnr"),
             rs.getString("email"), rs.getString("nottel"));
 
     public List<Teilnehmer> getAll(final int gruppe) {
