@@ -8,9 +8,9 @@ import de.zlvp.entity.Materialwart;
 
 public class MaterialwartDao extends AbstractDao<Materialwart> {
 
-    private static final String findAll = "select p.* from person p inner join stlama st on p.peid = st.pe where st.la = ?";
-    private static final String delete = "delete from stlama where la = ? and pe = ?";
-    private static final String insert = "insert into stlama (la,pe) values (?,?)";
+    private static final String findAll = "select p.* from person p inner join stlama st on p.peid = st.person_id where st.lager_id = ?";
+    private static final String delete = "delete from stlama where lager_id = ? and person_id = ?";
+    private static final String insert = "insert into stlama (lager_id,person_id) values (?,?)";
 
     public List<Materialwart> getAll(int lagerId) {
         return select(findAll, ps -> ps.setInt(1, lagerId),
