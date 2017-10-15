@@ -7,8 +7,8 @@ import de.zlvp.entity.Zeltverleih;
 
 public class ZeltverleihDao extends AbstractDao<Zeltverleih> {
 
-    private static final String findAllFromZelt = "select zv.* from zverleih zv where zv.ze = ? order by datum";
-    private static final String insertVerleih = "insert into zverleih (ze,datum,person,bemerkung) values (?,?,?,?)";
+    private static final String findAllFromZelt = "select zv.* from zverleih zv where zv.zelt_id = ? order by datum";
+    private static final String insertVerleih = "insert into zverleih (zelt_id,datum,person,bemerkung) values (?,?,?,?)";
     private static final String updateVerleih = "update zverleih set datum = ?, person = ?, bemerkung = ? where zvid = ?";
     private static final String deleteVerleih = "delete from zverleih where zvid = ?";
 
