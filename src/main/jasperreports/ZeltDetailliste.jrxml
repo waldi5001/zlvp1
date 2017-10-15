@@ -10,14 +10,14 @@
 	<import value="net.sf.jasperreports.engine.data.*"/>
 	<parameter name="zeID" class="java.lang.Integer" isForPrompting="false"/>
 	<queryString>
-		<![CDATA[SELECT Zelt.Bezeichnung AS ZeltName, zeltdetail.zelt, zeltdetail.schlüssel, zdbez.bezeichnung, zeltdetail.anzahl
+		<![CDATA[SELECT Zelt.Bezeichnung AS ZeltName, zeltdetail.zelt, zeltdetail.schluessel, zdbez.bezeichnung, zeltdetail.anzahl
 FROM Zelt INNER JOIN (zdbez INNER JOIN zeltdetail ON zdbez.zdbid = zeltdetail.bezeichnung) ON Zelt.ZeID = zeltdetail.zelt
 WHERE (((zeltdetail.zelt)= $P{zeID}))
 ORDER BY zdbez.bezeichnung;]]>
 	</queryString>
 	<field name="zeltname" class="java.lang.String"/>
 	<field name="zelt" class="java.lang.Integer"/>
-	<field name="schlüssel" class="java.lang.String"/>
+	<field name="schluessel" class="java.lang.String"/>
 	<field name="bezeichnung" class="java.lang.String"/>
 	<field name="anzahl" class="java.lang.Integer"/>
 	<background>

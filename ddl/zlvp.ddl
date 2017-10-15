@@ -853,7 +853,7 @@ CREATE TABLE zeltdetail (
     anzahl integer,
     zelt integer,
     bezeichnung integer,
-    "schlüssel" character varying(20)
+    schluessel character varying(20)
 );
 
 

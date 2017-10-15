@@ -6,15 +6,15 @@ import de.zlvp.entity.Zeltdetail;
 
 public class ZeltdetailDao extends AbstractDao<Zeltdetail> {
 
-    private static final String findAllFromZelt = "select zd.* from zeltdetail zd where zd.zelt = ? order by schlüssel";
-    private static final String insert = "insert into zeltdetail (anzahl,zelt,bezeichnung,schlüssel) values (?,?,?,?)";
-    private static final String update = "update zeltdetail set anzahl = ?, zelt = ?, bezeichnung = ?, schlüssel = ? where zdid = ?";
+    private static final String findAllFromZelt = "select zd.* from zeltdetail zd where zd.zelt = ? order by schluessel";
+    private static final String insert = "insert into zeltdetail (anzahl,zelt,bezeichnung,schluessel) values (?,?,?,?)";
+    private static final String update = "update zeltdetail set anzahl = ?, zelt = ?, bezeichnung = ?, schluessel = ? where zdid = ?";
     private static final String delete = "delete from zeltdetail where zdid = ?";
 
     public List<Zeltdetail> getAllFromZelt(int zeltId) {
         return select(findAllFromZelt, ps -> {
             ps.setInt(1, zeltId);
-        }, rs -> new Zeltdetail(rs.getInt("zdid"), rs.getInt("anzahl"), rs.getString("schlüssel")));
+        }, rs -> new Zeltdetail(rs.getInt("zdid"), rs.getInt("anzahl"), rs.getString("schluessel")));
     }
 
     public void speichern(Integer id, int zeltId, int anzahl, int bezeichnung, String schluessel) {
