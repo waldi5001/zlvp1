@@ -1,10 +1,8 @@
 package de.zlvp.ui;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
@@ -15,7 +13,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 
 import org.jdesktop.swingx.table.DatePickerCellEditor;
-import org.jfree.ui.DateCellRenderer;
 
 import de.javasoft.swing.JYTable;
 import de.javasoft.swing.JYTableHeader;
@@ -131,11 +128,7 @@ public class JTableBuilder<E> {
             }
 
             if (column.getClazz() == Date.class) {
-                DatePickerCellEditor dateCellEditor = new DatePickerCellEditor(
-                        DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN));
-                tableColumn.setCellEditor(dateCellEditor);
-                tableColumn.setCellRenderer(
-                        new DateCellRenderer(DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN)));
+                tableColumn.setCellEditor(new DatePickerCellEditor());
             }
 
             if (column.getSortOrder() != null) {
