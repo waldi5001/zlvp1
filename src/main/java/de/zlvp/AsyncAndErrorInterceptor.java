@@ -1,5 +1,7 @@
 package de.zlvp;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.swing.SwingUtilities;
 
 import org.aopalliance.intercept.MethodInterceptor;
@@ -10,11 +12,16 @@ import org.springframework.core.task.TaskExecutor;
 
 import de.javasoft.swing.DetailsDialog;
 import de.zlvp.controller.AsyncCallback;
+import de.zlvp.gui.FensterKlasse;
 
 public class AsyncAndErrorInterceptor implements MethodInterceptor {
     private static Logger log = LoggerFactory.getLogger(AsyncAndErrorInterceptor.class);
 
     private TaskExecutor taskExecutor;
+
+    private FensterKlasse fensterKlasse;
+
+    private AtomicInteger invocationCounter = new AtomicInteger(0);
 
     @Override
     @SuppressWarnings("unchecked")
@@ -29,8 +36,14 @@ public class AsyncAndErrorInterceptor implements MethodInterceptor {
 
         taskExecutor.execute(() -> {
             try {
+                if (invocationCounter.incrementAndGet() == 1) {
+                    CursorToolkit.startWaitCursor(fensterKlasse.getRootPane());
+                }
                 invocation.proceed();
                 edtCallback.get(proxy.getControllerResult());
+                if (invocationCounter.decrementAndGet() == 0) {
+                    CursorToolkit.stopWaitCursor(fensterKlasse.getRootPane());
+                }
             } catch (Throwable e) {
                 handleThrowable(e);
             }
@@ -84,6 +97,10 @@ public class AsyncAndErrorInterceptor implements MethodInterceptor {
 
     public void setTaskExecutor(TaskExecutor taskExecutor) {
         this.taskExecutor = taskExecutor;
+    }
+
+    public void setFensterKlasse(FensterKlasse fensterKlasse) {
+        this.fensterKlasse = fensterKlasse;
     }
 
 }

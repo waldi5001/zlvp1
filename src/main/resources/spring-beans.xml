@@ -28,6 +28,7 @@
 
 	<bean id="asyncAndErrorInterceptor" class="de.zlvp.AsyncAndErrorInterceptor">
 		<property name="taskExecutor" ref="taskExecutor" />
+		<property name="fensterKlasse" ref="fensterKlasse" />
 	</bean>
 
 	<bean id="methodLogInterceptor" class="org.springframework.aop.interceptor.CustomizableTraceInterceptor">
