@@ -131,7 +131,7 @@ ORDER BY zdbez.bezeichnung;]]>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{schlüssel}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{schluessel}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement key="line-1" x="0" y="12" width="534" height="1" uuid="6bf45a14-efd8-4dd1-991b-42a8d4dda1fe"/>
