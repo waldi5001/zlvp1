@@ -1,5 +1,6 @@
 package de.zlvp.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import de.zlvp.entity.Geschlecht;
@@ -7,16 +8,16 @@ import de.zlvp.entity.Materialwart;
 
 public class MaterialwartDao extends AbstractDao<Materialwart> {
 
-    private static final String findAll = "select st.stlamaid, p.* from person p inner join stlama st on p.peid = st.pe where st.la = ?";
-    private static final String delete = "delete from stlama where stlamaid = ?";
-    private static final String insert = "insert into stlama (la,pe) values (?,?)";
+    private static final String findAll = "select p.* from person p inner join stlama st on p.peid = st.person_id where st.lager_id = ?";
+    private static final String delete = "delete from stlama where lager_id = ? and person_id = ?";
+    private static final String insert = "insert into stlama (lager_id,person_id) values (?,?)";
 
-    public List<Materialwart> getAll(final int lagerId) {
+    public List<Materialwart> getAll(int lagerId) {
         return select(findAll, ps -> ps.setInt(1, lagerId),
-                rs -> new Materialwart(rs.getInt("stlamaid"), Geschlecht.fromDbId(rs.getInt("geschlecht")), rs.getInt("peid"),
+                rs -> new Materialwart(rs.getInt("peid"), Geschlecht.fromDbId(rs.getInt("geschlecht")),
                         rs.getString("vorname"), rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"),
-                        rs.getString("ort"), rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"),
-                        rs.getString("email")));
+                        rs.getString("ort"), new Date(rs.getDate("gebDat").getTime()), rs.getString("handy"),
+                        rs.getString("telnr"), rs.getString("email"), rs.getString("nottel")));
     }
 
     public void speichern(Integer lagerId, int personId) {
@@ -26,8 +27,8 @@ public class MaterialwartDao extends AbstractDao<Materialwart> {
         });
     }
 
-    public void loeschen(int id) {
-        delete(delete, ps -> ps.setInt(1, id));
+    public void loeschen(int lagerId, int personid) {
+        jdbc.update(delete, lagerId, personid);
     }
 
 }

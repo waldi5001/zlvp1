@@ -130,13 +130,13 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void getAllLager(int jahrId, AsyncCallback<List<Lager>> callback) {
-        callback.get(lagerDao.getAll(jahrId));
-    }
-
-    @Override
     public void getAllStab(int lagerId, AsyncCallback<List<Stab>> callback) {
-        callback.get(stabDao.getAll(lagerId));
+        List<Stab> all = stabDao.getAll(lagerId);
+        Lager lager = lagerDao.get(lagerId);
+        for (Stab stab : all) {
+            stab.setLager(lager);
+        }
+        callback.get(all);
     }
 
     @Override
@@ -145,6 +145,7 @@ public class ControllerImpl implements Controller {
         Lager lager = lagerDao.get(lagerId);
         for (Materialwart mw : all) {
             mw.setLager(lager);
+            mw.setChecked(true);
         }
         callback.get(all);
     }
@@ -196,19 +197,19 @@ public class ControllerImpl implements Controller {
     @Override
     public void getAllZeltFromLager(int lagerId, AsyncCallback<List<Zelt>> callback) {
         List<Zelt> allFromLager = zeltDao.getAllFromLager(lagerId);
-        Lager lager = lagerDao.get(lagerId);
         for (Zelt zelt : allFromLager) {
-            zelt.getLager().add(lager);
+            zelt.setLager(lagerDao.get(lagerId));
+            zelt.setChecked(true);
         }
         callback.get(allFromLager);
     }
 
     @Override
     public void getAllZeltFromGruppe(int gruppeId, AsyncCallback<List<Zelt>> callback) {
-        Gruppe gruppe = gruppeDao.get(gruppeId);
         List<Zelt> allFromGruppe = zeltDao.getAllFromGruppe(gruppeId);
         for (Zelt zelt : allFromGruppe) {
-            zelt.getGruppe().add(gruppe);
+            zelt.setGruppe(gruppeDao.get(gruppeId));
+            zelt.setChecked(true);
         }
         callback.get(allFromGruppe);
     }
@@ -261,12 +262,22 @@ public class ControllerImpl implements Controller {
 
     @Override
     public void getAllSchaeden(Integer id, AsyncCallback<List<Schaden>> callback) {
-        callback.get(schadenDao.getAllFromZelt(id));
+        List<Schaden> allFromZelt = schadenDao.getAllFromZelt(id);
+        Zelt zelt = zeltDao.get(id);
+        for (Schaden schaden : allFromZelt) {
+            schaden.setZelt(zelt);
+        }
+        callback.get(allFromZelt);
     }
 
     @Override
     public void getAllZeltverleih(Integer id, AsyncCallback<List<Zeltverleih>> callback) {
-        callback.get(zeltverleihDao.getAllFromZelt(id));
+        List<Zeltverleih> allFromZelt = zeltverleihDao.getAllFromZelt(id);
+        Zelt zelt = zeltDao.get(id);
+        for (Zeltverleih zeltverleih : allFromZelt) {
+            zeltverleih.setZelt(zelt);
+        }
+        callback.get(allFromZelt);
     }
 
     @Override
@@ -296,6 +307,18 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
+    public void speichereLegendatyp(String legendatyp, AsyncCallback<Void> callback) {
+        legendatypDao.speichern(legendatyp);
+        callback.get(null);
+    }
+
+    @Override
+    public void speichereAnrede(String anrede, AsyncCallback<Void> callback) {
+        anredeDao.speichereAnrede(anrede);
+        callback.get(null);
+    }
+
+    @Override
     public void speichereLegenda(Integer id, int lagerortId, String nachname, String vorname, String firma,
             String strasse, String plz, String ort, Integer legendatypId, Integer anredeId, String tel, String fax,
             String handy, String email, String bemerkung, AsyncCallback<Void> callback) {
@@ -313,23 +336,13 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void speichereStab(Integer id, int personId, Geschlecht geschlecht, String vorname, String nachname,
-            String strasse, String plz, String ort, Date gebtag, String telnr, String email, String handy,
-            String nottel, Funktion funktion, int lagerId, AsyncCallback<Void> callback) {
-        personDao.speichern(personId, vorname, nachname, gebtag, strasse, plz, ort, telnr, email, geschlecht, handy,
-                nottel);
-        // Wenn ein Stab ohne Funktion ausgewählt wird ignorieren.
-        if (id == null && funktion != REMOVE) {
-            // ansonsten anlegen
-            stabDao.speichern(id, lagerId, personId, funktion);
+    public void speichereStab(Integer id, Funktion funktion, int lagerId, AsyncCallback<Lager> callback) {
+        if (funktion == REMOVE) {
+            stabDao.loeschen(lagerId, id);
         } else {
-            if (funktion == REMOVE) {
-                stabDao.loeschen(id);
-            } else {
-                stabDao.speichern(id, lagerId, personId, funktion);
-            }
+            stabDao.speichern(lagerId, id, funktion);
         }
-        callback.get(null);
+        callback.get(lagerDao.get(lagerId));
     }
 
     @Override
@@ -340,24 +353,25 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void speichereZeltZuLager(Integer id, int zeltId, Integer lagerId, AsyncCallback<Void> callback) {
-        if (lagerId != null) {
-            zeltDao.speichernZuLager(zeltId, lagerId);
+    public void speichereZeltZuLager(boolean add, Integer id, Integer lagerId, AsyncCallback<Lager> callback) {
+        if (add) {
+            zeltDao.speichernZuLager(id, lagerId);
+            callback.get(lagerDao.get(lagerId));
         } else {
-            zeltDao.loeschenZuLager(id);
+            zeltDao.loeschenZuLager(id, lagerId);
+            callback.get(null);
         }
-        callback.get(null);
     }
 
     @Override
-    public void speichereZeltZuGruppe(Integer id, int zeltId, Integer gruppeId, AsyncCallback<Void> callback) {
-        if (gruppeId != null) {
-            // id ist von stLaZe gefüllt
-            zeltDao.speichernZuGruppe(zeltId, gruppeId);
+    public void speichereZeltZuGruppe(boolean add, Integer id, Integer gruppeId, AsyncCallback<Gruppe> callback) {
+        if (add) {
+            zeltDao.speichernZuGruppe(id, gruppeId);
+            callback.get(gruppeDao.get(gruppeId));
         } else {
-            zeltDao.loeschenZuGruppe(id);
+            zeltDao.loeschenZuGruppe(id, gruppeId);
+            callback.get(null);
         }
-        callback.get(null);
     }
 
     @Override
@@ -381,34 +395,37 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void speichereMaterialwart(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
-            String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
-            String nottel, Integer lagerId, AsyncCallback<Void> callback) {
-        personDao.speichern(personId, vorname, name, gebDat, strasse, plz, ort, telNr, email, geschlecht, handy,
-                nottel);
-        if (lagerId != null) {
-            materialwartDao.speichern(lagerId, personId);
-        } else if (id != null && lagerId == null) {
-            materialwartDao.loeschen(id);
+    public void speichereMaterialwart(boolean add, Integer id, Integer lagerId, AsyncCallback<Lager> callback) {
+        if (add) {
+            materialwartDao.speichern(lagerId, id);
+            callback.get(lagerDao.get(lagerId));
+        } else {
+            materialwartDao.loeschen(lagerId, id);
+            callback.get(null);
+        }
+    }
+
+    @Override
+    public void loescheSchaeden(List<Integer> ids, AsyncCallback<Void> callback) {
+        for (Integer id : ids) {
+            schadenDao.loeschen(id);
         }
         callback.get(null);
     }
 
     @Override
-    public void loescheSchaden(Integer id, AsyncCallback<Void> callback) {
-        schadenDao.loeschen(id);
+    public void loescheZeltverleihe(List<Integer> ids, AsyncCallback<Void> callback) {
+        for (Integer id : ids) {
+            zeltverleihDao.loeschen(id);
+        }
         callback.get(null);
     }
 
     @Override
-    public void loescheZeltverleih(int id, AsyncCallback<Void> callback) {
-        zeltverleihDao.loeschen(id);
-        callback.get(null);
-    }
-
-    @Override
-    public void loescheZeltdetail(int id, AsyncCallback<Void> callback) {
-        zeltdetailDao.loeschen(id);
+    public void loescheZeltdetails(List<Integer> ids, AsyncCallback<Void> callback) {
+        for (Integer id : ids) {
+            zeltdetailDao.loeschen(id);
+        }
         callback.get(null);
     }
 
@@ -442,7 +459,7 @@ public class ControllerImpl implements Controller {
             leiterDao.speichere(gruppeId, personId);
             callback.get(gruppeDao.get(gruppeId));
         } else {
-            leiterDao.loesche(gruppeId, personId);
+            leiterDao.loeschen(gruppeId, personId);
             callback.get(null);
         }
     }
@@ -453,7 +470,7 @@ public class ControllerImpl implements Controller {
             teilnehmerDao.speichere(personId, gruppeId);
             callback.get(gruppeDao.get(gruppeId));
         } else {
-            teilnehmerDao.loesche(personId, gruppeId);
+            teilnehmerDao.loeschen(personId, gruppeId);
             callback.get(null);
         }
     }
@@ -503,15 +520,11 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
-    public void speichereLagerinfo(Integer id, int personId, Geschlecht geschlecht, String vorname, String name,
-            String strasse, String plz, String ort, Date gebDat, String telNr, String email, String handy,
-            String telNr2, boolean checked, AsyncCallback<Void> callback) {
-        personDao.speichern(personId, vorname, name, gebDat, strasse, plz, ort, telNr, email, geschlecht, handy,
-                telNr2);
-        if (checked) {
-            lagerinfoDao.speichereLagerinfo(personId);
-        } else if (id != null && !checked) {
-            lagerinfoDao.loesche(id);
+    public void speichereLagerinfo(boolean add, Integer id, AsyncCallback<Void> callback) {
+        if (add) {
+            lagerinfoDao.speichereLagerinfo(id);
+        } else {
+            lagerinfoDao.loeschen(id);
         }
         callback.get(null);
     }
@@ -525,14 +538,14 @@ public class ControllerImpl implements Controller {
 
     @Override
     public void verschiebeLeiter(int personId, int srcGruppeId, int destGruppeId, AsyncCallback<Void> callback) {
-        leiterDao.loesche(srcGruppeId, personId);
+        leiterDao.loeschen(srcGruppeId, personId);
         leiterDao.speichere(destGruppeId, personId);
         callback.get(null);
     }
 
     @Override
     public void verschiebeTeilnehmer(int personId, int srcGruppeId, int destGruppeId, AsyncCallback<Void> callback) {
-        teilnehmerDao.loesche(personId, srcGruppeId);
+        teilnehmerDao.loeschen(personId, srcGruppeId);
         teilnehmerDao.speichere(personId, destGruppeId);
         callback.get(null);
     }

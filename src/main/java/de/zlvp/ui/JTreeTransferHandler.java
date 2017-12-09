@@ -144,11 +144,10 @@ public class JTreeTransferHandler extends TransferHandler {
                     Gruppe destGruppe = (Gruppe) ((DefaultMutableTreeNode) dropNode.getParent()).getUserObject();
 
                     if ("Leiter".equals(dropUserObject) && person instanceof Leiter) {
-                        get().verschiebeLeiter(person.getOriginalId(), srcGruppe.getId(), destGruppe.getId(),
+                        get().verschiebeLeiter(person.getId(), srcGruppe.getId(), destGruppe.getId(),
                                 c -> Events.get().fireLeiterSaved((Leiter) person, srcGruppe, destGruppe));
                     } else if ("Teilnehmer".equals(dropUserObject) && person instanceof Teilnehmer) {
-                        get().verschiebeTeilnehmer(person.getOriginalId(), srcGruppe.getId(),
-                                destGruppe.getOriginalId(),
+                        get().verschiebeTeilnehmer(person.getId(), srcGruppe.getId(), destGruppe.getId(),
                                 c -> Events.get().fireTeilnehmerSaved((Teilnehmer) person, srcGruppe, destGruppe));
                     }
                 }
@@ -159,13 +158,13 @@ public class JTreeTransferHandler extends TransferHandler {
                     Gruppe gruppe = (Gruppe) ((DefaultMutableTreeNode) dropNode.getParent()).getUserObject();
 
                     if ("Leiter".equals(dropUserObject)) {
-                        get().speichereLeiter(true, person.getId(), gruppe.getOriginalId(), c -> {
+                        get().speichereLeiter(true, person.getId(), gruppe.getId(), c -> {
                             Leiter leiter = new Leiter(person);
                             leiter.setGruppe(gruppe);
                             Events.get().fireLeiterSaved(leiter, null, gruppe);
                         });
                     } else if ("Teilnehmer".equals(dropUserObject)) {
-                        get().speichereTeilnehmer(true, person.getId(), gruppe.getOriginalId(), c -> {
+                        get().speichereTeilnehmer(true, person.getId(), gruppe.getId(), c -> {
                             Teilnehmer teilnehmer = new Teilnehmer(person);
                             teilnehmer.setGruppe(gruppe);
                             Events.get().fireTeilnehmerSaved(teilnehmer, null, gruppe);

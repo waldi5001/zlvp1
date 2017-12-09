@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
 	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
@@ -21,8 +23,13 @@
 	</bean>
 
 	<bean id="trimInterceptor" class="de.zlvp.TrimInterceptor" />
+	
+	<task:executor id="taskExecutor" pool-size="5-10" queue-capacity="100"/>
 
-	<bean id="asyncAndErrorInterceptor" class="de.zlvp.AsyncAndErrorInterceptor" />
+	<bean id="asyncAndErrorInterceptor" class="de.zlvp.AsyncAndErrorInterceptor">
+		<property name="taskExecutor" ref="taskExecutor" />
+		<property name="fensterKlasse" ref="fensterKlasse" />
+	</bean>
 
 	<bean id="methodLogInterceptor" class="org.springframework.aop.interceptor.CustomizableTraceInterceptor">
 		<property name="enterMessage" value="Start: $[targetClassShortName]#$[methodName] $[arguments]" />
@@ -58,7 +65,7 @@
 
 	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
 		<property name="driverClassName" value="org.postgresql.Driver" />
-		<property name="jdbcUrl" value="jdbc:postgresql://127.0.0.1/zlvp" />
+		<property name="jdbcUrl" value="jdbc:postgresql:zlvp" />
 		<property name="maxLifetime" value="30000" />
 	</bean>
 

@@ -3,9 +3,7 @@ package de.zlvp.gui;
 import static de.zlvp.Client.get;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
@@ -21,9 +19,7 @@ public class LagerinfoVerwalten extends AbstractJInternalFrame {
 
     private JPanel jContentPane;
     private JPanel jPanel;
-    private JPanel jPanelButtons;
     private JTable jTablePerson;
-    private JButton jButtonAbbrechen;
 
     private JTableBuilder<Lagerinfo> tableBuilder;
 
@@ -55,34 +51,15 @@ public class LagerinfoVerwalten extends AbstractJInternalFrame {
             jPanel = new JPanel();
             jPanel.setLayout(new BorderLayout());
             jPanel.add(new JYTableScrollPane(getJTablePerson()), java.awt.BorderLayout.CENTER);
-            jPanel.add(getJPanel2(), java.awt.BorderLayout.SOUTH);
         }
         return jPanel;
     }
 
-    private JPanel getJPanel2() {
-        if (jPanelButtons == null) {
-            jPanelButtons = new JPanel();
-            jPanelButtons.setLayout(new FlowLayout());
-            jPanelButtons.add(getJButtonAbbrechen());
-        }
-        return jPanelButtons;
-    }
-
     private JTable getJTablePerson() {
         if (jTablePerson == null) {
-            jTablePerson = tableBuilder.build();
+            jTablePerson = tableBuilder.buildAndLoad();
         }
         return jTablePerson;
-    }
-
-    private JButton getJButtonAbbrechen() {
-        if (jButtonAbbrechen == null) {
-            jButtonAbbrechen = new JButton();
-            jButtonAbbrechen.setText("Abbrechen");
-            jButtonAbbrechen.addActionListener(e -> setVisible(false));
-        }
-        return jButtonAbbrechen;
     }
 
 }

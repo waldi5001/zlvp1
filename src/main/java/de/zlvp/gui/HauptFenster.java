@@ -5,6 +5,7 @@ import static javax.swing.DropMode.ON;
 import static javax.swing.tree.TreeSelectionModel.SINGLE_TREE_SELECTION;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -30,7 +31,7 @@ import de.zlvp.Client;
 import de.zlvp.Events;
 import de.zlvp.Events.Aktualisieren;
 import de.zlvp.Events.GruppeSaved;
-import de.zlvp.Events.LagerSaved;
+import de.zlvp.Events.LagerRenamed;
 import de.zlvp.Events.LeiterSaved;
 import de.zlvp.Events.TeilnehmerSaved;
 import de.zlvp.entity.AbstractEntity;
@@ -46,7 +47,13 @@ import de.zlvp.ui.TreePopup;
 
 public class HauptFenster extends AbstractJInternalFrame {
 
+    private static final String EMPTY = "EMPTY";
+    private static final String LAGER = "LAGER";
+    private static final String GRUPPE = "GRUPPE";
+
     private static final long serialVersionUID = 1L;
+
+    private JPanel jRightPane;
 
     private JPanel jContentPane;
 
@@ -83,6 +90,11 @@ public class HauptFenster extends AbstractJInternalFrame {
                 Events.get().fireDisableMenuItems();
             }
         });
+
+        getjRightPane().add(new JPanel(), EMPTY);
+        getjRightPane().add(new TPLager(), LAGER);
+        getjRightPane().add(new TPGruppe(), GRUPPE);
+        this.getJSplitPane().setRightComponent(getjRightPane());
     }
 
     private JPanel getJContentPane() {
@@ -192,31 +204,18 @@ public class HauptFenster extends AbstractJInternalFrame {
 
                     if (anzahlElemente == 1) {
                         Events.get().fireJahrSelected((Jahr) userObject);
-                    }
-
-                    if (anzahlElemente == 2) {
+                        ((CardLayout) getjRightPane().getLayout()).show(getjRightPane(), EMPTY);
+                    } else if (anzahlElemente == 2) {
                         Events.get().fireLagerSelected((Lager) userObject);
-                        getJSplitPane().setRightComponent(new TPLager((Lager) userObject));
-                    }
-
-                    if (anzahlElemente == 3) {
+                        ((CardLayout) getjRightPane().getLayout()).show(getjRightPane(), LAGER);
+                    } else if (anzahlElemente == 3) {
                         Events.get().fireGruppeSelected((Gruppe) userObject);
-
-                        DefaultMutableTreeNode lagerNode = (DefaultMutableTreeNode) selectionPath.getParentPath()
-                                .getLastPathComponent();
-                        Lager lager = (Lager) lagerNode.getUserObject();
-
-                        getJSplitPane().setRightComponent(new TPGruppe(lager, ((Gruppe) userObject)));
-                    }
-
-                    if (anzahlElemente == 5) {
-                        DefaultMutableTreeNode lagerNode = (DefaultMutableTreeNode) selectionPath
-                                .getLastPathComponent();
-                        Person person = (Person) lagerNode.getUserObject();
-
-                        Events.get().firePersonSelected(person);
+                        ((CardLayout) getjRightPane().getLayout()).show(getjRightPane(), GRUPPE);
+                    } else if (anzahlElemente == 5) {
+                        Events.get().firePersonSelected((Person) userObject);
+                        ((CardLayout) getjRightPane().getLayout()).show(getjRightPane(), EMPTY);
                     } else {
-                        // getFensterKlasse().disableMenuItems();
+                        ((CardLayout) getjRightPane().getLayout()).show(getjRightPane(), EMPTY);
                     }
                 }
 
@@ -250,10 +249,10 @@ public class HauptFenster extends AbstractJInternalFrame {
 
         DefaultMutableTreeNode currentNode = root.getNextNode();
         do {
-            if (currentNode.getLevel() == level) {
+            if (currentNode != null && currentNode.getLevel() == level) {
                 tree.expandPath(new TreePath(currentNode.getPath()));
             }
-            currentNode = currentNode.getNextNode();
+            currentNode = currentNode != null ? currentNode.getNextNode() : null;
         } while (currentNode != null);
     }
 
@@ -385,7 +384,7 @@ public class HauptFenster extends AbstractJInternalFrame {
 
     @Subscribe
     @SuppressWarnings("unchecked")
-    public void aktualisieren(LagerSaved event) {
+    public void aktualisieren(LagerRenamed event) {
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) getJTree().getModel().getRoot();
         Enumeration<DefaultMutableTreeNode> breadthFirstEnumeration = root.breadthFirstEnumeration();
         while (breadthFirstEnumeration.hasMoreElements()) {
@@ -412,5 +411,12 @@ public class HauptFenster extends AbstractJInternalFrame {
             }
         }
         return null;
+    }
+
+    public JPanel getjRightPane() {
+        if (jRightPane == null) {
+            jRightPane = new JPanel(new CardLayout());
+        }
+        return jRightPane;
     }
 }

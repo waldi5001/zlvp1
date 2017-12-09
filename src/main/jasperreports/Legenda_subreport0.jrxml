@@ -10,11 +10,11 @@
 	<import value="net.sf.jasperreports.engine.data.*"/>
 	<parameter name="loid" class="java.lang.Integer" isForPrompting="false"/>
 	<queryString>
-		<![CDATA[SELECT an.anrede, lt.typ AS typbez, lg.* FROM lagerort lo
-INNER JOIN stlolg ON lo.loid = stlolg.lagerort
-INNER JOIN legenda lg ON lg.lgid = stlolg.legenda
-INNER JOIN legendatyp lt ON lg.typ = lt.tyid
-INNER JOIN anrede an ON lg.anrede = an.anid
+		<![CDATA[SELECT an.anrede, lt.typ AS typbez, lg.* 
+		from legenda lg
+left join anrede an on lg.anrede = an.anid
+left join legendatyp lt on lg.typ = lt.tyid
+inner join lagerort lo on lg.lagerort_id = lo.loid
 WHERE lo.loid = $P{loid}]]>
 	</queryString>
 	<field name="anrede" class="java.lang.String"/>

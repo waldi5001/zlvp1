@@ -5,7 +5,6 @@ import com.google.common.eventbus.EventBus;
 import de.zlvp.entity.Gruppe;
 import de.zlvp.entity.Jahr;
 import de.zlvp.entity.Lager;
-import de.zlvp.entity.Lagerort;
 import de.zlvp.entity.Leiter;
 import de.zlvp.entity.Person;
 import de.zlvp.entity.Teilnehmer;
@@ -127,19 +126,12 @@ public class Events {
         });
     }
 
-    public void fireLagerSaved(Lager lager, Lagerort lagerort) {
-        bus.post(new LagerSaved() {
-            @Override
-            public Lager get() {
-                return lager;
-            }
+    public void fireLagerSaved(Lager lager) {
+        bus.post((LagerSaved) () -> lager);
+    }
 
-            @Override
-            public Lagerort lagerort() {
-                return lagerort;
-            }
-
-        });
+    public void fireLagerRenamed(Lager lager) {
+        bus.post((LagerRenamed) () -> lager);
     }
 
     public static interface Aktualisieren {
@@ -183,8 +175,10 @@ public class Events {
 
     public static interface LagerSaved {
         Lager get();
+    }
 
-        Lagerort lagerort();
+    public static interface LagerRenamed {
+        Lager get();
     }
 
     @FunctionalInterface

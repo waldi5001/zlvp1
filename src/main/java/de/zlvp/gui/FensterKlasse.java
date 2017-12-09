@@ -118,8 +118,6 @@ public class FensterKlasse extends JFrame {
 
     private JDesktopPane jDesktopPane;
 
-    private JMenuItem jMenuItemZeltAnlegen;
-
     private JMenuItem jMenuItemOeffnen;
 
     private JMenu jMenuAendern;
@@ -177,6 +175,12 @@ public class FensterKlasse extends JFrame {
     private JMenuItem jMenuItemExcelImportieren;
 
     private JMenuItem jMenuItemReportOeffnen;
+
+    private JMenuItem jMenuItemLegendatyp;
+
+    private JMenuItem jMenuItemZelt;
+
+    private JMenuItem jMenuItemAnrede;
 
     public FensterKlasse() {
         super();
@@ -252,6 +256,9 @@ public class FensterKlasse extends JFrame {
             jMenuAnlegen.setEnabled(false);
             jMenuAnlegen.add(getJMenuItemPerson());
             jMenuAnlegen.add(getJMenuItemLagerOrt());
+            jMenuAnlegen.add(getJMenuItemLegendatyp());
+            jMenuAnlegen.add(getJMenuItemZelt());
+            jMenuAnlegen.add(getJMenuItemAnrede());
         }
         return jMenuAnlegen;
     }
@@ -403,17 +410,6 @@ public class FensterKlasse extends JFrame {
         return jDesktopPane;
     }
 
-    private JMenuItem getJMenuItemZeltAnlegen() {
-        if (jMenuItemZeltAnlegen == null) {
-            jMenuItemZeltAnlegen = new JMenuItem();
-            jMenuItemZeltAnlegen.setText("Zelt anlegen");
-            jMenuItemZeltAnlegen.addActionListener(e -> {
-                new ZeltAnlegen();
-            });
-        }
-        return jMenuItemZeltAnlegen;
-    }
-
     private JMenuItem getJMenuItemOeffnen() {
         if (jMenuItemOeffnen == null) {
             jMenuItemOeffnen = new JMenuItem();
@@ -446,7 +442,6 @@ public class FensterKlasse extends JFrame {
             jMenuMaterial = new JMenu();
             jMenuMaterial.setText("Material");
             jMenuMaterial.setEnabled(false);
-            jMenuMaterial.add(getJMenuItemZeltAnlegen());
             jMenuMaterial.add(getJMenuItemZelteVerwalten());
             jMenuMaterial.add(getJMenuItemBezLöschen());
         }
@@ -519,7 +514,7 @@ public class FensterKlasse extends JFrame {
             jMenuItemTeStatistik = new JMenuItem();
             jMenuItemTeStatistik.setText("Statistik");
             jMenuItemTeStatistik.addActionListener(
-                    e -> Client.getReports().teilnehmerStatistik(SelectionContext.get().getPerson().getOriginalId()));
+                    e -> Client.getReports().teilnehmerStatistik(SelectionContext.get().getPerson().getId()));
         }
         return jMenuItemTeStatistik;
     }
@@ -1010,6 +1005,51 @@ public class FensterKlasse extends JFrame {
             });
         }
         return jMenuItemLagerOrt;
+    }
+
+    private JMenuItem getJMenuItemLegendatyp() {
+        if (jMenuItemLegendatyp == null) {
+            jMenuItemLegendatyp = new JMenuItem();
+            jMenuItemLegendatyp.setText("Legendatyp");
+            jMenuItemLegendatyp.addActionListener(e -> {
+                String lgendatyp = JOptionPane.showInputDialog("Neuen Legendatyp eingeben");
+                if (lgendatyp != null && !lgendatyp.isEmpty()) {
+                    get().speichereLegendatyp(lgendatyp, cb -> {
+                    });
+                }
+            });
+        }
+        return jMenuItemLegendatyp;
+    }
+
+    private JMenuItem getJMenuItemZelt() {
+        if (jMenuItemZelt == null) {
+            jMenuItemZelt = new JMenuItem();
+            jMenuItemZelt.setText("Zelt");
+            jMenuItemZelt.addActionListener(e -> {
+                String zeltBezeichnung = JOptionPane.showInputDialog("Zeltbezeichnung eingeben", "BR-Z-");
+                if (zeltBezeichnung != null && !zeltBezeichnung.isEmpty()) {
+                    get().speichereZelt(null, zeltBezeichnung, null, 0, null, cb -> {
+                    });
+                }
+            });
+        }
+        return jMenuItemZelt;
+    }
+
+    private JMenuItem getJMenuItemAnrede() {
+        if (jMenuItemAnrede == null) {
+            jMenuItemAnrede = new JMenuItem();
+            jMenuItemAnrede.setText("Legenda Anrede");
+            jMenuItemAnrede.addActionListener(e -> {
+                String anrede = JOptionPane.showInputDialog("Legenda Anrede eingeben");
+                if (anrede != null && !anrede.isEmpty()) {
+                    get().speichereAnrede(anrede, cb -> {
+                    });
+                }
+            });
+        }
+        return jMenuItemAnrede;
     }
 
     private JMenuItem getJMenuItemPersonenVonLager() {

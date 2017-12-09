@@ -19,13 +19,15 @@ public class PersonDao extends AbstractDao<Person> {
             + "vorname = ?, nachname = ?, gebdat = ?, strasse = ?, plz = ?, ort = ?, telnr = ?, email = ?, geschlecht = ?, handy = ?, nottel = ? "
             + "where peid = ?";
 
+    private RSE<Person> rse = rs -> {
+        return new Person(rs.getInt("peid"), Geschlecht.fromDbId(rs.getInt("geschlecht")), rs.getString("vorname"),
+                rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"), rs.getString("ort"),
+                new Date(rs.getDate("gebDat").getTime()), rs.getString("handy"), rs.getString("telnr"),
+                rs.getString("email"), rs.getString("nottel"));
+    };
+
     public List<Person> getAll() {
-        return select(findAll, rs -> {
-            return new Person(rs.getInt("peid"), Geschlecht.fromDbId(rs.getInt("geschlecht")), rs.getString("vorname"),
-                    rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"), rs.getString("ort"),
-                    rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"), rs.getString("email"),
-                    rs.getString("nottel"));
-        });
+        return select(findAll, rse);
     }
 
     public void speichern(Integer id, String vorname, String nachname, Date gebdat, String strasse, String plz,
@@ -52,12 +54,7 @@ public class PersonDao extends AbstractDao<Person> {
             } else {
                 ps.setString(2, nachname);
             }
-        }, rs -> {
-            return new Person(rs.getInt("peid"), Geschlecht.fromDbId(rs.getInt("geschlecht")), rs.getString("vorname"),
-                    rs.getString("nachname"), rs.getString("strasse"), rs.getString("plz"), rs.getString("ort"),
-                    rs.getDate("gebDat"), rs.getString("handy"), rs.getString("telnr"), rs.getString("email"),
-                    rs.getString("nottel"));
-        });
+        }, rse);
     }
 
 }

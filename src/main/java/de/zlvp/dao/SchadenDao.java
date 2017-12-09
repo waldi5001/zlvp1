@@ -13,8 +13,8 @@ public class SchadenDao extends AbstractDao<Schaden> {
     private static final String deleteSchaden = "delete from schaeden where scid = ?";
 
     public List<Schaden> getAllFromZelt(int zeltId) {
-        return select(findAllFromZelt, ps -> ps.setInt(1, zeltId),
-                rs -> new Schaden(rs.getInt("scid"), rs.getDate("datum"), rs.getString("bezeichnung")));
+        return select(findAllFromZelt, ps -> ps.setInt(1, zeltId), rs -> new Schaden(rs.getInt("scid"),
+                new Date(rs.getDate("datum").getTime()), rs.getString("bezeichnung")));
     }
 
     public void speichern(Integer id, int zeltId, Date datum, String schaden) {
@@ -33,8 +33,8 @@ public class SchadenDao extends AbstractDao<Schaden> {
         }
     }
 
-    public void loeschen(Integer id) {
-        delete(deleteSchaden, ps -> ps.setInt(1, id));
+    public void loeschen(int id) {
+        jdbc.update(deleteSchaden, id);
     }
 
 }

@@ -39,6 +39,15 @@ public class Person extends AbstractEntity {
     private Geschlecht geschlecht;
     private String handy;
     private String nottel;
+    private boolean checked = false;
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
 
     public String getVorname() {
         return vorname;

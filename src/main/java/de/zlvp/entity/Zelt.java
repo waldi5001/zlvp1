@@ -2,15 +2,12 @@ package de.zlvp.entity;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Zelt extends AbstractEntity {
 
-    public Zelt(Integer id, Integer zeltId, String brzNummer, double preis, Date angeschafft, Waehrung waehrung) {
+    public Zelt(Integer id, String brzNummer, double preis, Date angeschafft, Waehrung waehrung) {
         setId(id);
-        setOriginalId(zeltId);
         this.brzNummer = brzNummer;
         this.angeschafft = angeschafft;
         this.preis = preis;
@@ -18,7 +15,7 @@ public class Zelt extends AbstractEntity {
     }
 
     public Zelt(Zelt z) {
-        this(z.getId(), z.getOriginalId(), z.getBezeichnung(), z.getPreis(), z.getAngeschafft(), z.getWaehrung());
+        this(z.getId(), z.getBezeichnung(), z.getPreis(), z.getAngeschafft(), z.getWaehrung());
     }
 
     private String brzNummer;
@@ -33,8 +30,18 @@ public class Zelt extends AbstractEntity {
 
     private List<Schaden> schaden;
 
-    private Set<Lager> lager;
-    private Set<Gruppe> gruppe;
+    private Lager lager;
+    private Gruppe gruppe;
+
+    private boolean checked = false;
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
 
     public List<Zeltdetail> getZeltdetail() {
         if (zeltdetail == null) {
@@ -48,20 +55,6 @@ public class Zelt extends AbstractEntity {
             schaden = new ArrayList<>();
         }
         return schaden;
-    }
-
-    public Set<Lager> getLager() {
-        if (lager == null) {
-            lager = new HashSet<>();
-        }
-        return lager;
-    }
-
-    public Set<Gruppe> getGruppe() {
-        if (gruppe == null) {
-            gruppe = new HashSet<>();
-        }
-        return gruppe;
     }
 
     @Override
@@ -91,6 +84,22 @@ public class Zelt extends AbstractEntity {
 
     public void setWaehrung(Waehrung waehrung) {
         this.waehrung = waehrung;
+    }
+
+    public Lager getLager() {
+        return lager;
+    }
+
+    public void setLager(Lager lager) {
+        this.lager = lager;
+    }
+
+    public Gruppe getGruppe() {
+        return gruppe;
+    }
+
+    public void setGruppe(Gruppe gruppe) {
+        this.gruppe = gruppe;
     }
 
 }

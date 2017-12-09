@@ -14,10 +14,12 @@ import com.google.common.eventbus.Subscribe;
 import de.javasoft.swing.JYTableScrollPane;
 import de.zlvp.Events;
 import de.zlvp.Events.LagerSaved;
+import de.zlvp.Events.LagerSelected;
 import de.zlvp.entity.Lagerort;
 import de.zlvp.entity.Legenda;
 import de.zlvp.ui.JTableBuilder;
 import de.zlvp.ui.JTableBuilders;
+import de.zlvp.ui.JTableBuilders.Callback;
 
 public class LegendaVerwaltenPanel extends JPanel {
 
@@ -26,16 +28,15 @@ public class LegendaVerwaltenPanel extends JPanel {
     private JPanel jPanelButtons;
     private JButton jButtonNeu;
 
-    private Lagerort lagerort;
+    private final Callback<Lagerort> lagerortCallabck;
     private JTableBuilder<Legenda> tableBuilderLegenda;
 
-    public LegendaVerwaltenPanel(Lagerort lagerort) {
+    public LegendaVerwaltenPanel(Callback<Lagerort> lagerortCallabck) {
+        this.lagerortCallabck = lagerortCallabck;
         Events.bus().register(this);
 
-        this.lagerort = lagerort;
-
         tableBuilderLegenda = JTableBuilders
-                .legenda(legendas -> get().getAllLegendaFromLagerort(lagerort.getOriginalId(), legendas));
+                .legenda(legendas -> get().getAllLegendaFromLagerort(lagerortCallabck.get().getId(), legendas));
 
         initialize();
     }
@@ -48,7 +49,7 @@ public class LegendaVerwaltenPanel extends JPanel {
 
     public JTable getJTableLegenda() {
         if (jTableLegenda == null) {
-            jTableLegenda = tableBuilderLegenda.build();
+            jTableLegenda = tableBuilderLegenda.buildAndLoad();
         }
         return jTableLegenda;
     }
@@ -67,8 +68,8 @@ public class LegendaVerwaltenPanel extends JPanel {
             jButtonNeu = new JButton();
             jButtonNeu.setText("Neu");
             jButtonNeu.addActionListener(e -> {
-                get().speichereLegenda(null, lagerort.getOriginalId(), "Neu", "Neu", null, null, null, null, null, null,
-                        null, null, null, null, null, asyncCallback -> tableBuilderLegenda.refresh());
+                get().speichereLegenda(null, lagerortCallabck.get().getId(), "Neu", "Neu", null, null, null, null, null,
+                        null, null, null, null, null, null, asyncCallback -> tableBuilderLegenda.refresh());
             });
         }
         return jButtonNeu;
@@ -76,9 +77,11 @@ public class LegendaVerwaltenPanel extends JPanel {
 
     @Subscribe
     public void lagersaved(LagerSaved event) {
-        if (event.lagerort() != null) {
-            lagerort = event.lagerort();
-            tableBuilderLegenda.refresh();
-        }
+        tableBuilderLegenda.refresh();
+    }
+
+    @Subscribe
+    public void lagerSelected(LagerSelected event) {
+        tableBuilderLegenda.refresh();
     }
 }

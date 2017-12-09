@@ -10,14 +10,14 @@
 	<import value="net.sf.jasperreports.engine.data.*"/>
 	<parameter name="zeID" class="java.lang.Integer" isForPrompting="false"/>
 	<queryString>
-		<![CDATA[SELECT Zelt.Bezeichnung AS ZeltName, zeltdetail.zelt, zeltdetail.schlüssel, zdbez.bezeichnung, zeltdetail.anzahl
+		<![CDATA[SELECT Zelt.Bezeichnung AS ZeltName, zeltdetail.zelt, zeltdetail.schluessel, zdbez.bezeichnung, zeltdetail.anzahl
 FROM Zelt INNER JOIN (zdbez INNER JOIN zeltdetail ON zdbez.zdbid = zeltdetail.bezeichnung) ON Zelt.ZeID = zeltdetail.zelt
 WHERE (((zeltdetail.zelt)= $P{zeID}))
 ORDER BY zdbez.bezeichnung;]]>
 	</queryString>
 	<field name="zeltname" class="java.lang.String"/>
 	<field name="zelt" class="java.lang.Integer"/>
-	<field name="schlüssel" class="java.lang.String"/>
+	<field name="schluessel" class="java.lang.String"/>
 	<field name="bezeichnung" class="java.lang.String"/>
 	<field name="anzahl" class="java.lang.Integer"/>
 	<background>
@@ -131,7 +131,7 @@ ORDER BY zdbez.bezeichnung;]]>
 				<textElement>
 					<font fontName="Times New Roman"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{schlüssel}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{schluessel}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement key="line-1" x="0" y="12" width="534" height="1" uuid="6bf45a14-efd8-4dd1-991b-42a8d4dda1fe"/>

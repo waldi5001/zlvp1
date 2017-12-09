@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.zlvp</groupId>
 	<artifactId>zlvp</artifactId>
-	<version>0.5</version>
+	<version>0.6</version>
 	<distributionManagement>
 		<repository>
 			<id>internal.repo</id>
@@ -29,6 +29,11 @@
 					<artifactId>error_prone_annotations</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jul-to-slf4j</artifactId>
+			<version>1.7.25</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
@@ -126,9 +131,9 @@
 			<version>42.1.1</version>
 		</dependency>
 		<dependency>
-			<groupId>org.jdesktop</groupId>
-			<artifactId>swingx</artifactId>
-			<version>1.6.5</version>
+			<groupId>org.swinglabs.swingx</groupId>
+			<artifactId>swingx-all</artifactId>
+			<version>1.6.5-1</version>
 		</dependency>
 		<dependency>
 			<groupId>de.javasoft</groupId>

@@ -1,48 +1,55 @@
 package de.zlvp;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.task.TaskExecutor;
 
 import de.javasoft.swing.DetailsDialog;
 import de.zlvp.controller.AsyncCallback;
+import de.zlvp.gui.FensterKlasse;
 
 public class AsyncAndErrorInterceptor implements MethodInterceptor {
     private static Logger log = LoggerFactory.getLogger(AsyncAndErrorInterceptor.class);
 
+    private TaskExecutor taskExecutor;
+
+    private FensterKlasse fensterKlasse;
+
+    private AtomicInteger invocationCounter = new AtomicInteger(0);
+
     @Override
     @SuppressWarnings("unchecked")
     public Object invoke(MethodInvocation invocation) {
-        try {
-            AsyncCallback<Object> originalCallback = (AsyncCallback<Object>) invocation
-                    .getArguments()[invocation.getArguments().length - 1];
+        AsyncCallback<Object> originalCallback = (AsyncCallback<Object>) invocation
+                .getArguments()[invocation.getArguments().length - 1];
 
-            AsyncCallback<Object> edtCallback = new EDTCallback(originalCallback);
+        AsyncCallback<Object> edtCallback = new EDTCallback(originalCallback);
 
-            ProxyCallback proxy = new ProxyCallback();
-            invocation.getArguments()[invocation.getArguments().length - 1] = proxy;
+        ProxyCallback proxy = new ProxyCallback();
+        invocation.getArguments()[invocation.getArguments().length - 1] = proxy;
 
-            SwingWorker<Object, Void> sw = new SwingWorker<Object, Void>() {
-                @Override
-                protected Object doInBackground() {
-                    try {
-                        Object proceed = invocation.proceed();
-                        edtCallback.get(proxy.getControllerResult());
-                        return proceed;
-                    } catch (Throwable e) {
-                        handleThrowable(e);
-                    }
-                    return null;
+        taskExecutor.execute(() -> {
+            try {
+                if (invocationCounter.incrementAndGet() == 1) {
+                    CursorToolkit.startWaitCursor(fensterKlasse.getRootPane());
                 }
-            };
-            sw.execute();
-        } catch (Throwable e) {
-            handleThrowable(e);
-        }
+                invocation.proceed();
+                edtCallback.get(proxy.getControllerResult());
+                if (invocationCounter.decrementAndGet() == 0) {
+                    CursorToolkit.stopWaitCursor(fensterKlasse.getRootPane());
+                }
+            } catch (Throwable e) {
+                handleThrowable(e);
+            }
+
+        });
+
         return null;
     }
 
@@ -67,6 +74,11 @@ public class AsyncAndErrorInterceptor implements MethodInterceptor {
             return controllerResult;
         }
 
+        @Override
+        public String toString() {
+            return "AsyncCallback@" + Integer.toHexString(hashCode());
+        }
+
     }
 
     private static class EDTCallback implements AsyncCallback<Object> {
@@ -81,6 +93,14 @@ public class AsyncAndErrorInterceptor implements MethodInterceptor {
             SwingUtilities.invokeLater(() -> originalCallback.get(result));
         }
 
+    }
+
+    public void setTaskExecutor(TaskExecutor taskExecutor) {
+        this.taskExecutor = taskExecutor;
+    }
+
+    public void setFensterKlasse(FensterKlasse fensterKlasse) {
+        this.fensterKlasse = fensterKlasse;
     }
 
 }
