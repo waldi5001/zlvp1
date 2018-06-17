@@ -8,11 +8,13 @@ import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import javax.swing.ProgressMonitor;
@@ -131,40 +133,45 @@ public class ExcelControllerImpl implements ExcelController, PropertyChangeListe
 
                         for (int c = 0; c < row.getLastCellNum(); c++) {
                             Cell cell = row.getCell(c);
-                            if (c == 0) {
-                                anrede = cell.getStringCellValue().trim();
-                            } else if (c == 1) {
-                                nachname = cell.getStringCellValue().trim();
-                            } else if (c == 2) {
-                                vorname = cell.getStringCellValue().trim();
-                            } else if (c == 3) {
-                                strasse = cell.getStringCellValue().trim();
-                            } else if (c == 4) {
-                                plz = cell.getStringCellValue().trim();
-                            } else if (c == 5) {
-                                ort = cell.getStringCellValue().trim();
-                            } else if (c == 6) {
-                                gebdat = cell.getDateCellValue();
-                            } else if (c == 7) {
-                                telefon = cell.getStringCellValue().trim();
-                            } else if (c == 8) {
-                                handy = cell.getStringCellValue().trim();
-                            } else if (c == 9) {
-                                nottel = cell.getStringCellValue().trim();
-                            } else if (c == 10) {
-                                email = cell.getStringCellValue().trim();
+                            if (cell != null) {
+                                if (c == 0) {
+                                    anrede = cell.getStringCellValue().trim();
+                                } else if (c == 1) {
+                                    nachname = cell.getStringCellValue().trim();
+                                } else if (c == 2) {
+                                    vorname = cell.getStringCellValue().trim();
+                                } else if (c == 3) {
+                                    strasse = cell.getStringCellValue().trim();
+                                } else if (c == 4 && cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                                    plz = cell.getStringCellValue().trim();
+                                } else if (c == 4 && cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                                    plz = new Integer(new Double(cell.getNumericCellValue()).intValue()).toString();
+                                } else if (c == 5) {
+                                    ort = cell.getStringCellValue().trim();
+                                } else if (c == 6) {
+                                    gebdat = cell.getDateCellValue();
+                                } else if (c == 7) {
+                                    telefon = cell.getStringCellValue().trim();
+                                } else if (c == 8) {
+                                    handy = cell.getStringCellValue().trim();
+                                } else if (c == 9) {
+                                    nottel = cell.getStringCellValue().trim();
+                                } else if (c == 10) {
+                                    email = cell.getStringCellValue().trim();
+                                }
                             }
                         }
 
-                        setProgress(r * 100 / s.getPhysicalNumberOfRows());
                         try {
+                            setProgress(r * 100 / s.getPhysicalNumberOfRows());
                             personDao.speichern(null, vorname, nachname, gebdat, strasse, plz, ort, telefon, email,
                                     "Herr".equals(anrede) ? Maennlich : Weiblich, handy, nottel);
                             Thread.sleep(100L);
                         } catch (Throwable e) {
                             log.error(e.getMessage(), e);
-                            failed.add(new Object[] { anrede, vorname, nachname, gebdat, strasse, plz, ort, telefon,
-                                    email, handy, nottel, "\n\t" + e.getCause().getMessage().replaceAll("\n", "") });
+                            failed.add(new Object[] { anrede, vorname, nachname,
+                                    new SimpleDateFormat("dd.MM.yy").format(gebdat), strasse, plz, ort, telefon, email,
+                                    handy, nottel, "\n\t" + e.getCause().getMessage().replaceAll("\n", "") });
                         }
 
                     }
@@ -173,6 +180,14 @@ public class ExcelControllerImpl implements ExcelController, PropertyChangeListe
 
                 @Override
                 protected void done() {
+                    try {
+                        get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        log.error(e.getMessage(), e);
+                        DetailsDialog.showDialog(null, "Fehler beim Import",
+                                "Bei der Verarbeitung des Excels kam es zu einem Fehler", e);
+                    }
+
                     progressMonitor.setProgress(100);
                     if (!failed.isEmpty()) {
                         List<String> collect = failed.stream().map(f -> Arrays.toString(f) + "\n")
