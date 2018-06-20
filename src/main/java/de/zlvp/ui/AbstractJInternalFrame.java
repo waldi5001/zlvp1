@@ -1,5 +1,9 @@
 package de.zlvp.ui;
 
+import static java.awt.event.KeyEvent.VK_ESCAPE;
+import static java.awt.event.KeyEvent.VK_W;
+import static javax.swing.KeyStroke.getKeyStroke;
+
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -10,7 +14,6 @@ import java.beans.PropertyVetoException;
 import javax.swing.AbstractAction;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
-import javax.swing.KeyStroke;
 
 public class AbstractJInternalFrame extends JInternalFrame {
 
@@ -20,10 +23,8 @@ public class AbstractJInternalFrame extends JInternalFrame {
 
     public AbstractJInternalFrame() {
         this.desktopPane = DesktopPane.get();
-        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.CTRL_DOWN_MASK),
-                "close");
-        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "close");
-        getActionMap().put("close", new AbstractAction() {
+
+        AbstractAction closeAction = new AbstractAction() {
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -34,7 +35,11 @@ public class AbstractJInternalFrame extends JInternalFrame {
                     e1.printStackTrace();
                 }
             }
-        });
+        };
+
+        getRootPane().getInputMap(WHEN_IN_FOCUSED_WINDOW).put(getKeyStroke(VK_W, KeyEvent.CTRL_DOWN_MASK), "close");
+        getRootPane().getInputMap(WHEN_IN_FOCUSED_WINDOW).put(getKeyStroke(VK_ESCAPE, 0), "close");
+        getRootPane().getActionMap().put("close", closeAction);
     }
 
     protected void setupDialog() {
