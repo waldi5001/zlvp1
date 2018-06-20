@@ -18,7 +18,7 @@ import de.zlvp.ui.AbstractJInternalFrame;
 
 public class LoginDialog extends AbstractJInternalFrame {
 
-    private static final long serialVersionUID = 5225735348585188004L;
+    private static final long serialVersionUID = 1L;
 
     private JPanel jContentPane;
 
