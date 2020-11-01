@@ -35,6 +35,7 @@ import de.zlvp.Events.LagerSelected;
 import de.zlvp.Events.LoginSuccessfull;
 import de.zlvp.Events.PersonSelected;
 import de.zlvp.SelectionContext;
+import de.zlvp.entity.Jahr;
 import de.zlvp.entity.Lagerort;
 import de.zlvp.entity.ZeltdetailBezeichnung;
 import de.zlvp.ui.Actions;
@@ -344,7 +345,8 @@ public class FensterKlasse extends JFrame {
 
                 if (chooser.showOpenDialog(DesktopPane.get()) == ExtendedFileChooser.APPROVE_OPTION) {
                     try {
-                        byte[] vorlage = Client.getExcelController().getVorlage();
+                        Jahr jahr = SelectionContext.get().getJahr();
+                        byte[] vorlage = Client.getExcelController().getVorlage(jahr != null ? jahr.getId() : null);
                         String canonicalPath = chooser.getSelectedFile().getCanonicalPath();
                         Path path = Paths.get(canonicalPath.endsWith("xlsx") ? canonicalPath : canonicalPath + ".xlsx");
                         Files.write(path, vorlage);
