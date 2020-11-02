@@ -9,6 +9,7 @@ import de.zlvp.entity.Person;
 public class PersonDao extends AbstractDao<Person> {
 
     private static final String findAll = "select p.* from person p order by nachname, vorname";
+    private static final String findOne = "select p.* from person p where p.peid = ?";
     private static final String find = "select p.* from person p where p.vorname ilike ? or p.nachname ilike ? order by p.nachname, p.vorname";
 
     private static final String insertPerson = "insert into persont "
@@ -30,15 +31,29 @@ public class PersonDao extends AbstractDao<Person> {
         return select(findAll, rse);
     }
 
-    public void speichern(Integer id, String vorname, String nachname, Date gebdat, String strasse, String plz,
+    public Person speichern(Integer id, String vorname, String nachname, Date gebdat, String strasse, String plz,
             String ort, String telnr, String email, Geschlecht geschlecht, String handy, String nottel) {
+        Integer peid;
         if (id == null) {
-            jdbc.update(insertPerson, vorname, nachname, new java.sql.Date(gebdat.getTime()), strasse, plz, ort, telnr,
-                    email, geschlecht.getDbId(), handy, nottel);
+            peid = (Integer) insertOrUpdate(insertPerson, ps -> {
+                ps.setString(1, vorname);
+                ps.setString(2, nachname);
+                ps.setDate(3, new java.sql.Date(gebdat.getTime()));
+                ps.setString(4, strasse);
+                ps.setString(5, plz);
+                ps.setString(6, ort);
+                ps.setString(7, telnr);
+                ps.setString(8, email);
+                ps.setInt(9, geschlecht.getDbId());
+                ps.setString(10, handy);
+                ps.setString(11, nottel);
+            }).get("peid");
         } else {
             jdbc.update(updatePerson, vorname, nachname, new java.sql.Date(gebdat.getTime()), strasse, plz, ort, telnr,
                     email, geschlecht.getDbId(), handy, nottel, id);
+            peid = id;
         }
+        return selectOne(findOne, ps -> ps.setInt(1, peid), rse);
     }
 
     public List<Person> findPerson(String vorname, String nachname) {

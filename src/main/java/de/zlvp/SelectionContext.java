@@ -24,14 +24,14 @@ public class SelectionContext {
     public void setLager(Lager lager) {
         this.lager = lager;
         this.gruppe = null;
-        this.jahr = null;
+        this.jahr = lager.getJahr();
         this.person = null;
     }
 
     public void setGruppe(Gruppe gruppe) {
         this.gruppe = gruppe;
-        this.lager = null;
-        this.jahr = null;
+        this.lager = gruppe.getLager();
+        this.jahr = gruppe.getLager().getJahr();
         this.person = null;
     }
 

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.zlvp</groupId>
 	<artifactId>zlvp</artifactId>
-	<version>0.8</version>
+	<version>0.9</version>
 	<distributionManagement>
 		<repository>
 			<id>internal.repo</id>
@@ -15,7 +15,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>22.0</version>
+			<version>30.0-jre</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.codehaus.mojo</groupId>
@@ -29,6 +29,18 @@
 					<groupId>com.google.errorprone</groupId>
 					<artifactId>error_prone_annotations</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>com.google.code.findbugs</groupId>
+					<artifactId>jsr305</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.google.guava</groupId>
+					<artifactId>listenablefuture</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.checkerframework</groupId>
+					<artifactId>checker-qual</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -39,12 +51,12 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
-			<version>3.10.1</version>
+			<version>4.1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>3.10.1</version>
+			<version>4.1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>

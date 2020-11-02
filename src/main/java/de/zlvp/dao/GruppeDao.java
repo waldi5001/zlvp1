@@ -5,10 +5,13 @@ import java.util.List;
 import de.zlvp.entity.Gruppe;
 
 public class GruppeDao extends AbstractDao<Gruppe> {
+
     private static final String find = "select g.* from gruppe g where grid = ?";
+    private static final String findByName = "select g.* from gruppe g where name = ?";
     private static final String findAll = "SELECT grid, name, schlachtruf FROM gruppe ORDER BY name";
     private static final String findAllUnassigned = "select g.* from gruppe g where not exists (select gruppe from stgrla st where g.grid = st.gruppe) ORDER BY g.name";
     private static final String findAllFromLager = "select g.* from gruppe g inner join stgrla st on g.grid = st.gruppe where st.lager = ? ORDER BY g.name";
+    private static final String findAllFromJahr = "select g.* from gruppe g inner join stgrla st on g.grid = st.gruppe inner join lager l on st.lager = l.laid inner join stlaja on l.laid = stlaja.lager where stlaja.jahr = ? ORDER BY g.name";
 
     private static final String insertGruppeZuLager = "INSERT INTO stGrLaT (lager,gruppe) values (?,?)";
     private static final String deleteGruppeZuLager = "delete from stGrLaT where lager = ? and gruppe = ?";
@@ -29,6 +32,10 @@ public class GruppeDao extends AbstractDao<Gruppe> {
     public List<Gruppe> getAllFromLager(int lagerId) {
         return select(findAllFromLager, ps -> ps.setInt(1, lagerId), rse);
 
+    }
+
+    public List<Gruppe> getAllFromJahr(int jahrId) {
+        return select(findAllFromJahr, ps -> ps.setInt(1, jahrId), rse);
     }
 
     public Gruppe get(int gruppeId) {
@@ -52,6 +59,10 @@ public class GruppeDao extends AbstractDao<Gruppe> {
         }
 
         return get(grid);
+    }
+
+    public Gruppe findGruppe(String bezeichnung) {
+        return selectOne(findByName, ps -> ps.setString(1, bezeichnung), rse);
     }
 
     public void speicherenZuLager(int lagerId, int gruppeId) {
