@@ -1,6 +1,7 @@
 package de.zlvp.gui;
 
 import static de.zlvp.Client.get;
+import static java.lang.String.format;
 
 import java.awt.BorderLayout;
 import java.awt.Desktop;
@@ -95,11 +96,11 @@ public class FensterKlasse extends JFrame {
 
     private JMenuItem jMenuItemTeGruppe;
 
-    private JMenuItem jMenuItemBezLöschen;
+    private JMenuItem jMenuItemBezLoeschen;
 
-    private JMenuItem jMenuItemNachtWache;
+    private JMenuItem jMenuItemNachtwache;
 
-    private JMenuItem jMenuItemNachtWacheGruppe;
+    private JMenuItem jMenuItemNachtwacheGruppe;
     private JMenuItem jMenuItemLegendaListen;
 
     private JPanel jContentPane;
@@ -282,7 +283,7 @@ public class FensterKlasse extends JFrame {
             jMenuItemUeber.addActionListener(e -> {
                 try {
                     AboutDialog.showDialog(null, null, "",
-                            String.format("Version: %s", getClass().getPackage().getImplementationVersion()));
+                            format("Version: %s", getClass().getPackage().getImplementationVersion()));
                 } catch (IOException e1) {
                     throw new RuntimeException(e1.getMessage(), e1);
                 }
@@ -313,10 +314,8 @@ public class FensterKlasse extends JFrame {
                 if (chooser.showOpenDialog(DesktopPane.get()) == ExtendedFileChooser.APPROVE_OPTION) {
                     try {
                         JasperViewer.viewReport(chooser.getSelectedFile().getCanonicalPath(), false, false);
-                    } catch (IOException e1) {
-                        throw new RuntimeException(e1.getMessage(), e1);
-                    } catch (JRException e1) {
-                        throw new RuntimeException(e1.getMessage(), e1);
+                    } catch (Throwable t) {
+                        throw new RuntimeException(t.getMessage(), t);
                     }
                 }
             });
@@ -774,10 +773,10 @@ public class FensterKlasse extends JFrame {
     }
 
     private JMenuItem getJMenuItemBezLöschen() {
-        if (jMenuItemBezLöschen == null) {
-            jMenuItemBezLöschen = new JMenuItem();
-            jMenuItemBezLöschen.setText("Bezeichnungen Löschen");
-            jMenuItemBezLöschen.addActionListener(e -> {
+        if (jMenuItemBezLoeschen == null) {
+            jMenuItemBezLoeschen = new JMenuItem();
+            jMenuItemBezLoeschen.setText("Bezeichnungen Löschen");
+            jMenuItemBezLoeschen.addActionListener(e -> {
                 get().getAllZeltdetailBezeichnung(allZeltdetailBezeichnung -> {
                     ZeltdetailBezeichnung[] zdbs = allZeltdetailBezeichnung
                             .toArray(new ZeltdetailBezeichnung[allZeltdetailBezeichnung.size()]);
@@ -791,27 +790,27 @@ public class FensterKlasse extends JFrame {
                 });
             });
         }
-        return jMenuItemBezLöschen;
+        return jMenuItemBezLoeschen;
     }
 
     private JMenuItem getJMenuItemNachtWache() {
-        if (jMenuItemNachtWache == null) {
-            jMenuItemNachtWache = new JMenuItem();
-            jMenuItemNachtWache.setText("Nachtwache");
-            jMenuItemNachtWache.addActionListener(
+        if (jMenuItemNachtwache == null) {
+            jMenuItemNachtwache = new JMenuItem();
+            jMenuItemNachtwache.setText("Nachtwache");
+            jMenuItemNachtwache.addActionListener(
                     e -> Client.getReports().nachtwachenliste(SelectionContext.get().getLager().getId()));
         }
-        return jMenuItemNachtWache;
+        return jMenuItemNachtwache;
     }
 
     private JMenuItem getJMenuItemNachtWacheGruppe() {
-        if (jMenuItemNachtWacheGruppe == null) {
-            jMenuItemNachtWacheGruppe = new JMenuItem();
-            jMenuItemNachtWacheGruppe.setText("Nachtwache nach Gruppen");
-            jMenuItemNachtWacheGruppe.addActionListener(
+        if (jMenuItemNachtwacheGruppe == null) {
+            jMenuItemNachtwacheGruppe = new JMenuItem();
+            jMenuItemNachtwacheGruppe.setText("Nachtwache nach Gruppen");
+            jMenuItemNachtwacheGruppe.addActionListener(
                     e -> Client.getReports().nachtwachenlisteGruppe(SelectionContext.get().getLager().getId()));
         }
-        return jMenuItemNachtWacheGruppe;
+        return jMenuItemNachtwacheGruppe;
     }
 
     private JMenuItem getJMenuItemLegendaListen() {
