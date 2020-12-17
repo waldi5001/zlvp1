@@ -89,18 +89,12 @@ public class ExcelControllerImpl implements ExcelController, PropertyChangeListe
                 s.addValidationData(validationHelper.createValidation(gruppenConstraints, gruppenRange));
             }
 
-            titelRow.createCell(0).setCellValue("Anrede");
-            titelRow.createCell(1).setCellValue("Nachname");
-            titelRow.createCell(2).setCellValue("Vorname");
-            titelRow.createCell(3).setCellValue("Straße");
-            titelRow.createCell(4).setCellValue("PLZ");
-            titelRow.createCell(5).setCellValue("Ort");
-            titelRow.createCell(6).setCellValue("Geburtstag");
-            titelRow.createCell(7).setCellValue("Telefon");
-            titelRow.createCell(8).setCellValue("Handy");
-            titelRow.createCell(9).setCellValue("Notfall Telefon");
-            titelRow.createCell(10).setCellValue("Email");
-            titelRow.createCell(11).setCellValue("Gruppe");
+            String[] titel =
+                    new String[]{ "Anrede", "Nachname", "Vorname", "Straße", "PLZ", "Ort", "Geburtstag", "Telefon",
+                            "Handy", "Notfall Telefon", "Email", "Gruppe" };
+            for (int i = 0; i < titel.length; i++) {
+                titelRow.createCell(i).setCellValue(titel[i]);
+            }
 
             Row beispielRow = s.createRow(1);
             beispielRow.createCell(0).setCellValue("Frau");
