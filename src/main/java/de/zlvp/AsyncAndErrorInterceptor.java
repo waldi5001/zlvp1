@@ -41,13 +41,13 @@ public class AsyncAndErrorInterceptor implements MethodInterceptor {
                 }
                 invocation.proceed();
                 edtCallback.get(proxy.getControllerResult());
+            } catch (Throwable e) {
+                handleThrowable(e);
+            }finally {
                 if (invocationCounter.decrementAndGet() == 0) {
                     CursorToolkit.stopWaitCursor(fensterKlasse.getRootPane());
                 }
-            } catch (Throwable e) {
-                handleThrowable(e);
             }
-
         });
 
         return null;
