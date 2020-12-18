@@ -134,10 +134,10 @@ public class Events {
         bus.post((LagerRenamed) () -> lager);
     }
 
-    public static interface Aktualisieren {
+    public  interface Aktualisieren {
     }
 
-    public static interface LeiterSaved {
+    public  interface LeiterSaved {
         Leiter get();
 
         Gruppe srcGruppe();
@@ -149,7 +149,7 @@ public class Events {
         };
     }
 
-    public static interface TeilnehmerSaved {
+    public  interface TeilnehmerSaved {
         Teilnehmer get();
 
         Gruppe srcGruppe();
@@ -161,7 +161,7 @@ public class Events {
         };
     }
 
-    public static interface GruppeSaved {
+    public  interface GruppeSaved {
         Gruppe get();
 
         Lager srcLager();
@@ -173,39 +173,39 @@ public class Events {
         };
     }
 
-    public static interface LagerSaved {
+    public  interface LagerSaved {
         Lager get();
     }
 
-    public static interface LagerRenamed {
-        Lager get();
-    }
-
-    @FunctionalInterface
-    public static interface LagerSelected {
+    public  interface LagerRenamed {
         Lager get();
     }
 
     @FunctionalInterface
-    public static interface GruppeSelected {
+    public  interface LagerSelected {
+        Lager get();
+    }
+
+    @FunctionalInterface
+    public  interface GruppeSelected {
         Gruppe get();
     }
 
     @FunctionalInterface
-    public static interface PersonSelected {
+    public  interface PersonSelected {
         Person get();
     }
 
     @FunctionalInterface
-    public static interface JahrSelected {
+    public  interface JahrSelected {
         Jahr get();
     }
 
-    public static interface DisableMenuItems {
+    public  interface DisableMenuItems {
     }
 
     @FunctionalInterface
-    public static interface LoginSuccessfull {
+    public  interface LoginSuccessfull {
         String getUsername();
     }
 

@@ -95,10 +95,8 @@ public class JTreeTransferHandler extends TransferHandler {
                     }
                     return true;
                 }
-            } catch (UnsupportedFlavorException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            } catch (java.io.IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
+            } catch (Throwable t) {
+                throw new RuntimeException(t.getMessage(), t);
             }
         }
         return false;
@@ -172,10 +170,8 @@ public class JTreeTransferHandler extends TransferHandler {
                     }
                 }
             }
-        } catch (UnsupportedFlavorException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        } catch (java.io.IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
+        } catch (Throwable t) {
+            throw new RuntimeException(t.getMessage(), t);
         }
 
         return true;

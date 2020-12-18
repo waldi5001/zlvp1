@@ -2,6 +2,7 @@ package de.zlvp.controller;
 
 import static de.zlvp.entity.Geschlecht.Maennlich;
 import static de.zlvp.entity.Geschlecht.Weiblich;
+import static java.util.Calendar.APRIL;
 import static java.util.stream.Collectors.toList;
 
 import java.beans.PropertyChangeEvent;
@@ -105,7 +106,7 @@ public class ExcelControllerImpl implements ExcelController, PropertyChangeListe
             beispielRow.createCell(5).setCellValue("Bräunlingen");
 
             Calendar c = Calendar.getInstance();
-            c.set(1944, 4, 21);
+            c.set(1944, APRIL, 21);
             Cell geburtstag = beispielRow.createCell(6);
             geburtstag.setCellValue(c);
             geburtstag.setCellStyle(cs);
@@ -230,7 +231,7 @@ public class ExcelControllerImpl implements ExcelController, PropertyChangeListe
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
+        if ("progress".equals(evt.getPropertyName())) {
             int progress = (Integer) evt.getNewValue();
             progressMonitor.setProgress(progress);
             String message = String.format("Fertig: %d%%.\n", progress);
