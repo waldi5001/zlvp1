@@ -15,7 +15,7 @@ import de.zlvp.ui.AbstractJInternalFrame;
 
 public class PasswortAendern extends AbstractJInternalFrame {
 
-    private static final long serialVersionUID = 1456325056875416840L;
+    private static final long serialVersionUID = 1L;
 
     private JPanel jContentPane;
 

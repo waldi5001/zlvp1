@@ -96,7 +96,7 @@ public class JTableBuilders {
                 .addColumn(ColumnBuilder.get(Funktion.class).add("Funktion")
                         .add(JComboBoxBuilder.get(Funktion.class, allFunktion -> {
                             allFunktion.get(asList(Funktion.values()));
-                        }).map(f -> f.getBezeichnung()).build()).desc().build());
+                        }).map(Funktion::getBezeichnung).build()).desc().build());
     }
 
     public static JTableBuilder<Materialwart> materialwart(Callback<Lager> lagerCallback, Loader<Person> loaderPerson,

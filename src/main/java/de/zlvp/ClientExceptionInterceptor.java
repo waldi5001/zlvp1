@@ -19,11 +19,9 @@ public class ClientExceptionInterceptor extends EventQueue {
         } catch (Throwable t) {
             log.error(t.getMessage(), t);
             String message = t.getMessage();
-
             if (message == null || message.length() == 0) {
                 message = "Fatal: " + t.getClass();
             }
-
             DetailsDialog.showDialog(null, "Fehler", message, t);
         }
     }
