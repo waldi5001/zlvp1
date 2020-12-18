@@ -79,24 +79,25 @@ public class JTreeTransferHandler extends TransferHandler {
             }
         } else if (support.isDataFlavorSupported(listFlavor)) {
             JTree.DropLocation dl = (JTree.DropLocation) support.getDropLocation();
-            try {
-                Transferable t = support.getTransferable();
-                Person person = (Person) t.getTransferData(listFlavor);
-                DefaultMutableTreeNode targetModel = (DefaultMutableTreeNode) dl.getPath().getLastPathComponent();
+            if (dl != null && dl.getPath() != null) {
+                try {
+                    Transferable t = support.getTransferable();
+                    Person person = (Person) t.getTransferData(listFlavor);
+                    DefaultMutableTreeNode targetModel = (DefaultMutableTreeNode) dl.getPath().getLastPathComponent();
 
-                if (targetModel.getUserObject().equals("Teilnehmer") || targetModel.getUserObject().equals("Leiter")) {
-                    @SuppressWarnings("unchecked")
-                    Enumeration<DefaultMutableTreeNode> children = targetModel.children();
-                    while (children.hasMoreElements()) {
-                        DefaultMutableTreeNode node = children.nextElement();
-                        if (node.getUserObject().equals(person)) {
-                            return false;
+                    if (targetModel.getUserObject().equals("Teilnehmer") || targetModel.getUserObject().equals("Leiter")) {
+                        @SuppressWarnings("unchecked") Enumeration<DefaultMutableTreeNode> children = targetModel.children();
+                        while (children.hasMoreElements()) {
+                            DefaultMutableTreeNode node = children.nextElement();
+                            if (node.getUserObject().equals(person)) {
+                                return false;
+                            }
                         }
+                        return true;
                     }
-                    return true;
+                } catch (Throwable t) {
+                    throw new RuntimeException(t.getMessage(), t);
                 }
-            } catch (Throwable t) {
-                throw new RuntimeException(t.getMessage(), t);
             }
         }
         return false;
