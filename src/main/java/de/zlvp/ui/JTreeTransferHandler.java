@@ -130,12 +130,12 @@ public class JTreeTransferHandler extends TransferHandler {
                 if (dropUserObject instanceof Lager) {
                     Lager lager = (Lager) dropUserObject;
                     Gruppe gruppe = (Gruppe) srcNode.getUserObject();
-
-                    get().verschiebeGruppe(gruppe.getId(), gruppe.getLager().getId(), lager.getId(),
-                            c -> Events.get().fireGruppeSaved(gruppe, gruppe.getLager(), lager));
-                } else if ((dropUserObject instanceof String
-                        && ("Leiter".equals(dropUserObject) || "Teilnehmer".equals(dropUserObject)))
-                        && srcNode.getUserObject() instanceof Person) {
+                    get().verschiebeGruppe(gruppe.getId(), gruppe.getLager().getId(), lager.getId(), c -> {
+                        Lager oldLager = gruppe.getLager();
+                        gruppe.setLager(lager);
+                        Events.get().fireGruppeSaved(gruppe, oldLager, lager);
+                    });
+                } else if ((dropUserObject instanceof String && ("Leiter".equals(dropUserObject) || "Teilnehmer".equals(dropUserObject))) && srcNode.getUserObject() instanceof Person) {
 
                     Person person = (Person) srcNode.getUserObject();
                     Gruppe srcGruppe = (Gruppe) ((DefaultMutableTreeNode) srcNode.getParent().getParent())
@@ -143,11 +143,15 @@ public class JTreeTransferHandler extends TransferHandler {
                     Gruppe destGruppe = (Gruppe) ((DefaultMutableTreeNode) dropNode.getParent()).getUserObject();
 
                     if ("Leiter".equals(dropUserObject) && person instanceof Leiter) {
-                        get().verschiebeLeiter(person.getId(), srcGruppe.getId(), destGruppe.getId(),
-                                c -> Events.get().fireLeiterSaved((Leiter) person, srcGruppe, destGruppe));
+                        get().verschiebeLeiter(person.getId(), srcGruppe.getId(), destGruppe.getId(), c -> {
+                            ((Leiter) person).setGruppe(destGruppe);
+                            Events.get().fireLeiterSaved((Leiter) person, srcGruppe, destGruppe);
+                        });
                     } else if ("Teilnehmer".equals(dropUserObject) && person instanceof Teilnehmer) {
-                        get().verschiebeTeilnehmer(person.getId(), srcGruppe.getId(), destGruppe.getId(),
-                                c -> Events.get().fireTeilnehmerSaved((Teilnehmer) person, srcGruppe, destGruppe));
+                        get().verschiebeTeilnehmer(person.getId(), srcGruppe.getId(), destGruppe.getId(), c -> {
+                            ((Teilnehmer) person).setGruppe(destGruppe);
+                            Events.get().fireTeilnehmerSaved((Teilnehmer) person, srcGruppe, destGruppe);
+                        });
                     }
                 }
             } else if (t.isDataFlavorSupported(listFlavor)) {
