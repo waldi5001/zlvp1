@@ -1,47 +1,6 @@
 package de.zlvp.gui;
 
-import static de.zlvp.Client.get;
-
-import java.awt.AWTKeyStroke;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.KeyboardFocusManager;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeListener;
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
-
-import javax.swing.InputMap;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DateFormatter;
-
 import com.google.common.eventbus.Subscribe;
-
 import de.javasoft.swing.JYTableScrollPane;
 import de.zlvp.Events;
 import de.zlvp.Events.LagerSelected;
@@ -56,6 +15,27 @@ import de.zlvp.entity.Zelt;
 import de.zlvp.ui.JComboBoxBuilder;
 import de.zlvp.ui.JTableBuilder;
 import de.zlvp.ui.JTableBuilders;
+import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeListener;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DateFormatter;
+
+import static de.zlvp.Client.get;
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
 
 public class TPLager extends JTabbedPane {
 
@@ -116,16 +96,29 @@ public class TPLager extends JTabbedPane {
         Events.bus().register(this);
 
         tableBuilderStab =
-                JTableBuilders.stab(() -> lager, get()::getAllPersons, allStab -> get().getAllStab(lager.getId(), allStab))
-                        .doubleClicked(selectedValue -> new PersonSuchen(selectedValue.getId()));
-        tableBuilderMaterialwart =
-                JTableBuilders.materialwart(() -> lager, get()::getAllPersons, allMaterialwart -> get().getAllMaterialwart(lager.getId(),
-                        allMaterialwart)).doubleClicked(selectedValue -> new PersonSuchen(selectedValue.getId()));
-        tableBuilderZelt =
-                JTableBuilders.zelteVonLager(() -> lager, get()::getAllZelt, allZeltFromLager -> get().getAllZeltFromLager(lager.getId(),
-                        allZeltFromLager));
+                JTableBuilders.stab(() -> lager, get()::getAllPersons, allStab -> get().getAllStab(lager.getId(), allStab)).doubleClicked(
+                        selectedValue -> new PersonSuchen(selectedValue.getId())).tooltip(
+                        (objectUnderTooltip, asynCallback) -> get().getAllLagerFromPerson(objectUnderTooltip.getId(), cb -> {
+                            String innerHtml =
+                                    cb.stream().map(l -> format("%s (%s) als %s", l.getName(), l.getJahrAsString(), l.getDabeiAls())).collect(
+                                            joining("<br>"));
+                            asynCallback.get(format("<html>%s</html>", innerHtml));
+                        }));
+        tableBuilderMaterialwart = JTableBuilders.materialwart(() -> lager, get()::getAllPersons,
+                allMaterialwart -> get().getAllMaterialwart(lager.getId(), allMaterialwart)).doubleClicked(
+                selectedValue -> new PersonSuchen(selectedValue.getId())).tooltip(
+                (objectUnderTooltip, asynCallback) -> get().getAllLagerFromPerson(objectUnderTooltip.getId(), cb -> {
+                    String innerHtml =
+                            cb.stream().map(l -> format("%s (%s) als %s", l.getName(), l.getJahrAsString(), l.getDabeiAls())).collect(
+                                    joining("<br>"));
+                    asynCallback.get(format("<html>%s</html>", innerHtml));
+                }));
+        tableBuilderZelt = JTableBuilders.zelteVonLager(() -> lager, get()::getAllZelt,
+                allZeltFromLager -> get().getAllZeltFromLager(lager.getId(), allZeltFromLager));
         tableBuilderGruppe =
-                JTableBuilders.gruppe(() -> lager, getJCheckBoxAlleGruppenAnzeigen()::isSelected, cb -> cb.get(lager.getGruppe()));
+                JTableBuilders.gruppe(() -> lager, getJCheckBoxAlleGruppenAnzeigen()::isSelected, cb -> cb.get(lager.getGruppe())).tooltip(
+                        (gruppe, asyncCallback) -> get().getLagerFromGruppe(gruppe.getId(),
+                                cb -> asyncCallback.get(cb != null ? cb.getName() : "Ist keinem Lager zugeordnet")));
         comboboxBuilderLagerort = JComboBoxBuilder.get(Lagerort.class, get()::getAllLagerort, () -> {
             if (lager != null) {
                 if (lager.getLagerort() != null) {
@@ -290,8 +283,8 @@ public class TPLager extends JTabbedPane {
                 @Override
                 public void focusLost(FocusEvent e) {
                     lager.setName(jTextFieldName.getText());
-                    get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(),
-                            lager.getDatumStop(), result -> {
+                    get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(), lager.getDatumStop(),
+                            result -> {
                                 Events.get().fireLagerSaved(lager);
                             });
                 }
@@ -333,8 +326,8 @@ public class TPLager extends JTabbedPane {
                 @Override
                 public void focusLost(FocusEvent e) {
                     lager.setThema(jTextFieldThema.getText());
-                    get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(),
-                            lager.getDatumStop(), result -> {
+                    get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(), lager.getDatumStop(),
+                            result -> {
                                 Events.get().fireLagerSaved(lager);
                             });
                 }
@@ -346,12 +339,12 @@ public class TPLager extends JTabbedPane {
 
     private JFormattedTextField getJFormattedTextFieldDatumStart() {
         if (jFormattedTextFieldDatumStart == null) {
-            jFormattedTextFieldDatumStart = new JFormattedTextField(
-                    new DateFormatter(DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN)));
+            jFormattedTextFieldDatumStart =
+                    new JFormattedTextField(new DateFormatter(DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN)));
             PropertyChangeListener l = evt -> {
                 lager.setDatumStart((Date) evt.getNewValue());
-                get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(),
-                        lager.getDatumStop(), result -> {
+                get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(), lager.getDatumStop(),
+                        result -> {
                         });
             };
             jFormattedTextFieldDatumStart.addPropertyChangeListener("value", l);
@@ -361,12 +354,12 @@ public class TPLager extends JTabbedPane {
 
     private JFormattedTextField getJFormattedTextFieldDatumStop() {
         if (jFormattedTextFieldDatumStop == null) {
-            jFormattedTextFieldDatumStop = new JFormattedTextField(
-                    new DateFormatter(DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN)));
+            jFormattedTextFieldDatumStop =
+                    new JFormattedTextField(new DateFormatter(DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN)));
             PropertyChangeListener l = evt -> {
                 lager.setDatumStop((Date) evt.getNewValue());
-                get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(),
-                        lager.getDatumStop(), result -> {
+                get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(), lager.getDatumStop(),
+                        result -> {
                         });
             };
             jFormattedTextFieldDatumStop.addPropertyChangeListener("value", l);
@@ -504,8 +497,8 @@ public class TPLager extends JTabbedPane {
                     get().speichereProgramm(lager.getId(), null, lager.getDatumStart(), null, null, null,
                             asyncCallback -> tableBuilderProgramm.refresh());
                 } else {
-                    Date letztesDatum = (Date) getJTableProgramm().getModel()
-                            .getValueAt(getJTableProgramm().getModel().getRowCount() - 1, 0);
+                    Date letztesDatum =
+                            (Date) getJTableProgramm().getModel().getValueAt(getJTableProgramm().getModel().getRowCount() - 1, 0);
 
                     Calendar c = Calendar.getInstance();
                     c.setTime(letztesDatum);
@@ -561,18 +554,15 @@ public class TPLager extends JTabbedPane {
             jButtonHinzufuegenEssen.setText("Hinzufügen");
             jButtonHinzufuegenEssen.addActionListener(e -> {
                 if (getJTableEssen().getModel().getRowCount() == 0) {
-                    get().speichereEssen(lager.getId(), null, lager.getDatumStart(), null, null, null,
-                            cb -> tableBuilderEssen.refresh());
+                    get().speichereEssen(lager.getId(), null, lager.getDatumStart(), null, null, null, cb -> tableBuilderEssen.refresh());
                 } else {
-                    Date letztesDatum = (Date) getJTableEssen().getModel()
-                            .getValueAt(getJTableEssen().getModel().getRowCount() - 1, 0);
+                    Date letztesDatum = (Date) getJTableEssen().getModel().getValueAt(getJTableEssen().getModel().getRowCount() - 1, 0);
 
                     Calendar c = Calendar.getInstance();
                     c.setTime(letztesDatum);
                     c.add(Calendar.DAY_OF_MONTH, 1);
 
-                    get().speichereEssen(lager.getId(), null, c.getTime(), null, null, null,
-                            cb -> tableBuilderEssen.refresh());
+                    get().speichereEssen(lager.getId(), null, c.getTime(), null, null, null, cb -> tableBuilderEssen.refresh());
                 }
             });
         }
@@ -585,9 +575,8 @@ public class TPLager extends JTabbedPane {
             jComboBoxLagerOrt.addItemListener(e -> {
                 if (e.getStateChange() == ItemEvent.SELECTED && jComboBoxLagerOrt.isPopupVisible()) {
                     lager.setLagerort((Lagerort) e.getItem());
-                    get().speichereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(),
-                            lager.getDatumStop(), lager.getJahr().getId(), lager.getLagerort().getId(),
-                            cb -> Events.get().fireLagerSaved(lager));
+                    get().speichereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(), lager.getDatumStop(),
+                            lager.getJahr().getId(), lager.getLagerort().getId(), cb -> Events.get().fireLagerSaved(lager));
                 }
             });
         }
@@ -603,18 +592,15 @@ public class TPLager extends JTabbedPane {
 
     private void setupTabTraversalKeys() {
         KeyStroke ctrlTab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.CTRL_DOWN_MASK);
-        KeyStroke ctrlShiftTab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB,
-                KeyEvent.SHIFT_DOWN_MASK | KeyEvent.CTRL_DOWN_MASK);
+        KeyStroke ctrlShiftTab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, KeyEvent.SHIFT_DOWN_MASK | KeyEvent.CTRL_DOWN_MASK);
 
         // Remove ctrl-tab from normal focus traversal
-        Set<AWTKeyStroke> forwardKeys = new HashSet<>(
-                getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS));
+        Set<AWTKeyStroke> forwardKeys = new HashSet<>(getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS));
         forwardKeys.remove(ctrlTab);
         setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, forwardKeys);
 
         // Remove ctrl-shift-tab from normal focus traversal
-        Set<AWTKeyStroke> backwardKeys = new HashSet<>(
-                getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS));
+        Set<AWTKeyStroke> backwardKeys = new HashSet<>(getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS));
         backwardKeys.remove(ctrlShiftTab);
         setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, backwardKeys);
 
