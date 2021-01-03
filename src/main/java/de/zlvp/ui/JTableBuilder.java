@@ -404,32 +404,32 @@ public class JTableBuilder<E> {
     }
 
     @FunctionalInterface
-    public static interface Loader<T> {
+    public interface Loader<T> {
         void get(AsyncCallback<List<T>> result);
     }
 
     @FunctionalInterface
-    public static interface ObjectGetter<T> {
+    public interface ObjectGetter<T> {
         Object get(T object, int column);
     }
 
     @FunctionalInterface
-    public static interface ObjectSetter<T> {
+    public interface ObjectSetter<T> {
         void set(T object, Object objectToSet, int column);
     }
 
     @FunctionalInterface
-    public static interface Saver<T> {
+    public interface Saver<T> {
         void save(T toSave, AsyncCallback<Void> asyncCallback);
     }
 
     @FunctionalInterface
-    public static interface Deleter<T> {
+    public interface Deleter<T> {
         void delete(List<T> data, AsyncCallback<Void> asyncCallback);
     }
 
     @FunctionalInterface
-    public static interface TooltipSetter<T> {
+    public interface TooltipSetter<T> {
         void setToolTip(T objectUnderTooltip, AsyncCallback<String> asyncCallback);
     }
 
