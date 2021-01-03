@@ -84,6 +84,11 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
+    public void getPerson(int personId, AsyncCallback<Person> callback) {
+        callback.get(personDao.getPerson(personId));
+    }
+
+    @Override
     public void getAllAnrede(AsyncCallback<List<Anrede>> callback) {
         callback.get(anredeDao.getAll());
     }

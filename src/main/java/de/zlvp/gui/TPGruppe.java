@@ -82,10 +82,12 @@ public class TPGruppe extends JTabbedPane {
     public TPGruppe() {
         Events.bus().register(this);
 
-        tableBuilderTeilnehmer = JTableBuilders.teilnehmer(() -> gruppe, get()::getAllPersons,
-                allTeilnehmer -> get().getAllTeilnehmer(gruppe.getId(), allTeilnehmer));
+        tableBuilderTeilnehmer =
+                JTableBuilders.teilnehmer(() -> gruppe, get()::getAllPersons, allTeilnehmer -> get().getAllTeilnehmer(gruppe.getId(),
+                        allTeilnehmer)).doubleClicked(selectedValue -> new PersonSuchen(selectedValue.getId()));
+
         tableBuilderLeiter = JTableBuilders.leiter(() -> gruppe, get()::getAllPersons,
-                allLeiter -> get().getAllLeiter(gruppe.getId(), allLeiter));
+                allLeiter -> get().getAllLeiter(gruppe.getId(), allLeiter)).doubleClicked(selectedValue -> new PersonSuchen(selectedValue.getId()));
         tableBuilderZelt = JTableBuilders.zelteVonGruppe(() -> gruppe,
                 allZelt -> get().getAllZeltFromLager(gruppe.getLager().getId(), allZelt),
                 allZeltFromGruppe -> get().getAllZeltFromGruppe(gruppe.getId(), allZeltFromGruppe));

@@ -24,7 +24,8 @@ public class LagerinfoVerwalten extends AbstractJInternalFrame {
     private JTableBuilder<Lagerinfo> tableBuilder;
 
     public LagerinfoVerwalten() {
-        tableBuilder = JTableBuilders.lagerinfo(get()::getAllPersons, get()::getAllLagerinfo);
+        tableBuilder =
+                JTableBuilders.lagerinfo(get()::getAllPersons, get()::getAllLagerinfo).doubleClicked(selectedValue -> new PersonSuchen(selectedValue.getId()));
         initialize();
         setup();
         // Sollte erst nach Laden gemacht werden.

@@ -32,6 +32,8 @@ public interface Controller {
 
     void findPerson(String vorname, String nachname, AsyncCallback<List<Person>> callback);
 
+    void getPerson(int personId, AsyncCallback<Person> callback);
+
     void getAllAnrede(AsyncCallback<List<Anrede>> callback);
 
     void getAllEssen(int lagerId, AsyncCallback<List<Essen>> callback);
