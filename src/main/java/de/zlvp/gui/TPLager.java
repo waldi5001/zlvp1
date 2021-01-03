@@ -115,14 +115,17 @@ public class TPLager extends JTabbedPane {
     public TPLager() {
         Events.bus().register(this);
 
-        tableBuilderStab = JTableBuilders.stab(() -> lager, get()::getAllPersons,
-                allStab -> get().getAllStab(lager.getId(), allStab));
-        tableBuilderMaterialwart = JTableBuilders.materialwart(() -> lager, get()::getAllPersons,
-                allMaterialwart -> get().getAllMaterialwart(lager.getId(), allMaterialwart));
-        tableBuilderZelt = JTableBuilders.zelteVonLager(() -> lager, get()::getAllZelt,
-                allZeltFromLager -> get().getAllZeltFromLager(lager.getId(), allZeltFromLager));
-        tableBuilderGruppe = JTableBuilders.gruppe(() -> lager, getJCheckBoxAlleGruppenAnzeigen()::isSelected,
-                cb -> cb.get(lager.getGruppe()));
+        tableBuilderStab =
+                JTableBuilders.stab(() -> lager, get()::getAllPersons, allStab -> get().getAllStab(lager.getId(), allStab))
+                        .doubleClicked(selectedValue -> new PersonSuchen(selectedValue.getId()));
+        tableBuilderMaterialwart =
+                JTableBuilders.materialwart(() -> lager, get()::getAllPersons, allMaterialwart -> get().getAllMaterialwart(lager.getId(),
+                        allMaterialwart)).doubleClicked(selectedValue -> new PersonSuchen(selectedValue.getId()));
+        tableBuilderZelt =
+                JTableBuilders.zelteVonLager(() -> lager, get()::getAllZelt, allZeltFromLager -> get().getAllZeltFromLager(lager.getId(),
+                        allZeltFromLager));
+        tableBuilderGruppe =
+                JTableBuilders.gruppe(() -> lager, getJCheckBoxAlleGruppenAnzeigen()::isSelected, cb -> cb.get(lager.getGruppe()));
         comboboxBuilderLagerort = JComboBoxBuilder.get(Lagerort.class, get()::getAllLagerort, () -> {
             if (lager != null) {
                 if (lager.getLagerort() != null) {

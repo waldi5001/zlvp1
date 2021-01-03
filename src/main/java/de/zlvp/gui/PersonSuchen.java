@@ -1,27 +1,5 @@
 package de.zlvp.gui;
 
-import static de.zlvp.Client.get;
-import static java.util.Arrays.asList;
-
-import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextField;
-import javax.swing.text.DateFormatter;
-
 import de.zlvp.Client;
 import de.zlvp.entity.Geschlecht;
 import de.zlvp.entity.Person;
@@ -29,10 +7,20 @@ import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JComboBoxBuilder;
 import de.zlvp.ui.JListBuilder;
 import de.zlvp.ui.JListTransferHandler;
+import java.awt.*;
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Locale;
+import javax.swing.*;
+import javax.swing.text.DateFormatter;
+
+import static de.zlvp.Client.get;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 
 public class PersonSuchen extends AbstractJInternalFrame {
 
-    private static final long serialVersionUID = 5510798374241439356L;
+    private static final long serialVersionUID = 1L;
 
     private JPanel jContentPane;
 
@@ -91,19 +79,19 @@ public class PersonSuchen extends AbstractJInternalFrame {
     private JLabel jLabel9;
     private JTextField jTextFieldHandy;
     private JTextField jTextFieldNottel;
-    private JLabel jLabel61;
+    private JLabel jLabel10;
     private JButton jButtonStatistik;
 
     private JButton jButtonAbbrechen;
 
     private final JComboBoxBuilder<Geschlecht> comboboxBuilderGeschlecht;
 
-    private JListBuilder<Person> jListBuilder;
+    private final JListBuilder<Person> jListBuilder;
 
     public PersonSuchen() {
         comboboxBuilderGeschlecht = JComboBoxBuilder
                 .get(Geschlecht.class, allGeschlecht -> allGeschlecht.get(asList(Geschlecht.values())))
-                .map(g -> g.getBezeichnung());
+                .map(Geschlecht::getBezeichnung);
 
         jListBuilder = JListBuilder.get(Person.class, asyncCallback -> get()
                 .findPerson(getJTextFieldVorname().getText(), getJTextFieldName().getText(), asyncCallback));
@@ -112,6 +100,21 @@ public class PersonSuchen extends AbstractJInternalFrame {
         setupDialog();
         getJButtonOK().setEnabled(false);
         getJButtonStatistik().setEnabled(false);
+    }
+
+    public PersonSuchen(int personId) {
+        comboboxBuilderGeschlecht = JComboBoxBuilder
+                .get(Geschlecht.class, allGeschlecht -> allGeschlecht.get(asList(Geschlecht.values())))
+                .map(Geschlecht::getBezeichnung);
+
+        jListBuilder =
+                JListBuilder.get(Person.class, asyncCallback -> get().getPerson(personId, cb -> {
+                    asyncCallback.get(singletonList(cb));
+                    getJListPerson().setSelectedValue(cb, true);
+                }));
+        initialize();
+        jListBuilder.refresh();
+        setupDialog();
     }
 
     private void initialize() {
@@ -274,7 +277,6 @@ public class PersonSuchen extends AbstractJInternalFrame {
 
                 get().speicherePerson(selectedPerson.getId(), geschlecht, vorname, name, strasse, plz, ort, gebtag,
                         telnr, email, handy, nottel, asyncCallback -> suchen());
-
             });
         }
         return jButtonOK;
@@ -287,8 +289,8 @@ public class PersonSuchen extends AbstractJInternalFrame {
             gridBagConstraints27.anchor = GridBagConstraints.WEST;
             gridBagConstraints27.insets = new Insets(10, 0, 0, 0);
             gridBagConstraints27.gridy = 10;
-            jLabel61 = new JLabel();
-            jLabel61.setText("Not Telefonnummer");
+            jLabel10 = new JLabel();
+            jLabel10.setText("Not Telefonnummer");
             GridBagConstraints gridBagConstraints26 = new GridBagConstraints();
             gridBagConstraints26.fill = GridBagConstraints.BOTH;
             gridBagConstraints26.gridy = 10;
@@ -455,7 +457,7 @@ public class PersonSuchen extends AbstractJInternalFrame {
             jPanel4.add(jLabel9, gridBagConstraints24);
             jPanel4.add(getJTextFieldHandy(), gridBagConstraints25);
             jPanel4.add(getJTextFieldNottel(), gridBagConstraints26);
-            jPanel4.add(jLabel61, gridBagConstraints27);
+            jPanel4.add(jLabel10, gridBagConstraints27);
         }
         return jPanel4;
     }

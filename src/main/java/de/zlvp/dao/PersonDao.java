@@ -72,4 +72,8 @@ public class PersonDao extends AbstractDao<Person> {
         }, rse);
     }
 
+    public Person getPerson(int personId){
+        return selectOne(findOne, ps -> ps.setInt(1, personId), rse);
+    }
+
 }

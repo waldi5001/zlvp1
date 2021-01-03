@@ -1,14 +1,12 @@
 package de.zlvp.ui;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
-import javax.swing.JTable;
-import javax.swing.SortOrder;
-import javax.swing.SwingConstants;
+import java.util.function.Consumer;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 
@@ -33,6 +31,12 @@ public class JTableBuilder<E> {
     private ObjectSetter<E> objectSetter;
     private Saver<E> saver;
     private Deleter<E> deleter;
+    private Consumer<E> doubleClickHandler;
+
+
+    private JTableBuilder(Class<E> clazz, Loader<E> loader) {
+        this.loader = loader;
+    }
 
     public static <E> JTableBuilder<E> get(Class<E> clazz, Loader<E> loader) {
         return new JTableBuilder<>(loader);
@@ -72,7 +76,16 @@ public class JTableBuilder<E> {
                 break;
             }
         }
-
+        if (doubleClickHandler != null) {
+            this.table.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getClickCount() == 2) {
+                        doubleClickHandler.accept(getSelectedValue());
+                    }
+                }
+            });
+        }
         return this.table;
     }
 
@@ -114,6 +127,11 @@ public class JTableBuilder<E> {
             dataToDelete.add(data.get(table.convertRowIndexToModel(i)));
         }
         deleter.delete(dataToDelete, result -> refresh());
+    }
+
+    public JTableBuilder<E> doubleClicked(Consumer<E> doubleClickHandler) {
+        this.doubleClickHandler = doubleClickHandler;
+        return this;
     }
 
     private void setColumns() {
