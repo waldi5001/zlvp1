@@ -1,34 +1,6 @@
 package de.zlvp.gui;
 
-import static de.zlvp.Client.get;
-
-import java.awt.AWTKeyStroke;
-import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.KeyboardFocusManager;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyEvent;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.swing.InputMap;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
-
 import com.google.common.eventbus.Subscribe;
-
 import de.javasoft.swing.JYTableScrollPane;
 import de.zlvp.Events;
 import de.zlvp.Events.GruppeSelected;
@@ -38,6 +10,20 @@ import de.zlvp.entity.Teilnehmer;
 import de.zlvp.entity.Zelt;
 import de.zlvp.ui.JTableBuilder;
 import de.zlvp.ui.JTableBuilders;
+import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyEvent;
+import java.util.HashSet;
+import java.util.Set;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+
+import static de.zlvp.Client.get;
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
 
 public class TPGruppe extends JTabbedPane {
 
@@ -82,15 +68,27 @@ public class TPGruppe extends JTabbedPane {
     public TPGruppe() {
         Events.bus().register(this);
 
-        tableBuilderTeilnehmer =
-                JTableBuilders.teilnehmer(() -> gruppe, get()::getAllPersons, allTeilnehmer -> get().getAllTeilnehmer(gruppe.getId(),
-                        allTeilnehmer)).doubleClicked(selectedValue -> new PersonSuchen(selectedValue.getId()));
-
+        tableBuilderTeilnehmer = JTableBuilders.teilnehmer(() -> gruppe, get()::getAllPersons,
+                allTeilnehmer -> get().getAllTeilnehmer(gruppe.getId(), allTeilnehmer)).doubleClicked(
+                selectedValue -> new PersonSuchen(selectedValue.getId())).tooltip(
+                (objectUnderTooltip, asynCallback) -> get().getAllLagerFromPerson(objectUnderTooltip.getId(), cb -> {
+                    String innerHtml =
+                            cb.stream().map(l -> format("%s (%s) als %s", l.getName(), l.getJahrAsString(), l.getDabeiAls())).collect(
+                                    joining("<br>"));
+                    asynCallback.get(format("<html>%s</html>", innerHtml));
+                }));
         tableBuilderLeiter = JTableBuilders.leiter(() -> gruppe, get()::getAllPersons,
-                allLeiter -> get().getAllLeiter(gruppe.getId(), allLeiter)).doubleClicked(selectedValue -> new PersonSuchen(selectedValue.getId()));
-        tableBuilderZelt = JTableBuilders.zelteVonGruppe(() -> gruppe,
-                allZelt -> get().getAllZeltFromLager(gruppe.getLager().getId(), allZelt),
-                allZeltFromGruppe -> get().getAllZeltFromGruppe(gruppe.getId(), allZeltFromGruppe));
+                allLeiter -> get().getAllLeiter(gruppe.getId(), allLeiter)).doubleClicked(
+                selectedValue -> new PersonSuchen(selectedValue.getId())).tooltip(
+                (objectUnderTooltip, asynCallback) -> get().getAllLagerFromPerson(objectUnderTooltip.getId(), cb -> {
+                    String innerHtml =
+                            cb.stream().map(l -> format("%s (%s) als %s", l.getName(), l.getJahrAsString(), l.getDabeiAls())).collect(
+                                    joining("<br>"));
+                    asynCallback.get(format("<html>%s</html>", innerHtml));
+                }));
+        tableBuilderZelt =
+                JTableBuilders.zelteVonGruppe(() -> gruppe, allZelt -> get().getAllZeltFromLager(gruppe.getLager().getId(), allZelt),
+                        allZeltFromGruppe -> get().getAllZeltFromGruppe(gruppe.getId(), allZeltFromGruppe));
         initialize();
         setupTabTraversalKeys();
     }
