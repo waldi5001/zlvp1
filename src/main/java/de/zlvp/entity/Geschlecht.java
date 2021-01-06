@@ -1,7 +1,7 @@
 package de.zlvp.entity;
 
 public enum Geschlecht {
-    Maennlich("Herr", 1), Weiblich("Frau", 2);
+    Maennlich("Herr", 1), Weiblich("Frau", 2), Divers("Divers", 3);
 
     private final String display;
     private final int dbId;
@@ -11,14 +11,6 @@ public enum Geschlecht {
         this.dbId = dbId;
     }
 
-    public String getBezeichnung() {
-        return display;
-    }
-
-    public int getDbId() {
-        return dbId;
-    }
-
     public static Geschlecht fromDbId(int dbId) {
         for (Geschlecht geschlecht : values()) {
             if (geschlecht.dbId == dbId) {
@@ -26,5 +18,13 @@ public enum Geschlecht {
             }
         }
         throw new RuntimeException("Geschlecht ID unbekannt " + dbId);
+    }
+
+    public String getBezeichnung() {
+        return display;
+    }
+
+    public int getDbId() {
+        return dbId;
     }
 }
