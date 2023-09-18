@@ -5,9 +5,7 @@ import static de.zlvp.Client.get;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-import javax.swing.AbstractAction;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
 import de.zlvp.Client;
 import de.zlvp.Events;
@@ -27,6 +25,8 @@ public class Actions {
     private static final OeffnenAction oeffnen = new OeffnenAction();
     private static final PersonAendernAction personAendernAction = new PersonAendernAction();
     private static final ZelteVerwaltenAction zelteVerwaltenAction = new ZelteVerwaltenAction();
+
+    private static final ZelteVerwaltenAction aktualisierenAction = new ZelteVerwaltenAction();
 
     private Actions() {
     }
@@ -166,6 +166,15 @@ public class Actions {
         @Override
         public void actionPerformed(ActionEvent e) {
             new ZeltVerwalten();
+        }
+
+    }
+
+    private abstract static class AktualisierenAction extends AbstractAction {
+        public AktualisierenAction() {
+            super("Aktualisieren");
+            setEnabled(true);
+            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
         }
 
     }

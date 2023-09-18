@@ -75,7 +75,8 @@ public class PersonAnlegen extends AbstractJInternalFrame {
 
     public PersonAnlegen() {
         comboboxBuilderGeschlecht = JComboBoxBuilder.get(Geschlecht.class,
-                allGeschlecht -> allGeschlecht.get(asList(Geschlecht.values())));
+                allGeschlecht -> allGeschlecht.get(asList(Geschlecht.values())))
+                .map(Geschlecht::getBezeichnung);
         initialize();
         setupDialog();
     }

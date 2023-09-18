@@ -1,48 +1,32 @@
 package de.zlvp.gui;
 
-import static de.zlvp.Client.get;
-import static java.lang.String.format;
-
-import java.awt.BorderLayout;
-import java.awt.Desktop;
-import java.awt.Toolkit;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.filechooser.FileFilter;
-
 import com.google.common.eventbus.Subscribe;
-
 import de.javasoft.plaf.synthetica.SyntheticaRootPaneUI;
 import de.javasoft.swing.AboutDialog;
 import de.javasoft.swing.ExtendedFileChooser;
 import de.zlvp.Client;
 import de.zlvp.ClientExceptionInterceptor;
 import de.zlvp.Events;
-import de.zlvp.Events.DisableMenuItems;
-import de.zlvp.Events.GruppeSelected;
-import de.zlvp.Events.JahrSelected;
-import de.zlvp.Events.LagerSelected;
-import de.zlvp.Events.LoginSuccessfull;
-import de.zlvp.Events.PersonSelected;
+import de.zlvp.Events.*;
 import de.zlvp.SelectionContext;
 import de.zlvp.entity.Jahr;
 import de.zlvp.entity.Lagerort;
 import de.zlvp.entity.ZeltdetailBezeichnung;
 import de.zlvp.ui.Actions;
 import de.zlvp.ui.DesktopPane;
-import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.view.JasperViewer;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static de.zlvp.Client.get;
+import static java.lang.String.format;
 
 public class FensterKlasse extends JFrame {
 

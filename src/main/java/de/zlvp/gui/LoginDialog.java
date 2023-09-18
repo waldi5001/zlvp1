@@ -45,6 +45,7 @@ public class LoginDialog extends AbstractJInternalFrame {
     public LoginDialog() {
         initialize();
         setupDialog();
+        this.setResizable(false);
     }
 
     private void initialize() {
