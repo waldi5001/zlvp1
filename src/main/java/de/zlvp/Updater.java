@@ -26,7 +26,6 @@ import org.springframework.util.DigestUtils;
 import com.google.common.io.ByteProcessor;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
-import com.google.common.io.Closeables;
 
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.SCPClient;
@@ -62,11 +61,10 @@ public class Updater implements InitializingBean {
                         Long bytesToRead = Long.valueOf(executeCommand("wc -c /home/lager/zlvp.jar"));
 
                         File tempFile = new File("./zlvp.jar.tmp");
-                        OutputStream outputStream = new FileOutputStream(tempFile);
 
                         final CancelInfo ci = new CancelInfo();
 
-                        try {
+                        try (OutputStream outputStream = new FileOutputStream(tempFile)) {
                             ByteStreams.readBytes(scpInputStream, new ByteProcessor<Void>() {
                                 long progress = 0;
 
@@ -87,7 +85,6 @@ public class Updater implements InitializingBean {
                                 }
                             });
                         } finally {
-                            Closeables.close(outputStream, true);
                             progressMonitor.setProgress(100);
                         }
 
