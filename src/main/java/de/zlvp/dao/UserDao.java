@@ -16,7 +16,7 @@ public class UserDao extends AbstractDao<Void> {
     }
 
     public List<String> getAllGroups() {
-        return jdbc.queryForList("select groname from pg_group order by groname", String.class);
+        return jdbc.queryForList("select groname from pg_group where grosysid >= 10000 order by groname", String.class);
     }
 
     public void createUser(String username, String password) {
