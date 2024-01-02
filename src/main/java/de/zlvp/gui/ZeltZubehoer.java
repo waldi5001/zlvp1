@@ -22,7 +22,7 @@ import de.zlvp.ui.JTableBuilder.ColumnBuilder;
 
 public class ZeltZubehoer extends AbstractJInternalFrame {
 
-    private static final long serialVersionUID = 7743223447839598598L;
+    private static final long serialVersionUID = 1L;
 
     private JPanel jContentPane;
 
@@ -179,7 +179,11 @@ public class ZeltZubehoer extends AbstractJInternalFrame {
             jButtonHinzufuegen = new JButton();
             jButtonHinzufuegen.setText("Hinzufügen");
             jButtonHinzufuegen.addActionListener(e -> {
-                get().speichereZeltdetail(null, zelt.getId(), 0, 1, "BR-Z-", cb -> tableBuilder.refresh());
+                get().getAllZeltdetailBezeichnung(cb -> {
+                    ZeltdetailBezeichnung zeltdetailBezeichnung = cb.get(0);
+                    get().speichereZeltdetail(null, zelt.getId(), 0, zeltdetailBezeichnung.getId(), "BR-Z-9-9-9",
+                            saveCallback -> tableBuilder.refresh());
+                });
             });
         }
         return jButtonHinzufuegen;
