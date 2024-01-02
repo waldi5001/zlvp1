@@ -56,7 +56,7 @@
 	</columnHeader>
 	<detail>
 		<band height="17" splitType="Stretch">
-			<textField pattern="" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
 				<reportElement key="textField" x="0" y="0" width="117" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="d0e5aaf4-93c4-4d06-985e-ba8f063aac04"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -96,7 +96,7 @@
 				<textFieldExpression><![CDATA[$F{strasse}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement key="line-1" x="0" y="15" width="782" height="1" uuid="84c633ea-6e29-45a3-80d0-a5fbb48add72"/>
+				<reportElement key="line-1" positionType="Float" x="0" y="15" width="782" height="1" uuid="84c633ea-6e29-45a3-80d0-a5fbb48add72"/>
 			</line>
 			<textField pattern="" isBlankWhenNull="true">
 				<reportElement key="textField-1" x="297" y="0" width="120" height="14" forecolor="#000000" backcolor="#FFFFFF" uuid="36a956b7-b4fa-4534-bf78-d54cf3cb9408"/>
