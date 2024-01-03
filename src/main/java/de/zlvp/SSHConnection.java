@@ -1,16 +1,18 @@
 package de.zlvp;
 
-import java.io.CharArrayWriter;
+import static com.google.common.io.ByteStreams.toByteArray;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import javax.swing.JOptionPane;
 
 import org.springframework.beans.factory.FactoryBean;
 
-import ch.ethz.ssh2.Connection;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.UserInfo;
 
-public class SSHConnection implements FactoryBean<Connection> {
+public class SSHConnection implements FactoryBean<Session> {
 
     private String hostname;
     private String sshUsername;
@@ -34,32 +36,18 @@ public class SSHConnection implements FactoryBean<Connection> {
     }
 
     @Override
-    public Connection getObject() throws Exception {
+    public Session getObject() throws Exception {
         try {
-            InputStreamReader ir = new InputStreamReader(getClass().getResource("/id_rsa").openStream());
-            CharArrayWriter cw = new CharArrayWriter();
+            JSch jsch = new JSch();
+            jsch.setInstanceLogger(new JSchLoggerAdapter());
+            jsch.setKnownHosts(getClass().getResourceAsStream("/known_host"));
+            jsch.addIdentity("lager", toByteArray(getClass().getResourceAsStream("/id_rsa")), null, keyfilePassword.getBytes());
 
-            char[] buffer = new char[256];
-
-            while (true) {
-                int len = ir.read(buffer);
-                if (len < 0) {
-                    break;
-                }
-                cw.write(buffer, 0, len);
-            }
-
-            Connection conn = new Connection(hostname);
-            conn.connect();
-
-            boolean isAuthenticated = conn.authenticateWithPublicKey(sshUsername, cw.toCharArray(), keyfilePassword);
-
-            if (isAuthenticated == false) {
-                throw new IOException("Authentication failed.");
-            }
-
-            conn.createLocalPortForwarder(sshLocalport, "127.0.0.1", 5432);
-            return conn;
+            Session session = jsch.getSession(sshUsername, hostname, 22);
+            session.setUserInfo(userInfo());
+            session.connect();
+            session.setPortForwardingL(sshLocalport, "localhost", sshLocalport);
+            return session;
         } catch (IOException e) {
             e.printStackTrace(System.err);
             JOptionPane.showMessageDialog(null, e.getMessage());
@@ -68,9 +56,42 @@ public class SSHConnection implements FactoryBean<Connection> {
         return null;
     }
 
+    private UserInfo userInfo() {
+        return new UserInfo() {
+            @Override
+            public void showMessage(String message) {
+            }
+
+            @Override
+            public boolean promptYesNo(String message) {
+                return false;
+            }
+
+            @Override
+            public boolean promptPassword(String message) {
+                return false;
+            }
+
+            @Override
+            public boolean promptPassphrase(String message) {
+                return false;
+            }
+
+            @Override
+            public String getPassword() {
+                return null;
+            }
+
+            @Override
+            public String getPassphrase() {
+                return null;
+            }
+        };
+    }
+
     @Override
     public Class<?> getObjectType() {
-        return Connection.class;
+        return Session.class;
     }
 
     @Override
