@@ -18,7 +18,7 @@ import de.zlvp.ui.JTableBuilders;
 
 public class SchaedenVerwalten extends AbstractJInternalFrame {
 
-    private static final long serialVersionUID = 3140216101445215956L;
+    private static final long serialVersionUID = 1L;
 
     private JPanel jContentPane;
 

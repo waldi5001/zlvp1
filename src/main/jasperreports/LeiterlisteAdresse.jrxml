@@ -154,7 +154,7 @@ WHERE Lager.LaID = $P{LID}]]>
 	</columnFooter>
 	<pageFooter>
 		<band height="18" splitType="Stretch">
-			<textField evaluationTime="Report" pattern="dd/MM/yyyy" isBlankWhenNull="false">
+			<textField evaluationTime="Report" pattern="dd.MM.yy" isBlankWhenNull="false">
 				<reportElement key="textField" x="0" y="0" width="100" height="18" uuid="fd65087f-a3d4-44a0-aa25-57e8a32408ce"/>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

@@ -2,6 +2,7 @@ package de.zlvp.controller;
 
 import static de.zlvp.entity.Geschlecht.Maennlich;
 import static de.zlvp.entity.Geschlecht.Weiblich;
+import static java.util.Calendar.APRIL;
 import static java.util.stream.Collectors.toList;
 
 import java.beans.PropertyChangeEvent;
@@ -89,18 +90,12 @@ public class ExcelControllerImpl implements ExcelController, PropertyChangeListe
                 s.addValidationData(validationHelper.createValidation(gruppenConstraints, gruppenRange));
             }
 
-            titelRow.createCell(0).setCellValue("Anrede");
-            titelRow.createCell(1).setCellValue("Nachname");
-            titelRow.createCell(2).setCellValue("Vorname");
-            titelRow.createCell(3).setCellValue("Straße");
-            titelRow.createCell(4).setCellValue("PLZ");
-            titelRow.createCell(5).setCellValue("Ort");
-            titelRow.createCell(6).setCellValue("Geburtstag");
-            titelRow.createCell(7).setCellValue("Telefon");
-            titelRow.createCell(8).setCellValue("Handy");
-            titelRow.createCell(9).setCellValue("Notfall Telefon");
-            titelRow.createCell(10).setCellValue("Email");
-            titelRow.createCell(11).setCellValue("Gruppe");
+            String[] titel =
+                    new String[]{ "Anrede", "Nachname", "Vorname", "Straße", "PLZ", "Ort", "Geburtstag", "Telefon",
+                            "Handy", "Notfall Telefon", "Email", "Gruppe" };
+            for (int i = 0; i < titel.length; i++) {
+                titelRow.createCell(i).setCellValue(titel[i]);
+            }
 
             Row beispielRow = s.createRow(1);
             beispielRow.createCell(0).setCellValue("Frau");
@@ -111,7 +106,7 @@ public class ExcelControllerImpl implements ExcelController, PropertyChangeListe
             beispielRow.createCell(5).setCellValue("Bräunlingen");
 
             Calendar c = Calendar.getInstance();
-            c.set(1944, 4, 21);
+            c.set(1944, APRIL, 21);
             Cell geburtstag = beispielRow.createCell(6);
             geburtstag.setCellValue(c);
             geburtstag.setCellStyle(cs);
@@ -236,7 +231,7 @@ public class ExcelControllerImpl implements ExcelController, PropertyChangeListe
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if ("progress" == evt.getPropertyName()) {
+        if ("progress".equals(evt.getPropertyName())) {
             int progress = (Integer) evt.getNewValue();
             progressMonitor.setProgress(progress);
             String message = String.format("Fertig: %d%%.\n", progress);

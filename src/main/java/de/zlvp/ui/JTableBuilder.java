@@ -1,26 +1,28 @@
 package de.zlvp.ui;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
-import javax.swing.JTable;
-import javax.swing.SortOrder;
-import javax.swing.SwingConstants;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableColumn;
-
-import org.jdesktop.swingx.table.DatePickerCellEditor;
-
 import de.javasoft.swing.JYTable;
 import de.javasoft.swing.JYTableHeader;
 import de.javasoft.swing.jytable.renderer.CellLayoutHint;
 import de.javasoft.swing.jytable.sort.JYTableSortController;
 import de.zlvp.controller.AsyncCallback;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.function.Consumer;
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
+import net.java.balloontip.TableCellBalloonTip;
+import net.java.balloontip.positioners.LeftBelowPositioner;
+import net.java.balloontip.styles.ToolTipBalloonStyle;
+import org.jdesktop.swingx.table.DatePickerCellEditor;
 
 public class JTableBuilder<E> {
+
+    private static final int TOOLTIP_DISAPPEAR_TIMEOUT = 4000;
 
     private final List<Column<?>> columns = new ArrayList<>();
 
@@ -33,6 +35,12 @@ public class JTableBuilder<E> {
     private ObjectSetter<E> objectSetter;
     private Saver<E> saver;
     private Deleter<E> deleter;
+    private Consumer<E> doubleClickHandler;
+    private TooltipSetter<E> tooltipSetter;
+
+    private JTableBuilder(Class<E> clazz, Loader<E> loader) {
+        this.loader = loader;
+    }
 
     public static <E> JTableBuilder<E> get(Class<E> clazz, Loader<E> loader) {
         return new JTableBuilder<>(loader);
@@ -57,7 +65,29 @@ public class JTableBuilder<E> {
     }
 
     public JTable build() {
-        this.table = new JYTable();
+        this.table = new JYTable() {
+            @Override
+            public String getToolTipText(MouseEvent event) {
+                Point p = event.getPoint();
+                int hitRowIndex = rowAtPoint(p);
+                int hitColumnIndex = columnAtPoint(p);
+                if (hitRowIndex >= 0 && hitColumnIndex >= 0 && tooltipSetter != null) {
+                    E objectUnderTooltip = data.get(convertRowIndexToModel(hitRowIndex));
+                    TableCellBalloonTip balloonTip =
+                            new TableCellBalloonTip(table, new JLabel("loading"), hitRowIndex, hitColumnIndex,
+                                    new ToolTipBalloonStyle(Color.WHITE, Color.BLACK), new LeftBelowPositioner(0, 0), null);
+                    balloonTip.setVisible(true);
+                    tooltipSetter.setToolTip(objectUnderTooltip, balloonTip::setTextContents);
+                    Timer timer = new Timer(TOOLTIP_DISAPPEAR_TIMEOUT, e -> balloonTip.closeBalloon());
+                    timer.setRepeats(false);
+                    timer.start();
+                }
+                return null;
+            }
+        };
+        if (tooltipSetter != null) {
+            ToolTipManager.sharedInstance().registerComponent(this.table);
+        }
         this.table.setCellSelectionEnabled(true);
         this.table.setSurrendersFocusOnKeystroke(true);
         JYTableHeader header = (JYTableHeader) table.getTableHeader();
@@ -72,7 +102,16 @@ public class JTableBuilder<E> {
                 break;
             }
         }
-
+        if (doubleClickHandler != null) {
+            this.table.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (e.getClickCount() == 2) {
+                        doubleClickHandler.accept(getSelectedValue());
+                    }
+                }
+            });
+        }
         return this.table;
     }
 
@@ -114,6 +153,16 @@ public class JTableBuilder<E> {
             dataToDelete.add(data.get(table.convertRowIndexToModel(i)));
         }
         deleter.delete(dataToDelete, result -> refresh());
+    }
+
+    public JTableBuilder<E> doubleClicked(Consumer<E> doubleClickHandler) {
+        this.doubleClickHandler = doubleClickHandler;
+        return this;
+    }
+
+    public JTableBuilder<E> tooltip(TooltipSetter<E> tooltipSetter) {
+        this.tooltipSetter = tooltipSetter;
+        return this;
     }
 
     private void setColumns() {
@@ -355,28 +404,33 @@ public class JTableBuilder<E> {
     }
 
     @FunctionalInterface
-    public static interface Loader<T> {
+    public interface Loader<T> {
         void get(AsyncCallback<List<T>> result);
     }
 
     @FunctionalInterface
-    public static interface ObjectGetter<T> {
+    public interface ObjectGetter<T> {
         Object get(T object, int column);
     }
 
     @FunctionalInterface
-    public static interface ObjectSetter<T> {
+    public interface ObjectSetter<T> {
         void set(T object, Object objectToSet, int column);
     }
 
     @FunctionalInterface
-    public static interface Saver<T> {
+    public interface Saver<T> {
         void save(T toSave, AsyncCallback<Void> asyncCallback);
     }
 
     @FunctionalInterface
-    public static interface Deleter<T> {
+    public interface Deleter<T> {
         void delete(List<T> data, AsyncCallback<Void> asyncCallback);
+    }
+
+    @FunctionalInterface
+    public interface TooltipSetter<T> {
+        void setToolTip(T objectUnderTooltip, AsyncCallback<String> asyncCallback);
     }
 
     public static class Columns {

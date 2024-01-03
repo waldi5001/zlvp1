@@ -3,6 +3,8 @@ package de.zlvp.gui;
 import static de.zlvp.Client.get;
 
 import java.awt.BorderLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -39,7 +41,9 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
         jTableBuilder = JTableBuilders.zelt(asyncCallback -> get().getAllZelt(result -> {
             asyncCallback.get(result);
             setVisible(true);
-        }));
+        })).doubleClicked(zelt -> {
+            new ZeltZubehoer(zelt);
+        });
 
         initialize();
         setup();
@@ -51,6 +55,7 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
     private void initialize() {
         this.setContentPane(getJContentPane());
         this.setTitle("Zelte Verwalten / Ändern");
+        this.getRootPane().setDefaultButton(getJButtonDetailAendern());
     }
 
     private JPanel getJContentPane() {
@@ -87,7 +92,15 @@ public class ZeltVerwalten extends AbstractJInternalFrame {
                     getJButtonSchaeden().setEnabled(true);
                 }
             });
-
+            jTable.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+                    if (getJButtonDetailAendern().isEnabled()) {
+                        Zelt selectedValue = jTableBuilder.getSelectedValue();
+                        new ZeltZubehoer(selectedValue);
+                    }
+                }
+            });
         }
         return jTable;
     }

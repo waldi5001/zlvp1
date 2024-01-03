@@ -30,6 +30,11 @@ public class StartKlasse {
         ClassPathXmlApplicationContext ctxt = new ClassPathXmlApplicationContext("spring-beans.xml");
         FensterKlasse fensterKlasse = ctxt.getBean(FensterKlasse.class);
         fensterKlasse.setVisible(true);
+        if (args.length == 2) {
+            if (Client.login(args[0], args[1].toCharArray())) {
+                Events.get().fireLoginSuccessfull(args[0]);
+            }
+        }
     }
 
 }

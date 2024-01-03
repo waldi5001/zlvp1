@@ -1,47 +1,32 @@
 package de.zlvp.gui;
 
-import static de.zlvp.Client.get;
-
-import java.awt.BorderLayout;
-import java.awt.Desktop;
-import java.awt.Toolkit;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.filechooser.FileFilter;
-
 import com.google.common.eventbus.Subscribe;
-
 import de.javasoft.plaf.synthetica.SyntheticaRootPaneUI;
 import de.javasoft.swing.AboutDialog;
 import de.javasoft.swing.ExtendedFileChooser;
 import de.zlvp.Client;
 import de.zlvp.ClientExceptionInterceptor;
 import de.zlvp.Events;
-import de.zlvp.Events.DisableMenuItems;
-import de.zlvp.Events.GruppeSelected;
-import de.zlvp.Events.JahrSelected;
-import de.zlvp.Events.LagerSelected;
-import de.zlvp.Events.LoginSuccessfull;
-import de.zlvp.Events.PersonSelected;
+import de.zlvp.Events.*;
 import de.zlvp.SelectionContext;
 import de.zlvp.entity.Jahr;
 import de.zlvp.entity.Lagerort;
 import de.zlvp.entity.ZeltdetailBezeichnung;
 import de.zlvp.ui.Actions;
 import de.zlvp.ui.DesktopPane;
-import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.view.JasperViewer;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static de.zlvp.Client.get;
+import static java.lang.String.format;
 
 public class FensterKlasse extends JFrame {
 
@@ -95,11 +80,11 @@ public class FensterKlasse extends JFrame {
 
     private JMenuItem jMenuItemTeGruppe;
 
-    private JMenuItem jMenuItemBezLöschen;
+    private JMenuItem jMenuItemBezLoeschen;
 
-    private JMenuItem jMenuItemNachtWache;
+    private JMenuItem jMenuItemNachtwache;
 
-    private JMenuItem jMenuItemNachtWacheGruppe;
+    private JMenuItem jMenuItemNachtwacheGruppe;
     private JMenuItem jMenuItemLegendaListen;
 
     private JPanel jContentPane;
@@ -282,7 +267,7 @@ public class FensterKlasse extends JFrame {
             jMenuItemUeber.addActionListener(e -> {
                 try {
                     AboutDialog.showDialog(null, null, "",
-                            String.format("Version: %s", getClass().getPackage().getImplementationVersion()));
+                            format("Version: %s", getClass().getPackage().getImplementationVersion()));
                 } catch (IOException e1) {
                     throw new RuntimeException(e1.getMessage(), e1);
                 }
@@ -313,10 +298,8 @@ public class FensterKlasse extends JFrame {
                 if (chooser.showOpenDialog(DesktopPane.get()) == ExtendedFileChooser.APPROVE_OPTION) {
                     try {
                         JasperViewer.viewReport(chooser.getSelectedFile().getCanonicalPath(), false, false);
-                    } catch (IOException e1) {
-                        throw new RuntimeException(e1.getMessage(), e1);
-                    } catch (JRException e1) {
-                        throw new RuntimeException(e1.getMessage(), e1);
+                    } catch (Throwable t) {
+                        throw new RuntimeException(t.getMessage(), t);
                     }
                 }
             });
@@ -774,10 +757,10 @@ public class FensterKlasse extends JFrame {
     }
 
     private JMenuItem getJMenuItemBezLöschen() {
-        if (jMenuItemBezLöschen == null) {
-            jMenuItemBezLöschen = new JMenuItem();
-            jMenuItemBezLöschen.setText("Bezeichnungen Löschen");
-            jMenuItemBezLöschen.addActionListener(e -> {
+        if (jMenuItemBezLoeschen == null) {
+            jMenuItemBezLoeschen = new JMenuItem();
+            jMenuItemBezLoeschen.setText("Bezeichnungen Löschen");
+            jMenuItemBezLoeschen.addActionListener(e -> {
                 get().getAllZeltdetailBezeichnung(allZeltdetailBezeichnung -> {
                     ZeltdetailBezeichnung[] zdbs = allZeltdetailBezeichnung
                             .toArray(new ZeltdetailBezeichnung[allZeltdetailBezeichnung.size()]);
@@ -791,27 +774,27 @@ public class FensterKlasse extends JFrame {
                 });
             });
         }
-        return jMenuItemBezLöschen;
+        return jMenuItemBezLoeschen;
     }
 
     private JMenuItem getJMenuItemNachtWache() {
-        if (jMenuItemNachtWache == null) {
-            jMenuItemNachtWache = new JMenuItem();
-            jMenuItemNachtWache.setText("Nachtwache");
-            jMenuItemNachtWache.addActionListener(
+        if (jMenuItemNachtwache == null) {
+            jMenuItemNachtwache = new JMenuItem();
+            jMenuItemNachtwache.setText("Nachtwache");
+            jMenuItemNachtwache.addActionListener(
                     e -> Client.getReports().nachtwachenliste(SelectionContext.get().getLager().getId()));
         }
-        return jMenuItemNachtWache;
+        return jMenuItemNachtwache;
     }
 
     private JMenuItem getJMenuItemNachtWacheGruppe() {
-        if (jMenuItemNachtWacheGruppe == null) {
-            jMenuItemNachtWacheGruppe = new JMenuItem();
-            jMenuItemNachtWacheGruppe.setText("Nachtwache nach Gruppen");
-            jMenuItemNachtWacheGruppe.addActionListener(
+        if (jMenuItemNachtwacheGruppe == null) {
+            jMenuItemNachtwacheGruppe = new JMenuItem();
+            jMenuItemNachtwacheGruppe.setText("Nachtwache nach Gruppen");
+            jMenuItemNachtwacheGruppe.addActionListener(
                     e -> Client.getReports().nachtwachenlisteGruppe(SelectionContext.get().getLager().getId()));
         }
-        return jMenuItemNachtWacheGruppe;
+        return jMenuItemNachtwacheGruppe;
     }
 
     private JMenuItem getJMenuItemLegendaListen() {

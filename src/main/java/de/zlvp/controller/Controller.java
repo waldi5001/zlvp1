@@ -1,5 +1,6 @@
 package de.zlvp.controller;
 
+import de.zlvp.dao.LagerDao;
 import java.util.Date;
 import java.util.List;
 
@@ -31,6 +32,8 @@ import de.zlvp.entity.Zeltverleih;
 public interface Controller {
 
     void findPerson(String vorname, String nachname, AsyncCallback<List<Person>> callback);
+
+    void getPerson(int personId, AsyncCallback<Person> callback);
 
     void getAllAnrede(AsyncCallback<List<Anrede>> callback);
 
@@ -75,6 +78,10 @@ public interface Controller {
     void getAllZeltFromLager(int lagerId, AsyncCallback<List<Zelt>> callback);
 
     void getAllZeltverleih(Integer id, AsyncCallback<List<Zeltverleih>> callback);
+
+    void getAllLagerFromPerson(int personId, AsyncCallback<List<LagerDao.LagerDTO>> callback);
+
+    void getLagerFromGruppe(int gruppeId, AsyncCallback<Lager> callback);
 
     void getJahr(int jahrId, AsyncCallback<Jahr> callback);
 

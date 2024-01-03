@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.zlvp</groupId>
 	<artifactId>zlvp</artifactId>
-	<version>0.9</version>
+	<version>0.10</version>
 	<distributionManagement>
 		<repository>
 			<id>internal.repo</id>
@@ -57,6 +57,11 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>4.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>net.java.balloontip</groupId>
+			<artifactId>balloontip</artifactId>
+			<version>1.2.4.1</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jasperreports</groupId>
@@ -134,14 +139,9 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>ch.ethz.ganymed</groupId>
-			<artifactId>ganymed-ssh2</artifactId>
-			<version>262</version>
-		</dependency>
-		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>42.1.1</version>
+			<version>42.6.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.swinglabs.swingx</groupId>
@@ -182,7 +182,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>4.3.9.RELEASE</version>
+			<version>${version.spring}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-logging</groupId>
@@ -193,14 +193,9 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
-			<version>4.3.9.RELEASE</version>
+			<version>${version.spring}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>1.7.16</version>
-		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
@@ -211,13 +206,19 @@
 			<artifactId>HikariCP</artifactId>
 			<version>2.6.1</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.github.mwiede</groupId>
+			<artifactId>jsch</artifactId>
+			<version>0.2.15</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>com.amashchenko.maven.plugin</groupId>
 				<artifactId>gitflow-maven-plugin</artifactId>
-				<version>1.9.0</version>
+				<version>1.21.0</version>
 				<configuration>
 
 				</configuration>
@@ -225,7 +226,7 @@
 			<plugin>
 				<groupId>com.alexnederlof</groupId>
 				<artifactId>jasperreports-plugin</artifactId>
-				<version>2.0</version>
+				<version>${version.jasper.plugin}</version>
 				<executions>
 					<execution>
 						<phase>process-sources</phase>
@@ -250,7 +251,7 @@
 					<dependency>
 						<groupId>com.alexnederlof</groupId>
 						<artifactId>jasperreports-plugin</artifactId>
-						<version>2.0</version>
+						<version>${version.jasper.plugin}</version>
 						<exclusions>
 							<exclusion>
 								<groupId>net.sf.jasperreports</groupId>
@@ -320,11 +321,13 @@
 		</plugins>
 	</build>
 	<scm>
-		<developerConnection>scm:git:file:///home/fk/Documents/zlvp1/</developerConnection>
+		<developerConnection>scm:git:file:///home/fk/zlvp/zlvp1/</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<version.jasper>6.4.1</version.jasper>
+		<version.jasper>6.21.0</version.jasper>
+		<version.spring>5.3.31</version.spring>
+		<version.jasper.plugin>2.8</version.jasper.plugin>
 	</properties>
 </project>

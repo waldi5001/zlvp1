@@ -79,26 +79,25 @@ public class JTreeTransferHandler extends TransferHandler {
             }
         } else if (support.isDataFlavorSupported(listFlavor)) {
             JTree.DropLocation dl = (JTree.DropLocation) support.getDropLocation();
-            try {
-                Transferable t = support.getTransferable();
-                Person person = (Person) t.getTransferData(listFlavor);
-                DefaultMutableTreeNode targetModel = (DefaultMutableTreeNode) dl.getPath().getLastPathComponent();
+            if (dl != null && dl.getPath() != null) {
+                try {
+                    Transferable t = support.getTransferable();
+                    Person person = (Person) t.getTransferData(listFlavor);
+                    DefaultMutableTreeNode targetModel = (DefaultMutableTreeNode) dl.getPath().getLastPathComponent();
 
-                if (targetModel.getUserObject().equals("Teilnehmer") || targetModel.getUserObject().equals("Leiter")) {
-                    @SuppressWarnings("unchecked")
-                    Enumeration<DefaultMutableTreeNode> children = targetModel.children();
-                    while (children.hasMoreElements()) {
-                        DefaultMutableTreeNode node = children.nextElement();
-                        if (node.getUserObject().equals(person)) {
-                            return false;
+                    if (targetModel.getUserObject().equals("Teilnehmer") || targetModel.getUserObject().equals("Leiter")) {
+                        @SuppressWarnings("unchecked") Enumeration<DefaultMutableTreeNode> children = targetModel.children();
+                        while (children.hasMoreElements()) {
+                            DefaultMutableTreeNode node = children.nextElement();
+                            if (node.getUserObject().equals(person)) {
+                                return false;
+                            }
                         }
+                        return true;
                     }
-                    return true;
+                } catch (Throwable t) {
+                    throw new RuntimeException(t.getMessage(), t);
                 }
-            } catch (UnsupportedFlavorException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            } catch (java.io.IOException e) {
-                throw new RuntimeException(e.getMessage(), e);
             }
         }
         return false;
@@ -131,12 +130,12 @@ public class JTreeTransferHandler extends TransferHandler {
                 if (dropUserObject instanceof Lager) {
                     Lager lager = (Lager) dropUserObject;
                     Gruppe gruppe = (Gruppe) srcNode.getUserObject();
-
-                    get().verschiebeGruppe(gruppe.getId(), gruppe.getLager().getId(), lager.getId(),
-                            c -> Events.get().fireGruppeSaved(gruppe, gruppe.getLager(), lager));
-                } else if ((dropUserObject instanceof String
-                        && ("Leiter".equals(dropUserObject) || "Teilnehmer".equals(dropUserObject)))
-                        && srcNode.getUserObject() instanceof Person) {
+                    get().verschiebeGruppe(gruppe.getId(), gruppe.getLager().getId(), lager.getId(), c -> {
+                        Lager oldLager = gruppe.getLager();
+                        gruppe.setLager(lager);
+                        Events.get().fireGruppeSaved(gruppe, oldLager, lager);
+                    });
+                } else if ((dropUserObject instanceof String && ("Leiter".equals(dropUserObject) || "Teilnehmer".equals(dropUserObject))) && srcNode.getUserObject() instanceof Person) {
 
                     Person person = (Person) srcNode.getUserObject();
                     Gruppe srcGruppe = (Gruppe) ((DefaultMutableTreeNode) srcNode.getParent().getParent())
@@ -144,11 +143,15 @@ public class JTreeTransferHandler extends TransferHandler {
                     Gruppe destGruppe = (Gruppe) ((DefaultMutableTreeNode) dropNode.getParent()).getUserObject();
 
                     if ("Leiter".equals(dropUserObject) && person instanceof Leiter) {
-                        get().verschiebeLeiter(person.getId(), srcGruppe.getId(), destGruppe.getId(),
-                                c -> Events.get().fireLeiterSaved((Leiter) person, srcGruppe, destGruppe));
+                        get().verschiebeLeiter(person.getId(), srcGruppe.getId(), destGruppe.getId(), c -> {
+                            ((Leiter) person).setGruppe(destGruppe);
+                            Events.get().fireLeiterSaved((Leiter) person, srcGruppe, destGruppe);
+                        });
                     } else if ("Teilnehmer".equals(dropUserObject) && person instanceof Teilnehmer) {
-                        get().verschiebeTeilnehmer(person.getId(), srcGruppe.getId(), destGruppe.getId(),
-                                c -> Events.get().fireTeilnehmerSaved((Teilnehmer) person, srcGruppe, destGruppe));
+                        get().verschiebeTeilnehmer(person.getId(), srcGruppe.getId(), destGruppe.getId(), c -> {
+                            ((Teilnehmer) person).setGruppe(destGruppe);
+                            Events.get().fireTeilnehmerSaved((Teilnehmer) person, srcGruppe, destGruppe);
+                        });
                     }
                 }
             } else if (t.isDataFlavorSupported(listFlavor)) {
@@ -172,10 +175,8 @@ public class JTreeTransferHandler extends TransferHandler {
                     }
                 }
             }
-        } catch (UnsupportedFlavorException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        } catch (java.io.IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
+        } catch (Throwable t) {
+            throw new RuntimeException(t.getMessage(), t);
         }
 
         return true;

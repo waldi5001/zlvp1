@@ -13,6 +13,7 @@ insert into funktion (name) values ('Küche');
 insert into funktion (name) values ('Gruppenleiter');
 insert into geschlecht (name) values ('Herr');
 insert into geschlecht (name) values ('Frau');
+insert into geschlecht (name) values ('Divers');
 insert into legendatyp (typ) values ('Wasser');
 insert into legendatyp (typ) values ('Besitzer');
 insert into legendatyp (typ) values ('Pächter');

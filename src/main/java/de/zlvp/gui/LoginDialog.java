@@ -12,8 +12,11 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import com.google.common.eventbus.Subscribe;
+
 import de.zlvp.Client;
 import de.zlvp.Events;
+import de.zlvp.Events.LoginSuccessfull;
 import de.zlvp.ui.AbstractJInternalFrame;
 
 public class LoginDialog extends AbstractJInternalFrame {
@@ -45,6 +48,9 @@ public class LoginDialog extends AbstractJInternalFrame {
     public LoginDialog() {
         initialize();
         setupDialog();
+        this.setResizable(false);
+        
+        Events.bus().register(this);
     }
 
     private void initialize() {
@@ -191,5 +197,9 @@ public class LoginDialog extends AbstractJInternalFrame {
         }
         return jButtonPasswortAendern;
     }
-
+    
+    @Subscribe
+    private void loginSuccessful(LoginSuccessfull event) {
+        setVisible(false);
+    }
 }

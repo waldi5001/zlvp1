@@ -25,7 +25,7 @@ import de.zlvp.ui.JComboBoxBuilder;
 
 public class PersonAnlegen extends AbstractJInternalFrame {
 
-    private static final long serialVersionUID = -6991827451131673965L;
+    private static final long serialVersionUID = 1L;
 
     private JPanel jContentPane;
 
@@ -75,7 +75,8 @@ public class PersonAnlegen extends AbstractJInternalFrame {
 
     public PersonAnlegen() {
         comboboxBuilderGeschlecht = JComboBoxBuilder.get(Geschlecht.class,
-                allGeschlecht -> allGeschlecht.get(asList(Geschlecht.values())));
+                allGeschlecht -> allGeschlecht.get(asList(Geschlecht.values())))
+                .map(Geschlecht::getBezeichnung);
         initialize();
         setupDialog();
     }

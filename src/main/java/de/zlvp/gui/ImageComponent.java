@@ -7,7 +7,7 @@ import java.awt.Image;
 import javax.swing.JComponent;
 
 public class ImageComponent extends JComponent {
-    private static final long serialVersionUID = 8400659688295296372L;
+    private static final long serialVersionUID = 1L;
     private Image image;
 
     public ImageComponent(Image image) {

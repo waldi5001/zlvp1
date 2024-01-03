@@ -19,7 +19,7 @@ import de.zlvp.ui.JListBuilder;
 
 public class ZeltDetailListen extends AbstractJInternalFrame {
 
-    private static final long serialVersionUID = 2547154648280401084L;
+    private static final long serialVersionUID = 1L;
 
     private JPanel jContentPane;
 
