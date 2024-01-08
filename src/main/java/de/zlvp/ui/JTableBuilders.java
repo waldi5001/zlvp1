@@ -501,6 +501,9 @@ public class JTableBuilders {
                         lg.getLegendaTyp() != null ? lg.getLegendaTyp().getId() : null,
                         lg.getAnrede() != null ? lg.getAnrede().getId() : null, lg.getStrasse(), lg.getFax(),
                         lg.getHandy(), lg.getEmail(), lg.getBemerkung(), cb))//
+                .delete((data, asyncCallback) -> {
+                    get().loescheLegendas(data.stream().map(Legenda::getId).collect(toList()), asyncCallback);
+                })//
                 .addColumn(ColumnBuilder.get(Legendatyp.class)
                         .add(JComboBoxBuilder.get(Legendatyp.class, get()::getAllLegendatyp).build()).add("Typ").desc()
                         .build())//

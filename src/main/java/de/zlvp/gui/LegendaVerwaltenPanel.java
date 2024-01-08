@@ -27,6 +27,7 @@ public class LegendaVerwaltenPanel extends JPanel {
     private JTable jTableLegenda;
     private JPanel jPanelButtons;
     private JButton jButtonNeu;
+    private JButton jButtonLoeschen;
 
     private final Callback<Lagerort> lagerortCallabck;
     private JTableBuilder<Legenda> tableBuilderLegenda;
@@ -59,6 +60,7 @@ public class LegendaVerwaltenPanel extends JPanel {
             jPanelButtons = new JPanel();
             jPanelButtons.setLayout(new FlowLayout());
             jPanelButtons.add(getJButtonNeu());
+            jPanelButtons.add(getJButtonLoeschen());
         }
         return jPanelButtons;
     }
@@ -73,6 +75,17 @@ public class LegendaVerwaltenPanel extends JPanel {
             });
         }
         return jButtonNeu;
+    }
+    
+    private JButton getJButtonLoeschen() {
+        if (jButtonLoeschen == null) {
+            jButtonLoeschen = new JButton();
+            jButtonLoeschen.setText("Löschen");
+            jButtonLoeschen.addActionListener(e -> {
+                tableBuilderLegenda.deleteSelectedRows();
+            });
+        }
+        return jButtonLoeschen;
     }
 
     @Subscribe

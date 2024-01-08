@@ -112,6 +112,8 @@ public interface Controller {
     void speichereLegenda(Integer id, int lagerortId, String nachname, String vorname, String firma, String strasse,
             String plz, String ort, Integer legendatypId, Integer anredeId, String tel, String fax, String handy,
             String email, String bemerkung, AsyncCallback<Void> callback);
+    
+    void loescheLegendas(List<Integer> ids, AsyncCallback<Void> callback);
 
     void speichereLeiter(boolean add, int personId, int gruppeId, AsyncCallback<Gruppe> callback);
 

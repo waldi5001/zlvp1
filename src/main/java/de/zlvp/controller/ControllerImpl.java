@@ -300,6 +300,14 @@ public class ControllerImpl implements Controller {
     }
 
     @Override
+    public void loescheLegendas(List<Integer> ids, AsyncCallback<Void> callback) {
+        for (Integer id : ids) {
+            legendaDao.delete(id);
+        }
+        callback.get(null);
+    }
+
+    @Override
     public void speicherePerson(Integer id, Geschlecht geschlecht, String vorname, String nachname, String strasse,
             String plz, String ort, Date gebtag, String telnr, String email, String handy, String nottel,
             AsyncCallback<Void> callback) {
