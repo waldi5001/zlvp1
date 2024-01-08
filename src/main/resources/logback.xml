@@ -8,13 +8,13 @@
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+			<pattern>%d{HH:mm:ss.SSS} [%-15.15thread] %-5level [%-36X{TRACE_ID}] %logger{40} - %msg%n</pattern>
 		</encoder>
 	</appender>
 
 	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<encoder>
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+			<pattern>%d{HH:mm:ss.SSS} [%-15.15thread] %-5level [%-36X{TRACE_ID}] %logger{40} - %msg%n</pattern>
 		</encoder>
 		<file>zlvp.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -23,7 +23,7 @@
 		</rollingPolicy>
 	</appender>
 
-	<logger name="org.springframework.aop.interceptor.CustomizableTraceInterceptor" level="trace" additivity="false">
+	<logger name="de.zlvp" level="trace" additivity="false">
 		<appender-ref ref="FILE" />
 		<appender-ref ref="STDOUT" />
 	</logger>
@@ -39,6 +39,11 @@
 	</logger>
 
 	<logger name="org.springframework" level="info" additivity="false">
+		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="net.sf.jasperreports" level="info" additivity="false">
 		<appender-ref ref="FILE" />
 		<appender-ref ref="STDOUT" />
 	</logger>
