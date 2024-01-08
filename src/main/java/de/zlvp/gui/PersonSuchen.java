@@ -225,7 +225,7 @@ public class PersonSuchen extends AbstractJInternalFrame {
 
     private JList<Person> getJListPerson() {
         if (jListPerson == null) {
-            jListPerson = jListBuilder.map(p -> p.getName() + ", " + p.getVorname()).build();
+            jListPerson = jListBuilder.map(Person::getBezeichnung).build();
             jListPerson.addListSelectionListener(e -> {
                 Person p = getJListPerson().getSelectedValue();
                 if (p != null) {

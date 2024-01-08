@@ -1,5 +1,9 @@
 package de.zlvp.dao;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static java.lang.String.format;
+import static java.util.Collections.emptyList;
+
 import java.util.Date;
 import java.util.List;
 
@@ -57,15 +61,18 @@ public class PersonDao extends AbstractDao<Person> {
     }
 
     public List<Person> findPerson(String vorname, String nachname) {
+        if (isNullOrEmpty(vorname) && isNullOrEmpty(nachname)) {
+            return emptyList();
+        }
         return select(find, ps -> {
             if (vorname != null && !vorname.isEmpty()) {
-                ps.setString(1, "%" + vorname + "%");
+                ps.setString(1, format("%%%s%%", vorname));
             } else {
                 ps.setString(1, vorname);
             }
 
             if (nachname != null && !nachname.isEmpty()) {
-                ps.setString(2, "%" + nachname + "%");
+                ps.setString(2, format("%%%s%%", nachname));
             } else {
                 ps.setString(2, nachname);
             }
