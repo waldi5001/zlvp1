@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -56,6 +57,8 @@ public class TPLager extends JTabbedPane {
     private JPanel jPanel18;
     private JPanel jPanelDaten;
     private JTextField jTextFieldName;
+    // Es gibt in Swing einfach keinen vernünftigen Mechanismus um festzustellen ob sich der Inhalt eines Textfeldes geändert hat.
+    private boolean isJTextFieldNameDirty = false;
     private JTextField jTextFieldThema;
     private JFormattedTextField jFormattedTextFieldDatumStart;
     private JFormattedTextField jFormattedTextFieldDatumStop;
@@ -282,11 +285,10 @@ public class TPLager extends JTabbedPane {
             jTextFieldName.addFocusListener(new FocusAdapter() {
                 @Override
                 public void focusLost(FocusEvent e) {
-                    lager.setName(jTextFieldName.getText());
-                    get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(), lager.getDatumStop(),
-                            result -> {
-                                Events.get().fireLagerSaved(lager);
-                            });
+                    if (isJTextFieldNameDirty) {
+                        lager.setName(jTextFieldName.getText());
+                        aendereLager();
+                    }
                 }
 
             });
@@ -310,6 +312,7 @@ public class TPLager extends JTabbedPane {
                         String name = documentEvent.getDocument().getText(0, documentEvent.getDocument().getLength());
                         lager.setName(name);
                         Events.get().fireLagerRenamed(lager);
+                        isJTextFieldNameDirty = true;
                     } catch (BadLocationException e) {
                         throw new RuntimeException(e.getMessage(), e);
                     }
@@ -325,11 +328,10 @@ public class TPLager extends JTabbedPane {
             jTextFieldThema.addFocusListener(new FocusAdapter() {
                 @Override
                 public void focusLost(FocusEvent e) {
-                    lager.setThema(jTextFieldThema.getText());
-                    get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(), lager.getDatumStop(),
-                            result -> {
-                                Events.get().fireLagerSaved(lager);
-                            });
+                    if (!Objects.equals(lager.getThema(), jTextFieldThema.getText())) {
+                        lager.setThema(jTextFieldThema.getText());
+                        aendereLager();
+                    }
                 }
 
             });
@@ -339,13 +341,13 @@ public class TPLager extends JTabbedPane {
 
     private JFormattedTextField getJFormattedTextFieldDatumStart() {
         if (jFormattedTextFieldDatumStart == null) {
-            jFormattedTextFieldDatumStart =
-                    new JFormattedTextField(new DateFormatter(DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN)));
+            jFormattedTextFieldDatumStart = new JFormattedTextField(
+                    new DateFormatter(DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN)));
             PropertyChangeListener l = evt -> {
-                lager.setDatumStart((Date) evt.getNewValue());
-                get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(), lager.getDatumStop(),
-                        result -> {
-                        });
+                if (!Objects.equals(lager.getDatumStart(), (Date) evt.getNewValue())) {
+                    lager.setDatumStart((Date) evt.getNewValue());
+                    aendereLager();
+                }
             };
             jFormattedTextFieldDatumStart.addPropertyChangeListener("value", l);
         }
@@ -354,13 +356,13 @@ public class TPLager extends JTabbedPane {
 
     private JFormattedTextField getJFormattedTextFieldDatumStop() {
         if (jFormattedTextFieldDatumStop == null) {
-            jFormattedTextFieldDatumStop =
-                    new JFormattedTextField(new DateFormatter(DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN)));
+            jFormattedTextFieldDatumStop = new JFormattedTextField(
+                    new DateFormatter(DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN)));
             PropertyChangeListener l = evt -> {
-                lager.setDatumStop((Date) evt.getNewValue());
-                get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(), lager.getDatumStop(),
-                        result -> {
-                        });
+                if (!Objects.equals(lager.getDatumStop(), (Date) evt.getNewValue())) {
+                    lager.setDatumStop((Date) evt.getNewValue());
+                    aendereLager();
+                }
             };
             jFormattedTextFieldDatumStop.addPropertyChangeListener("value", l);
         }
@@ -608,6 +610,11 @@ public class TPLager extends JTabbedPane {
         InputMap inputMap = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         inputMap.put(ctrlTab, "navigateNext");
         inputMap.put(ctrlShiftTab, "navigatePrevious");
+    }
+
+    private void aendereLager() {
+        get().aendereLager(lager.getId(), lager.getName(), lager.getThema(), lager.getDatumStart(), lager.getDatumStop(),
+                cb -> isJTextFieldNameDirty = false);
     }
 
     @Subscribe

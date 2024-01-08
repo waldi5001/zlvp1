@@ -15,6 +15,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -36,6 +37,8 @@ public class TPGruppe extends JTabbedPane {
     private JPanel jPanel;
 
     private JTextField jTextFieldName;
+    // Es gibt in Swing einfach keinen vernünftigen Mechanismus um festzustellen ob sich der Inhalt eines Textfeldes geändert hat.
+    private boolean isJTextFieldNameDirty = false;
     private JLabel jLabelName;
     private JLabel jLabelSchlachtruf;
 
@@ -163,10 +166,13 @@ public class TPGruppe extends JTabbedPane {
             jTextFieldName.addFocusListener(new FocusAdapter() {
                 @Override
                 public void focusLost(FocusEvent e) {
-                    gruppe.setName(jTextFieldName.getText());
-                    get().aendereGruppe(gruppe.getId(), gruppe.getName(), gruppe.getSchlachtruf(), cb -> {
-                        Events.get().fireGruppeSaved(gruppe, null, null);
-                    });
+                    if (isJTextFieldNameDirty) {
+                        gruppe.setName(jTextFieldName.getText());
+                        get().aendereGruppe(gruppe.getId(), gruppe.getName(), gruppe.getSchlachtruf(), cb -> {
+                            Events.get().fireGruppeSaved(gruppe, null, null);
+                            isJTextFieldNameDirty = false;
+                        });
+                    }
                 }
             });
             jTextFieldName.getDocument().addDocumentListener(new DocumentListener() {
@@ -189,6 +195,7 @@ public class TPGruppe extends JTabbedPane {
                         String name = documentEvent.getDocument().getText(0, documentEvent.getDocument().getLength());
                         gruppe.setName(name);
                         Events.get().fireGruppeSaved(gruppe, null, null);
+                        isJTextFieldNameDirty = true;
                     } catch (BadLocationException e) {
                         throw new RuntimeException(e.getMessage(), e);
                     }
@@ -265,10 +272,12 @@ public class TPGruppe extends JTabbedPane {
             jTextAreaSchlachtruf.addFocusListener(new FocusAdapter() {
                 @Override
                 public void focusLost(FocusEvent e) {
-                    gruppe.setSchlachtruf(jTextAreaSchlachtruf.getText());
-                    get().aendereGruppe(gruppe.getId(), gruppe.getName(), gruppe.getSchlachtruf(), cb -> {
-                        Events.get().fireGruppeSaved(gruppe, null, null);
-                    });
+                    if (!Objects.equals(gruppe.getSchlachtruf(), jTextAreaSchlachtruf.getText())) {
+                        gruppe.setSchlachtruf(jTextAreaSchlachtruf.getText());
+                        get().aendereGruppe(gruppe.getId(), gruppe.getName(), gruppe.getSchlachtruf(), cb -> {
+                            Events.get().fireGruppeSaved(gruppe, null, null);
+                        });
+                    }
                 }
             });
         }
