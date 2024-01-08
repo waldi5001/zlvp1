@@ -47,7 +47,7 @@ public class ReportsImpl implements Reports {
 
     @Override
     public void teilnehmerStatistik(int personId) {
-        showReport("Teilnehmer Bericht", map("PeID", personId));
+        showReport("TeilnehmerBericht", map("PeID", personId));
     }
 
     @Override
