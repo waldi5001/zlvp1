@@ -1,5 +1,6 @@
 package de.zlvp;
 
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.SwingUtilities;
@@ -8,6 +9,7 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.core.task.TaskExecutor;
 
 import de.javasoft.swing.DetailsDialog;
@@ -34,8 +36,11 @@ public class AsyncAndErrorInterceptor implements MethodInterceptor {
         ProxyCallback proxy = new ProxyCallback();
         invocation.getArguments()[invocation.getArguments().length - 1] = proxy;
 
+        Map<String, String> copyOfContextMap = MDC.getCopyOfContextMap();
+
         taskExecutor.execute(() -> {
             try {
+                MDC.setContextMap(copyOfContextMap);
                 if (invocationCounter.incrementAndGet() == 1) {
                     CursorToolkit.startWaitCursor(fensterKlasse.getRootPane());
                 }
@@ -43,10 +48,11 @@ public class AsyncAndErrorInterceptor implements MethodInterceptor {
                 edtCallback.get(proxy.getControllerResult());
             } catch (Throwable e) {
                 handleThrowable(e);
-            }finally {
+            } finally {
                 if (invocationCounter.decrementAndGet() == 0) {
                     CursorToolkit.stopWaitCursor(fensterKlasse.getRootPane());
                 }
+                MDC.clear();
             }
         });
 

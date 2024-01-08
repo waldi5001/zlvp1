@@ -18,13 +18,26 @@
 
 	<bean id="fensterKlasse" class="de.zlvp.gui.FensterKlasse" depends-on="syntheticaInitializer" />
 
-	<bean class="de.zlvp.reports.ReportsImpl">
-		<property name="dataSource" ref="dataSource" />
+	<bean class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target">
+			<bean class="de.zlvp.reports.ReportsImpl">
+				<property name="dataSource" ref="dataSource" />
+				<property name="fensterKlasse" ref="fensterKlasse" />
+			</bean>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>traceIdInterceptor</value>
+				<value>methodLogInterceptor</value>
+			</list>
+		</property>
 	</bean>
 
 	<bean id="trimInterceptor" class="de.zlvp.TrimInterceptor" />
 	
 	<task:executor id="taskExecutor" pool-size="5-10" queue-capacity="100"/>
+
+	<task:executor id="taskExecutor" pool-size="5-10" queue-capacity="100" />
 
 	<bean id="asyncAndErrorInterceptor" class="de.zlvp.AsyncAndErrorInterceptor">
 		<property name="taskExecutor" ref="taskExecutor" />
@@ -49,6 +62,8 @@
 			</props>
 		</property>
 	</bean>
+	
+	<bean id="traceIdInterceptor" class="de.zlvp.TraceIdInterceptor" />
 
 	<bean class="de.zlvp.Client" />
 
@@ -145,6 +160,7 @@
 		</property>
 		<property name="interceptorNames">
 			<list>
+				<value>traceIdInterceptor</value>
 				<value>asyncAndErrorInterceptor</value>
 				<value>methodLogInterceptor</value>
 				<value>transactionInterceptor</value>
@@ -163,6 +179,7 @@
 		</property>
 		<property name="interceptorNames">
 			<list>
+				<value>traceIdInterceptor</value>
 				<value>transactionInterceptor</value>
 			</list>
 		</property>

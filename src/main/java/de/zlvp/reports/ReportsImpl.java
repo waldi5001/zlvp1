@@ -16,6 +16,10 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileFilter;
 
+import org.slf4j.MDC;
+
+import de.zlvp.CursorToolkit;
+import de.zlvp.gui.FensterKlasse;
 import de.zlvp.ui.DesktopPane;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -29,6 +33,7 @@ import net.sf.jasperreports.view.JasperViewer;
 public class ReportsImpl implements Reports {
 
     private DataSource dataSource;
+    private FensterKlasse fensterKlasse;
 
     @Override
     public void lageruebersicht(int lagerId) {
@@ -177,10 +182,12 @@ public class ReportsImpl implements Reports {
     }
 
     private void showReport(String name, Map<String, Object> params) {
+        CursorToolkit.startWaitCursor(fensterKlasse.getRootPane());
+        Map<String, String> copyOfContextMap = MDC.getCopyOfContextMap();
         SwingWorker<JasperPrint, Void> sw = new SwingWorker<JasperPrint, Void>() {
             @Override
             protected JasperPrint doInBackground() throws Exception {
-                DesktopPane.get().setCursor(new Cursor(Cursor.WAIT_CURSOR));
+                MDC.setContextMap(copyOfContextMap);
                 Connection connection = dataSource.getConnection();
                 InputStream is = getClass().getResourceAsStream(format("/%s.jasper", name));
                 return JasperFillManager.fillReport(is, params, connection);
@@ -189,10 +196,12 @@ public class ReportsImpl implements Reports {
             @Override
             protected void done() {
                 try {
-                    DesktopPane.get().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+                    CursorToolkit.stopWaitCursor(fensterKlasse.getRootPane());
                     JasperViewer.viewReport(get(), false);
                 } catch (InterruptedException | ExecutionException e) {
                     throw new RuntimeException(e.getMessage(), e);
+                } finally {
+                    MDC.clear();
                 }
             }
         };
@@ -277,4 +286,7 @@ public class ReportsImpl implements Reports {
         this.dataSource = dataSource;
     }
 
+    public void setFensterKlasse(FensterKlasse fensterklasse) {
+        this.fensterKlasse = fensterklasse;
+    }
 }
