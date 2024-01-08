@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 public class JSchLoggerAdapter implements com.jcraft.jsch.Logger {
 
-    private static Logger log = LoggerFactory.getLogger("JSch");
+    private static final Logger log = LoggerFactory.getLogger("JSch");
 
     public boolean isEnabled(int level) {
         return true;
