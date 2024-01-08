@@ -1,24 +1,42 @@
 package de.zlvp.ui;
 
-import de.javasoft.swing.JYTable;
-import de.javasoft.swing.JYTableHeader;
-import de.javasoft.swing.jytable.renderer.CellLayoutHint;
-import de.javasoft.swing.jytable.sort.JYTableSortController;
-import de.zlvp.controller.AsyncCallback;
-import java.awt.*;
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
+import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
+import static javax.swing.JOptionPane.YES_NO_OPTION;
+import static javax.swing.JOptionPane.YES_OPTION;
+
+import java.awt.Color;
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
-import javax.swing.*;
+
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.SortOrder;
+import javax.swing.SwingConstants;
+import javax.swing.Timer;
+import javax.swing.ToolTipManager;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
+
+import org.jdesktop.swingx.table.DatePickerCellEditor;
+
+import de.javasoft.swing.JYTable;
+import de.javasoft.swing.JYTableHeader;
+import de.javasoft.swing.jytable.renderer.CellLayoutHint;
+import de.javasoft.swing.jytable.sort.JYTableSortController;
+import de.zlvp.controller.AsyncCallback;
 import net.java.balloontip.TableCellBalloonTip;
 import net.java.balloontip.positioners.LeftBelowPositioner;
 import net.java.balloontip.styles.ToolTipBalloonStyle;
-import org.jdesktop.swingx.table.DatePickerCellEditor;
 
 public class JTableBuilder<E> {
 
@@ -152,7 +170,15 @@ public class JTableBuilder<E> {
         for (int i : table.getSelectedRows()) {
             dataToDelete.add(data.get(table.convertRowIndexToModel(i)));
         }
-        deleter.delete(dataToDelete, result -> refresh());
+        if (dataToDelete.isEmpty()) {
+            return;
+        }
+        String namen = dataToDelete.stream().map(Object::toString).collect(joining(", "));
+        int answer = JOptionPane.showConfirmDialog(null, format("Soll %s wirklich gelöscht werden?", namen),
+                null, YES_NO_OPTION, INFORMATION_MESSAGE);
+        if (answer == YES_OPTION) {
+            deleter.delete(dataToDelete, result -> refresh());
+        }
     }
 
     public JTableBuilder<E> doubleClicked(Consumer<E> doubleClickHandler) {
