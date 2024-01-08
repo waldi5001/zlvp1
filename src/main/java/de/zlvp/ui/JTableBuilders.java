@@ -1,14 +1,20 @@
 package de.zlvp.ui;
 
 import static de.zlvp.Client.get;
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
+import static javax.swing.JOptionPane.NO_OPTION;
+import static javax.swing.JOptionPane.YES_NO_OPTION;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import javax.swing.JOptionPane;
 
 import de.zlvp.Events;
 import de.zlvp.entity.Anrede;
@@ -79,14 +85,22 @@ public class JTableBuilders {
                 // s.getFunktion() == Funktion.REMOVE && s.getLager() == null =
                 // Es wird ein leerer Eintrag bei der Funktion ausgewählt obwohl
                 // die Person noch kein Stab war.
-                .save((s, cb) -> get().speichereStab(s.getId(), s.getFunktion(),
-                        s.getFunktion() == Funktion.REMOVE
-                                ? s.getLager() == null ? lagerCallback.get().getId() : s.getLager().getId()
-                                : lagerCallback.get().getId(),
-                        speichernCallback -> {
-                            s.setLager(speichernCallback);
-                            cb.get(null);
-                        }))//
+                .save((s, cb) -> {
+                    if (s.getFunktion() == Funktion.REMOVE) {
+                        int answer = JOptionPane.showConfirmDialog(null, format("Soll %s aus dem Stab entfernt werden", s.getBezeichnung()),
+                                null, YES_NO_OPTION, INFORMATION_MESSAGE);
+                        if (answer == NO_OPTION) {
+                            return;
+                        }
+                    }
+                    int lagerId = s.getFunktion() == Funktion.REMOVE
+                            ? s.getLager() == null ? lagerCallback.get().getId() : s.getLager().getId()
+                            : lagerCallback.get().getId();
+                    get().speichereStab(s.getId(), s.getFunktion(), lagerId, speichernCallback -> {
+                        s.setLager(speichernCallback);
+                        cb.get(null);
+                    });
+                })//
                 .addColumn(ColumnBuilder.get(String.class).editable(false).add("Nachname").build())//
                 .addColumn(ColumnBuilder.get(String.class).editable(false).add("Vorname").build())//
                 .addColumn(ColumnBuilder.get(String.class).editable(false).add("Straße").build())//

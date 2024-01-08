@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import static de.zlvp.entity.Funktion.REMOVE;
+import static java.lang.String.format;
 import static java.lang.String.valueOf;
 
 public class ControllerImpl implements Controller {
@@ -311,6 +312,9 @@ public class ControllerImpl implements Controller {
         if (funktion == REMOVE) {
             stabDao.loeschen(lagerId, id);
         } else {
+            if (funktion == null) {
+                throw new RuntimeException(format("Funktion für Id %s ist null", id));
+            }
             stabDao.speichern(lagerId, id, funktion);
         }
         callback.get(lagerDao.get(lagerId));
