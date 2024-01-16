@@ -4,6 +4,8 @@ import static de.zlvp.Client.get;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -86,6 +88,11 @@ public class ZeltverleihVerwalten extends AbstractJInternalFrame {
                 public void mouseClicked(java.awt.event.MouseEvent e) {
                     selectedVerleih = tableBuilder.getSelectedValue();
                     getJButtonLoeschen().setEnabled(selectedVerleih != null);
+                }
+            });
+            jTable.addComponentListener(new ComponentAdapter() {
+                public void componentResized(ComponentEvent e) {
+                    jTable.scrollRectToVisible(jTable.getCellRect(jTable.getRowCount() - 1, 0, true));
                 }
             });
         }

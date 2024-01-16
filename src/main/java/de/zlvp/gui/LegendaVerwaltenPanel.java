@@ -4,6 +4,8 @@ import static de.zlvp.Client.get;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -51,6 +53,11 @@ public class LegendaVerwaltenPanel extends JPanel {
     public JTable getJTableLegenda() {
         if (jTableLegenda == null) {
             jTableLegenda = tableBuilderLegenda.buildAndLoad();
+            jTableLegenda.addComponentListener(new ComponentAdapter() {
+                public void componentResized(ComponentEvent e) {
+                    jTableLegenda.scrollRectToVisible(jTableLegenda.getCellRect(jTableLegenda.getRowCount() - 1, 0, true));
+                }
+            });
         }
         return jTableLegenda;
     }

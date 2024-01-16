@@ -3,6 +3,8 @@ package de.zlvp.gui;
 import static de.zlvp.Client.get;
 
 import java.awt.BorderLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -107,6 +109,11 @@ public class SchaedenVerwalten extends AbstractJInternalFrame {
                     }
                 }
 
+            });
+            jTableSchaeden.addComponentListener(new ComponentAdapter() {
+                public void componentResized(ComponentEvent e) {
+                    jTableSchaeden.scrollRectToVisible(jTableSchaeden.getCellRect(jTableSchaeden.getRowCount() - 1, 0, true));
+                }
             });
         }
         return jTableSchaeden;

@@ -16,6 +16,8 @@ import de.zlvp.ui.JComboBoxBuilder;
 import de.zlvp.ui.JTableBuilder;
 import de.zlvp.ui.JTableBuilders;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
@@ -486,6 +488,11 @@ public class TPLager extends JTabbedPane {
     private JTable getJTableProgramm() {
         if (jTableProgramm == null) {
             jTableProgramm = tableBuilderProgramm.build();
+            jTableProgramm.addComponentListener(new ComponentAdapter() {
+                public void componentResized(ComponentEvent e) {
+                    jTableProgramm.scrollRectToVisible(jTableProgramm.getCellRect(jTableProgramm.getRowCount() - 1, 0, true));
+                }
+            });
         }
         return jTableProgramm;
     }
@@ -546,6 +553,11 @@ public class TPLager extends JTabbedPane {
     private JTable getJTableEssen() {
         if (jTableEssen == null) {
             jTableEssen = tableBuilderEssen.build();
+            jTableEssen.addComponentListener(new ComponentAdapter() {
+                public void componentResized(ComponentEvent e) {
+                    jTableEssen.scrollRectToVisible(jTableEssen.getCellRect(jTableEssen.getRowCount() - 1, 0, true));
+                }
+            });
         }
         return jTableEssen;
     }
