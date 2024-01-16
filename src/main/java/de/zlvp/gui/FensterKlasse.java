@@ -1,32 +1,52 @@
 package de.zlvp.gui;
 
-import com.google.common.eventbus.Subscribe;
-import de.javasoft.plaf.synthetica.SyntheticaRootPaneUI;
-import de.javasoft.swing.AboutDialog;
-import de.javasoft.swing.ExtendedFileChooser;
-import de.zlvp.Client;
-import de.zlvp.ClientExceptionInterceptor;
-import de.zlvp.Events;
-import de.zlvp.Events.*;
-import de.zlvp.SelectionContext;
-import de.zlvp.entity.Jahr;
-import de.zlvp.entity.Lagerort;
-import de.zlvp.entity.ZeltdetailBezeichnung;
-import de.zlvp.ui.Actions;
-import de.zlvp.ui.DesktopPane;
-import net.sf.jasperreports.view.JasperViewer;
+import static de.zlvp.Client.get;
+import static de.zlvp.Client.getReports;
+import static java.lang.String.format;
+import static net.sf.jasperreports.view.JasperViewer.viewReport;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Desktop;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static de.zlvp.Client.get;
-import static java.lang.String.format;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.filechooser.FileFilter;
+
+import com.google.common.eventbus.Subscribe;
+
+import de.javasoft.plaf.synthetica.SyntheticaRootPaneUI;
+import de.javasoft.swing.AboutDialog;
+import de.javasoft.swing.ExtendedFileChooser;
+import de.zlvp.Client;
+import de.zlvp.ClientExceptionInterceptor;
+import de.zlvp.Events;
+import de.zlvp.Events.DisableMenuItems;
+import de.zlvp.Events.GruppeSelected;
+import de.zlvp.Events.JahrSelected;
+import de.zlvp.Events.LagerSelected;
+import de.zlvp.Events.LoginSuccessfull;
+import de.zlvp.Events.PersonSelected;
+import de.zlvp.SelectionContext;
+import de.zlvp.controller.AsyncCallback;
+import de.zlvp.entity.Jahr;
+import de.zlvp.entity.Lagerort;
+import de.zlvp.entity.ZeltdetailBezeichnung;
+import de.zlvp.reports.ReportsImpl;
+import de.zlvp.ui.Actions;
+import de.zlvp.ui.DesktopPane;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class FensterKlasse extends JFrame {
 
@@ -168,6 +188,9 @@ public class FensterKlasse extends JFrame {
 
     private JMenuItem jMenuItemAnrede;
 
+    private static final AsyncCallback<JasperPrint> showReport = report -> viewReport(report, false);
+    private static final AsyncCallback<JasperPrint> exportReport = report -> ReportsImpl.exportReport(report);
+
     public FensterKlasse() {
         super();
 
@@ -266,8 +289,7 @@ public class FensterKlasse extends JFrame {
             jMenuItemUeber.setText("Info");
             jMenuItemUeber.addActionListener(e -> {
                 try {
-                    AboutDialog.showDialog(null, null, "",
-                            format("Version: %s", getClass().getPackage().getImplementationVersion()));
+                    AboutDialog.showDialog(null, null, "", format("Version: %s", getClass().getPackage().getImplementationVersion()));
                 } catch (IOException e1) {
                     throw new RuntimeException(e1.getMessage(), e1);
                 }
@@ -498,8 +520,8 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemTeStatistik == null) {
             jMenuItemTeStatistik = new JMenuItem();
             jMenuItemTeStatistik.setText("Statistik");
-            jMenuItemTeStatistik.addActionListener(
-                    e -> Client.getReports().teilnehmerStatistik(SelectionContext.get().getPerson().getId()));
+            jMenuItemTeStatistik
+                    .addActionListener(e -> getReports().teilnehmerStatistik(SelectionContext.get().getPerson().getId(), showReport));
         }
         return jMenuItemTeStatistik;
     }
@@ -541,8 +563,8 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemTeAusfASC == null) {
             jMenuItemTeAusfASC = new JMenuItem();
             jMenuItemTeAusfASC.setText("Alphabetisch für Lager");
-            jMenuItemTeAusfASC.addActionListener(
-                    e -> Client.getReports().teilnehmerAusfuehrlichASC(SelectionContext.get().getLager().getId()));
+            jMenuItemTeAusfASC
+                    .addActionListener(e -> getReports().teilnehmerAusfuehrlichASC(SelectionContext.get().getLager().getId(), showReport));
         }
         return jMenuItemTeAusfASC;
     }
@@ -551,8 +573,8 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemTeAusfGesch == null) {
             jMenuItemTeAusfGesch = new JMenuItem();
             jMenuItemTeAusfGesch.setText("Geschlecht für Lager");
-            jMenuItemTeAusfGesch.addActionListener(e -> Client.getReports()
-                    .teilnehmerAusfuehrlichGeschlecht(SelectionContext.get().getLager().getId()));
+            jMenuItemTeAusfGesch.addActionListener(
+                    e -> getReports().teilnehmerAusfuehrlichGeschlecht(SelectionContext.get().getLager().getId(), showReport));
         }
         return jMenuItemTeAusfGesch;
     }
@@ -561,8 +583,7 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemTeKurASC == null) {
             jMenuItemTeKurASC = new JMenuItem();
             jMenuItemTeKurASC.setText("Alphabetisch");
-            jMenuItemTeKurASC.addActionListener(
-                    e -> Client.getReports().teilnehmerASC(SelectionContext.get().getLager().getId()));
+            jMenuItemTeKurASC.addActionListener(e -> getReports().teilnehmerASC(SelectionContext.get().getLager().getId(), showReport));
         }
         return jMenuItemTeKurASC;
     }
@@ -571,8 +592,8 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemTeKurGesch == null) {
             jMenuItemTeKurGesch = new JMenuItem();
             jMenuItemTeKurGesch.setText("Geschlecht");
-            jMenuItemTeKurGesch.addActionListener(
-                    e -> Client.getReports().teilnehmerGeschlecht(SelectionContext.get().getLager().getId()));
+            jMenuItemTeKurGesch
+                    .addActionListener(e -> getReports().teilnehmerGeschlecht(SelectionContext.get().getLager().getId(), showReport));
         }
         return jMenuItemTeKurGesch;
     }
@@ -599,8 +620,8 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemLeLaAusf == null) {
             jMenuItemLeLaAusf = new JMenuItem();
             jMenuItemLeLaAusf.setText("Ausführlich");
-            jMenuItemLeLaAusf.addActionListener(
-                    e -> Client.getReports().leiterLagerAusfuehrlich(SelectionContext.get().getLager().getId()));
+            jMenuItemLeLaAusf
+                    .addActionListener(e -> getReports().leiterLagerAusfuehrlich(SelectionContext.get().getLager().getId(), showReport));
         }
         return jMenuItemLeLaAusf;
     }
@@ -609,8 +630,8 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemLeJaAusf == null) {
             jMenuItemLeJaAusf = new JMenuItem();
             jMenuItemLeJaAusf.setText("Ausführlich");
-            jMenuItemLeJaAusf.addActionListener(
-                    e -> Client.getReports().leiterJahrAusfuehrlich(SelectionContext.get().getJahr().getId()));
+            jMenuItemLeJaAusf
+                    .addActionListener(e -> getReports().leiterJahrAusfuehrlich(SelectionContext.get().getJahr().getId(), showReport));
         }
         return jMenuItemLeJaAusf;
     }
@@ -619,8 +640,7 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemLaAlg == null) {
             jMenuItemLaAlg = new JMenuItem();
             jMenuItemLaAlg.setText("Lagerübersicht");
-            jMenuItemLaAlg.addActionListener(
-                    e -> Client.getReports().lageruebersicht(SelectionContext.get().getLager().getId()));
+            jMenuItemLaAlg.addActionListener(e -> getReports().lageruebersicht(SelectionContext.get().getLager().getId(), showReport));
         }
         return jMenuItemLaAlg;
     }
@@ -629,8 +649,7 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemJaAlg == null) {
             jMenuItemJaAlg = new JMenuItem();
             jMenuItemJaAlg.setText("Jahresübersicht");
-            jMenuItemJaAlg.addActionListener(
-                    e -> Client.getReports().jahresuebersicht(SelectionContext.get().getJahr().getId()));
+            jMenuItemJaAlg.addActionListener(e -> getReports().jahresuebersicht(SelectionContext.get().getJahr().getId(), showReport));
         }
         return jMenuItemJaAlg;
     }
@@ -649,7 +668,7 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemGesStatistik == null) {
             jMenuItemGesStatistik = new JMenuItem();
             jMenuItemGesStatistik.setText("Gesamt Statistik");
-            jMenuItemGesStatistik.addActionListener(e -> Client.getReports().gesamtstatistik());
+            jMenuItemGesStatistik.addActionListener(e -> getReports().gesamtstatistik(showReport));
         }
         return jMenuItemGesStatistik;
     }
@@ -658,8 +677,7 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemJaStatistik == null) {
             jMenuItemJaStatistik = new JMenuItem();
             jMenuItemJaStatistik.setText("Jahresstatistik");
-            jMenuItemJaStatistik.addActionListener(
-                    e -> Client.getReports().jahresstatistik(SelectionContext.get().getJahr().getId()));
+            jMenuItemJaStatistik.addActionListener(e -> getReports().jahresstatistik(SelectionContext.get().getJahr().getId(), showReport));
         }
         return jMenuItemJaStatistik;
     }
@@ -668,8 +686,7 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemZeLager == null) {
             jMenuItemZeLager = new JMenuItem();
             jMenuItemZeLager.setText("Zelt / Lager");
-            jMenuItemZeLager.addActionListener(
-                    e -> Client.getReports().zelteVonLager(SelectionContext.get().getLager().getId()));
+            jMenuItemZeLager.addActionListener(e -> getReports().zelteVonLager(SelectionContext.get().getLager().getId(), showReport));
         }
         return jMenuItemZeLager;
     }
@@ -678,7 +695,7 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemZeAlle == null) {
             jMenuItemZeAlle = new JMenuItem();
             jMenuItemZeAlle.setText("Alle");
-            jMenuItemZeAlle.addActionListener(e -> Client.getReports().alleZelte());
+            jMenuItemZeAlle.addActionListener(e -> getReports().alleZelte(showReport));
         }
         return jMenuItemZeAlle;
     }
@@ -750,8 +767,8 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemTeGruppe == null) {
             jMenuItemTeGruppe = new JMenuItem();
             jMenuItemTeGruppe.setText("Gruppe");
-            jMenuItemTeGruppe.addActionListener(
-                    e -> Client.getReports().teilnehmerVonGruppe(SelectionContext.get().getLager().getId()));
+            jMenuItemTeGruppe
+                    .addActionListener(e -> getReports().teilnehmerVonGruppe(SelectionContext.get().getLager().getId(), showReport));
         }
         return jMenuItemTeGruppe;
     }
@@ -781,8 +798,8 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemNachtwache == null) {
             jMenuItemNachtwache = new JMenuItem();
             jMenuItemNachtwache.setText("Nachtwache");
-            jMenuItemNachtwache.addActionListener(
-                    e -> Client.getReports().nachtwachenliste(SelectionContext.get().getLager().getId()));
+            jMenuItemNachtwache
+                    .addActionListener(e -> getReports().nachtwachenliste(SelectionContext.get().getLager().getId(), showReport));
         }
         return jMenuItemNachtwache;
     }
@@ -791,8 +808,8 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemNachtwacheGruppe == null) {
             jMenuItemNachtwacheGruppe = new JMenuItem();
             jMenuItemNachtwacheGruppe.setText("Nachtwache nach Gruppen");
-            jMenuItemNachtwacheGruppe.addActionListener(
-                    e -> Client.getReports().nachtwachenlisteGruppe(SelectionContext.get().getLager().getId()));
+            jMenuItemNachtwacheGruppe
+                    .addActionListener(e -> getReports().nachtwachenlisteGruppe(SelectionContext.get().getLager().getId(), showReport));
         }
         return jMenuItemNachtwacheGruppe;
     }
@@ -801,8 +818,7 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemLegendaListen == null) {
             jMenuItemLegendaListen = new JMenuItem();
             jMenuItemLegendaListen.setText("Legenda");
-            jMenuItemLegendaListen
-                    .addActionListener(e -> Client.getReports().legenda(SelectionContext.get().getLager().getId()));
+            jMenuItemLegendaListen.addActionListener(e -> getReports().legenda(SelectionContext.get().getLager().getId(), showReport));
         }
         return jMenuItemLegendaListen;
     }
@@ -811,8 +827,8 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemTeAusfGeschHaEm == null) {
             jMenuItemTeAusfGeschHaEm = new JMenuItem();
             jMenuItemTeAusfGeschHaEm.setText("Geschlecht mit EMail und Handy");
-            jMenuItemTeAusfGeschHaEm.addActionListener(
-                    e -> Client.getReports().teilnehmerHandyEmail(SelectionContext.get().getLager().getId()));
+            jMenuItemTeAusfGeschHaEm
+                    .addActionListener(e -> getReports().teilnehmerHandyEmail(SelectionContext.get().getLager().getId(), showReport));
         }
         return jMenuItemTeAusfGeschHaEm;
     }
@@ -822,7 +838,7 @@ public class FensterKlasse extends JFrame {
             jMenuItemTeAusfHaEmASC = new JMenuItem();
             jMenuItemTeAusfHaEmASC.setText("Alphabetisch mit EMail und Handy");
             jMenuItemTeAusfHaEmASC.addActionListener(
-                    e -> Client.getReports().teilnehmerAdresseHandyEmail(SelectionContext.get().getLager().getId()));
+                    e -> getReports().teilnehmerAdresseHandyEmail(SelectionContext.get().getLager().getId(), showReport));
         }
         return jMenuItemTeAusfHaEmASC;
     }
@@ -831,8 +847,7 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemEtiketten == null) {
             jMenuItemEtiketten = new JMenuItem();
             jMenuItemEtiketten.setText("Etiketten");
-            jMenuItemEtiketten
-                    .addActionListener(e -> Client.getReports().etiketten(SelectionContext.get().getLager().getId()));
+            jMenuItemEtiketten.addActionListener(e -> getReports().etiketten(SelectionContext.get().getLager().getId(), showReport));
         }
         return jMenuItemEtiketten;
     }
@@ -873,7 +888,7 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemEtikettenLI == null) {
             jMenuItemEtikettenLI = new JMenuItem();
             jMenuItemEtikettenLI.setText("Etiketten Lagerinfo");
-            jMenuItemEtikettenLI.addActionListener(e -> Client.getReports().etikettenLagerinfo());
+            jMenuItemEtikettenLI.addActionListener(e -> getReports().etikettenLagerinfo(showReport));
         }
         return jMenuItemEtikettenLI;
     }
@@ -903,7 +918,7 @@ public class FensterKlasse extends JFrame {
         if (jMenuItemEtikettenLI1 == null) {
             jMenuItemEtikettenLI1 = new JMenuItem();
             jMenuItemEtikettenLI1.setText("Etiketten Lagerinfo");
-            jMenuItemEtikettenLI1.addActionListener(e -> Client.getReports().etikettenLagerinfo());
+            jMenuItemEtikettenLI1.addActionListener(e -> getReports().etikettenLagerinfo(showReport));
         }
         return jMenuItemEtikettenLI1;
     }
@@ -913,8 +928,8 @@ public class FensterKlasse extends JFrame {
             jMenuItemLegendaJahr = new JMenuItem();
             jMenuItemLegendaJahr.setEnabled(false);
             jMenuItemLegendaJahr.setText("Legenda / Jahr");
-            jMenuItemLegendaJahr.addActionListener(
-                    e -> Client.getReports().exportLegendaCSVJahr(SelectionContext.get().getJahr().getId()));
+            jMenuItemLegendaJahr
+                    .addActionListener(e -> getReports().exportLegendaCSVJahr(SelectionContext.get().getJahr().getId(), exportReport));
         }
         return jMenuItemLegendaJahr;
     }
@@ -940,8 +955,7 @@ public class FensterKlasse extends JFrame {
             jMenuItemProgramm = new JMenuItem();
             jMenuItemProgramm.setText("Programm");
             jMenuItemProgramm.setEnabled(false);
-            jMenuItemProgramm
-                    .addActionListener(e -> Client.getReports().programm(SelectionContext.get().getLager().getId()));
+            jMenuItemProgramm.addActionListener(e -> getReports().programm(SelectionContext.get().getLager().getId(), showReport));
         }
         return jMenuItemProgramm;
     }
@@ -951,7 +965,7 @@ public class FensterKlasse extends JFrame {
             jMenuItemEssen = new JMenuItem();
             jMenuItemEssen.setText("Essen");
             jMenuItemEssen.setEnabled(false);
-            jMenuItemEssen.addActionListener(e -> Client.getReports().essen(SelectionContext.get().getLager().getId()));
+            jMenuItemEssen.addActionListener(e -> getReports().essen(SelectionContext.get().getLager().getId(), showReport));
         }
         return jMenuItemEssen;
     }
@@ -964,8 +978,8 @@ public class FensterKlasse extends JFrame {
                 get().getAllLagerort(allLagerort -> {
                     Lagerort[] los = allLagerort.toArray(new Lagerort[allLagerort.size()]);
 
-                    Lagerort lo = (Lagerort) JOptionPane.showInputDialog(null, null, "Legenda öffnen für:",
-                            JOptionPane.PLAIN_MESSAGE, null, los, null);
+                    Lagerort lo = (Lagerort) JOptionPane.showInputDialog(null, null, "Legenda öffnen für:", JOptionPane.PLAIN_MESSAGE, null,
+                            los, null);
 
                     if (lo != null) {
                         new LegendaVerwalten(lo);
@@ -1042,8 +1056,8 @@ public class FensterKlasse extends JFrame {
             jMenuItemOutlookLager = new JMenuItem();
             jMenuItemOutlookLager.setText("Alle Personen von Lager");
             jMenuItemOutlookLager.setEnabled(false);
-            jMenuItemOutlookLager.addActionListener(
-                    e -> Client.getReports().personenVonLagerCSV(SelectionContext.get().getLager().getId()));
+            jMenuItemOutlookLager
+                    .addActionListener(e -> getReports().personenVonLagerCSV(SelectionContext.get().getLager().getId(), exportReport));
         }
         return jMenuItemOutlookLager;
     }

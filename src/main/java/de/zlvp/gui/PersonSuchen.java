@@ -1,12 +1,15 @@
 package de.zlvp.gui;
 
 import de.zlvp.Client;
+import de.zlvp.controller.AsyncCallback;
 import de.zlvp.entity.Geschlecht;
 import de.zlvp.entity.Person;
 import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JComboBoxBuilder;
 import de.zlvp.ui.JListBuilder;
 import de.zlvp.ui.JListTransferHandler;
+import net.sf.jasperreports.engine.JasperPrint;
+
 import java.awt.*;
 import java.text.DateFormat;
 import java.util.Date;
@@ -17,6 +20,7 @@ import javax.swing.text.DateFormatter;
 import static de.zlvp.Client.get;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static net.sf.jasperreports.view.JasperViewer.viewReport;
 
 public class PersonSuchen extends AbstractJInternalFrame {
 
@@ -88,13 +92,14 @@ public class PersonSuchen extends AbstractJInternalFrame {
 
     private final JListBuilder<Person> jListBuilder;
 
+    private static final AsyncCallback<JasperPrint> showReport = report -> viewReport(report, false);
+
     public PersonSuchen() {
-        comboboxBuilderGeschlecht = JComboBoxBuilder
-                .get(Geschlecht.class, allGeschlecht -> allGeschlecht.get(asList(Geschlecht.values())))
+        comboboxBuilderGeschlecht = JComboBoxBuilder.get(Geschlecht.class, allGeschlecht -> allGeschlecht.get(asList(Geschlecht.values())))
                 .map(Geschlecht::getBezeichnung);
 
-        jListBuilder = JListBuilder.get(Person.class, asyncCallback -> get()
-                .findPerson(getJTextFieldVorname().getText(), getJTextFieldName().getText(), asyncCallback));
+        jListBuilder = JListBuilder.get(Person.class,
+                asyncCallback -> get().findPerson(getJTextFieldVorname().getText(), getJTextFieldName().getText(), asyncCallback));
 
         initialize();
         setupDialog();
@@ -103,15 +108,13 @@ public class PersonSuchen extends AbstractJInternalFrame {
     }
 
     public PersonSuchen(int personId) {
-        comboboxBuilderGeschlecht = JComboBoxBuilder
-                .get(Geschlecht.class, allGeschlecht -> allGeschlecht.get(asList(Geschlecht.values())))
+        comboboxBuilderGeschlecht = JComboBoxBuilder.get(Geschlecht.class, allGeschlecht -> allGeschlecht.get(asList(Geschlecht.values())))
                 .map(Geschlecht::getBezeichnung);
 
-        jListBuilder =
-                JListBuilder.get(Person.class, asyncCallback -> get().getPerson(personId, cb -> {
-                    asyncCallback.get(singletonList(cb));
-                    getJListPerson().setSelectedValue(cb, true);
-                }));
+        jListBuilder = JListBuilder.get(Person.class, asyncCallback -> get().getPerson(personId, cb -> {
+            asyncCallback.get(singletonList(cb));
+            getJListPerson().setSelectedValue(cb, true);
+        }));
         initialize();
         jListBuilder.refresh();
         setupDialog();
@@ -275,8 +278,8 @@ public class PersonSuchen extends AbstractJInternalFrame {
                 String handy = getJTextFieldHandy().getText();
                 String nottel = getJTextFieldNottel().getText();
 
-                get().speicherePerson(selectedPerson.getId(), geschlecht, vorname, name, strasse, plz, ort, gebtag,
-                        telnr, email, handy, nottel, asyncCallback -> suchen());
+                get().speicherePerson(selectedPerson.getId(), geschlecht, vorname, name, strasse, plz, ort, gebtag, telnr, email, handy,
+                        nottel, asyncCallback -> suchen());
             });
         }
         return jButtonOK;
@@ -575,7 +578,7 @@ public class PersonSuchen extends AbstractJInternalFrame {
             jButtonStatistik.addActionListener(e -> {
                 if (getJListPerson().getSelectedValue() != null) {
                     Person person = getJListPerson().getSelectedValue();
-                    Client.getReports().teilnehmerStatistik(person.getId());
+                    Client.getReports().teilnehmerStatistik(person.getId(), showReport);
                 }
             });
         }

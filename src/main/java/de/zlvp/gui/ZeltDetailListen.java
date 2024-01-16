@@ -1,6 +1,7 @@
 package de.zlvp.gui;
 
 import static de.zlvp.Client.get;
+import static net.sf.jasperreports.view.JasperViewer.viewReport;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -13,9 +14,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
 import de.zlvp.Client;
+import de.zlvp.controller.AsyncCallback;
 import de.zlvp.entity.Zelt;
 import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JListBuilder;
+import net.sf.jasperreports.engine.JasperPrint;
 
 public class ZeltDetailListen extends AbstractJInternalFrame {
 
@@ -44,6 +47,8 @@ public class ZeltDetailListen extends AbstractJInternalFrame {
     private JButton jButtonZeSchaeden;
 
     private JButton jButtonZeHistory;
+    
+    private static final AsyncCallback<JasperPrint> showReport = report -> viewReport(report, false);
 
     public ZeltDetailListen() {
         initialize();
@@ -167,7 +172,7 @@ public class ZeltDetailListen extends AbstractJInternalFrame {
             jButtonZeDetail.setText("Zelt Detail Liste");
             jButtonZeDetail.addActionListener(e -> {
                 Zelt zelt = getJListZelt().getSelectedValue();
-                Client.getReports().zeltDetails(zelt.getId());
+                Client.getReports().zeltDetails(zelt.getId(), showReport);
             });
         }
         return jButtonZeDetail;
@@ -179,7 +184,7 @@ public class ZeltDetailListen extends AbstractJInternalFrame {
             jButtonZeSchaeden.setText("Schäden");
             jButtonZeSchaeden.addActionListener(e -> {
                 Zelt zelt = getJListZelt().getSelectedValue();
-                Client.getReports().zeltSchaeden(zelt.getId());
+                Client.getReports().zeltSchaeden(zelt.getId(), showReport);
             });
         }
         return jButtonZeSchaeden;
@@ -191,7 +196,7 @@ public class ZeltDetailListen extends AbstractJInternalFrame {
             jButtonZeHistory.setText("History");
             jButtonZeHistory.addActionListener(e -> {
                 Zelt zelt = getJListZelt().getSelectedValue();
-                Client.getReports().zeltHistorie(zelt.getId());
+                Client.getReports().zeltHistorie(zelt.getId(), showReport);
             });
         }
         return jButtonZeHistory;
