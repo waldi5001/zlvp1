@@ -7,13 +7,10 @@ import static javax.swing.tree.TreeSelectionModel.SINGLE_TREE_SELECTION;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.Enumeration;
 
-import javax.swing.AbstractAction;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -40,6 +37,8 @@ import de.zlvp.entity.Jahr;
 import de.zlvp.entity.Lager;
 import de.zlvp.entity.Person;
 import de.zlvp.ui.AbstractJInternalFrame;
+import de.zlvp.ui.Actions;
+import de.zlvp.ui.Actions.AktualisierenAction;
 import de.zlvp.ui.JTreeTransferHandler;
 import de.zlvp.ui.TreeData;
 import de.zlvp.ui.TreeData.UserObjectEqualMutableTreeNode;
@@ -118,19 +117,10 @@ public class HauptFenster extends AbstractJInternalFrame {
 
     private JButton getJButtonAktualisieren() {
         if (jButtonAktualisieren == null) {
-            String key = "Aktualisieren";
-            AbstractAction action = new AbstractAction(key) {
-                private static final long serialVersionUID = 1L;
-
-                @Override
-                public void actionPerformed(ActionEvent evt) {
-                    aktualisieren();
-                }
-
-            };
+            AktualisierenAction action = Actions.getAktualisierenAction(e -> aktualisieren());
             jButtonAktualisieren = new JButton(action);
-            jButtonAktualisieren.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-                    .put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), key);
+            String key = "aktualisieren";
+            jButtonAktualisieren.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), key);
             jButtonAktualisieren.getActionMap().put(key, action);
         }
         return jButtonAktualisieren;

@@ -4,8 +4,11 @@ import static de.zlvp.Client.get;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.function.Consumer;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 
 import de.zlvp.Client;
 import de.zlvp.Events;
@@ -25,8 +28,6 @@ public class Actions {
     private static final OeffnenAction oeffnen = new OeffnenAction();
     private static final PersonAendernAction personAendernAction = new PersonAendernAction();
     private static final ZelteVerwaltenAction zelteVerwaltenAction = new ZelteVerwaltenAction();
-
-    private static final ZelteVerwaltenAction aktualisierenAction = new ZelteVerwaltenAction();
 
     private Actions() {
     }
@@ -169,14 +170,27 @@ public class Actions {
         }
 
     }
+    
+    public static AktualisierenAction getAktualisierenAction(Consumer<ActionEvent> consumer) {
+        return new AktualisierenAction(consumer);
+    }
+    
+    public static class AktualisierenAction extends AbstractAction {
+        private static final long serialVersionUID = 1L;
+        
+        private final Consumer<ActionEvent> consumer;
 
-    private abstract static class AktualisierenAction extends AbstractAction {
-        public AktualisierenAction() {
-            super("Aktualisieren");
+        public AktualisierenAction(Consumer<ActionEvent> consumer) {
+            super("Aktualisieren (F5)");
+            this.consumer=consumer;
             setEnabled(true);
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0));
+            putValue(MNEMONIC_KEY, KeyEvent.VK_R);
         }
 
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            consumer.accept(e);
+        }
     }
 
 }
