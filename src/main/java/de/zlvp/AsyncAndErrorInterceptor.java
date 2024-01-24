@@ -1,6 +1,7 @@
 package de.zlvp;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.SwingUtilities;
@@ -28,24 +29,24 @@ public class AsyncAndErrorInterceptor implements MethodInterceptor {
     @Override
     @SuppressWarnings("unchecked")
     public Object invoke(MethodInvocation invocation) {
-        AsyncCallback<Object> originalCallback = (AsyncCallback<Object>) invocation
-                .getArguments()[invocation.getArguments().length - 1];
-
-        AsyncCallback<Object> edtCallback = new EDTCallback(originalCallback);
+        AsyncCallback<Object> originalCallback = (AsyncCallback<Object>) invocation.getArguments()[invocation.getArguments().length - 1];
 
         ProxyCallback proxy = new ProxyCallback();
         invocation.getArguments()[invocation.getArguments().length - 1] = proxy;
 
         Map<String, String> copyOfContextMap = MDC.getCopyOfContextMap();
 
-        taskExecutor.execute(() -> {
+        CompletableFuture.supplyAsync(() -> {
             try {
                 MDC.setContextMap(copyOfContextMap);
+
                 if (invocationCounter.incrementAndGet() == 1) {
                     CursorToolkit.startWaitCursor(fensterKlasse.getRootPane());
                 }
+
                 invocation.proceed();
-                edtCallback.get(proxy.getControllerResult());
+
+                return proxy.getControllerResult();
             } catch (Throwable e) {
                 handleThrowable(e);
             } finally {
@@ -54,8 +55,8 @@ public class AsyncAndErrorInterceptor implements MethodInterceptor {
                 }
                 MDC.clear();
             }
-        });
-
+            return null;
+        }, taskExecutor).thenAcceptAsync(originalCallback::get, SwingUtilities::invokeLater);
         return null;
     }
 
@@ -83,20 +84,6 @@ public class AsyncAndErrorInterceptor implements MethodInterceptor {
         @Override
         public String toString() {
             return "AsyncCallback@" + Integer.toHexString(hashCode());
-        }
-
-    }
-
-    private static class EDTCallback implements AsyncCallback<Object> {
-        private final AsyncCallback<Object> originalCallback;
-
-        public EDTCallback(AsyncCallback<Object> originalCallback) {
-            this.originalCallback = originalCallback;
-        }
-
-        @Override
-        public void get(Object result) {
-            SwingUtilities.invokeLater(() -> originalCallback.get(result));
         }
 
     }
