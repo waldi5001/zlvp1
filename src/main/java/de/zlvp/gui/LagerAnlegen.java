@@ -1,6 +1,7 @@
 package de.zlvp.gui;
 
 import static de.zlvp.Client.get;
+import static java.util.Objects.isNull;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -50,7 +51,7 @@ public class LagerAnlegen extends AbstractJInternalFrame {
     private JFormattedTextField jFormattedTextFieldDatStart;
     private JFormattedTextField jFormattedTextFieldDatStop;
 
-    private JButton jButtonLöschen;
+    private JButton jButtonLoeschen;
     private JComboBox<Lagerort> jComboBoxLagerort;
 
     private JComboBoxBuilder<Lagerort> comboboxBuilderLagerort;
@@ -195,18 +196,11 @@ public class LagerAnlegen extends AbstractJInternalFrame {
             jButtonNeu = new JButton();
             jButtonNeu.setText("Neu");
             jButtonNeu.addActionListener(e -> {
-                Date start = (Date) getJFormattedTextFieldDatStart().getValue();
-                Date stop = (Date) getJFormattedTextFieldDatStop().getValue();
-
                 speichern();
 
                 getJTextFieldMotto().setText("");
                 getJTextFieldName().setText("");
                 getJComboBoxLagerort().setSelectedIndex(-1);
-
-                getJFormattedTextFieldDatStart().setValue(start);
-                getJFormattedTextFieldDatStop().setValue(stop);
-
             });
         }
         return jButtonNeu;
@@ -254,10 +248,10 @@ public class LagerAnlegen extends AbstractJInternalFrame {
     }
 
     private JButton getJButtonLoeschen() {
-        if (jButtonLöschen == null) {
-            jButtonLöschen = new JButton();
-            jButtonLöschen.setText("Löschen");
-            jButtonLöschen.addActionListener(e -> {
+        if (jButtonLoeschen == null) {
+            jButtonLoeschen = new JButton();
+            jButtonLoeschen.setText("Löschen");
+            jButtonLoeschen.addActionListener(e -> {
                 getJTextFieldMotto().setText("");
                 getJTextFieldName().setText("");
                 getJComboBoxLagerort().setSelectedIndex(-1);
@@ -265,7 +259,7 @@ public class LagerAnlegen extends AbstractJInternalFrame {
                 getJFormattedTextFieldDatStop().setValue(new Date());
             });
         }
-        return jButtonLöschen;
+        return jButtonLoeschen;
     }
 
     private JComboBox<Lagerort> getJComboBoxLagerort() {
@@ -282,6 +276,10 @@ public class LagerAnlegen extends AbstractJInternalFrame {
         String sName = getJTextFieldName().getText();
         String sThema = getJTextFieldMotto().getText();
         Lagerort lagerort = (Lagerort) getJComboBoxLagerort().getSelectedItem();
+
+        if (isNull(start) || isNull(stop) || isNull(sName) || sName.isEmpty() || isNull(lagerort)) {
+            throw new RuntimeException("Folgende Felder müssen gefüllt sein: Name, Ort, Datum Start und Datum Stop");
+        }
 
         get().speichereLager(null, sName, sThema, start, stop, jahrId, lagerort.getId(), cb -> {
         });
