@@ -1,15 +1,61 @@
 package de.zlvp.controller;
 
-import de.zlvp.dao.*;
-import de.zlvp.entity.*;
+import static de.zlvp.entity.Funktion.REMOVE;
+import static java.lang.String.format;
+import static java.lang.String.valueOf;
+import static java.time.ZoneId.systemDefault;
+
+import java.time.LocalDate;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static de.zlvp.entity.Funktion.REMOVE;
-import static java.lang.String.format;
-import static java.lang.String.valueOf;
+import de.zlvp.dao.AnredeDao;
+import de.zlvp.dao.EssenDao;
+import de.zlvp.dao.GruppeDao;
+import de.zlvp.dao.JahrDao;
+import de.zlvp.dao.LagerDao;
+import de.zlvp.dao.LagerinfoDao;
+import de.zlvp.dao.LagerortDao;
+import de.zlvp.dao.LegendaDao;
+import de.zlvp.dao.LegendatypDao;
+import de.zlvp.dao.LeiterDao;
+import de.zlvp.dao.MaterialwartDao;
+import de.zlvp.dao.PersonDao;
+import de.zlvp.dao.ProgrammDao;
+import de.zlvp.dao.SchadenDao;
+import de.zlvp.dao.StabDao;
+import de.zlvp.dao.TeilnehmerDao;
+import de.zlvp.dao.UserDao;
+import de.zlvp.dao.ZeltDao;
+import de.zlvp.dao.ZeltdetailBezeichnungDao;
+import de.zlvp.dao.ZeltdetailDao;
+import de.zlvp.dao.ZeltverleihDao;
+import de.zlvp.entity.Anrede;
+import de.zlvp.entity.Essen;
+import de.zlvp.entity.Funktion;
+import de.zlvp.entity.Geschlecht;
+import de.zlvp.entity.Gruppe;
+import de.zlvp.entity.Jahr;
+import de.zlvp.entity.Lager;
+import de.zlvp.entity.Lagerinfo;
+import de.zlvp.entity.Lagerort;
+import de.zlvp.entity.Legenda;
+import de.zlvp.entity.Legendatyp;
+import de.zlvp.entity.Leiter;
+import de.zlvp.entity.Materialwart;
+import de.zlvp.entity.Person;
+import de.zlvp.entity.Programm;
+import de.zlvp.entity.Schaden;
+import de.zlvp.entity.Stab;
+import de.zlvp.entity.Teilnehmer;
+import de.zlvp.entity.User;
+import de.zlvp.entity.Waehrung;
+import de.zlvp.entity.Zelt;
+import de.zlvp.entity.Zeltdetail;
+import de.zlvp.entity.ZeltdetailBezeichnung;
+import de.zlvp.entity.Zeltverleih;
 
 public class ControllerImpl implements Controller {
 
@@ -261,7 +307,15 @@ public class ControllerImpl implements Controller {
     @Override
     public void speichereLager(Integer id, String name, String thema, Date start, Date stop, int jahrId, int lagerortId,
             AsyncCallback<Void> callback) {
-        lagerDao.speichern(id, name, thema, start, stop, lagerortId, jahrId);
+        int neuesLagerId = lagerDao.speichern(id, name, thema, start, stop, lagerortId, jahrId);
+        if (id == null) {
+            LocalDate end = stop.toInstant().atZone(systemDefault()).toLocalDate();
+            for (LocalDate begin = start.toInstant().atZone(systemDefault()).toLocalDate(); begin.compareTo(end) <= 0; begin = begin
+                    .plusDays(1)) {
+                essenDao.speichereEssen(neuesLagerId, Date.from(begin.atStartOfDay(systemDefault()).toInstant()), null, null, null);
+                programmDao.speichereProgramm(neuesLagerId, Date.from(begin.atStartOfDay(systemDefault()).toInstant()), null, null, null);
+            }
+        }
         callback.get(null);
     }
 

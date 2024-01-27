@@ -502,19 +502,24 @@ public class TPLager extends JTabbedPane {
             jButtonHinzufuegenProgramm = new JButton();
             jButtonHinzufuegenProgramm.setText("Hinzufügen");
             jButtonHinzufuegenProgramm.addActionListener(e -> {
+                jButtonHinzufuegenProgramm.setEnabled(false);
                 if (getJTableProgramm().getModel().getRowCount() == 0) {
-                    get().speichereProgramm(lager.getId(), null, lager.getDatumStart(), null, null, null,
-                            asyncCallback -> tableBuilderProgramm.refresh());
+                    get().speichereProgramm(lager.getId(), null, lager.getDatumStart(), null, null, null, cb -> {
+                        tableBuilderProgramm.refresh();
+                        jButtonHinzufuegenProgramm.setEnabled(true);
+                    });
                 } else {
-                    Date letztesDatum =
-                            (Date) getJTableProgramm().getModel().getValueAt(getJTableProgramm().getModel().getRowCount() - 1, 0);
+                    Date letztesDatum = (Date) getJTableProgramm().getModel().getValueAt(getJTableProgramm().getModel().getRowCount() - 1,
+                            0);
 
                     Calendar c = Calendar.getInstance();
                     c.setTime(letztesDatum);
                     c.add(Calendar.DAY_OF_MONTH, 1);
 
-                    get().speichereProgramm(lager.getId(), null, c.getTime(), null, null, null,
-                            asyncCallback -> tableBuilderProgramm.refresh());
+                    get().speichereProgramm(lager.getId(), null, c.getTime(), null, null, null, cb -> {
+                        tableBuilderProgramm.refresh();
+                        jButtonHinzufuegenProgramm.setEnabled(true);
+                    });
                 }
             });
         }
@@ -567,8 +572,12 @@ public class TPLager extends JTabbedPane {
             jButtonHinzufuegenEssen = new JButton();
             jButtonHinzufuegenEssen.setText("Hinzufügen");
             jButtonHinzufuegenEssen.addActionListener(e -> {
+                jButtonHinzufuegenEssen.setEnabled(false);
                 if (getJTableEssen().getModel().getRowCount() == 0) {
-                    get().speichereEssen(lager.getId(), null, lager.getDatumStart(), null, null, null, cb -> tableBuilderEssen.refresh());
+                    get().speichereEssen(lager.getId(), null, lager.getDatumStart(), null, null, null, cb -> {
+                        tableBuilderEssen.refresh();
+                        jButtonHinzufuegenEssen.setEnabled(true);
+                    });
                 } else {
                     Date letztesDatum = (Date) getJTableEssen().getModel().getValueAt(getJTableEssen().getModel().getRowCount() - 1, 0);
 
@@ -576,7 +585,10 @@ public class TPLager extends JTabbedPane {
                     c.setTime(letztesDatum);
                     c.add(Calendar.DAY_OF_MONTH, 1);
 
-                    get().speichereEssen(lager.getId(), null, c.getTime(), null, null, null, cb -> tableBuilderEssen.refresh());
+                    get().speichereEssen(lager.getId(), null, c.getTime(), null, null, null, cb -> {
+                        tableBuilderEssen.refresh();
+                        jButtonHinzufuegenEssen.setEnabled(true);
+                    });
                 }
             });
         }

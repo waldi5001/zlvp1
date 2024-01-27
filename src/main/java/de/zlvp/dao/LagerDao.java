@@ -32,7 +32,7 @@ public class LagerDao extends AbstractDao<Lager> {
         return selectOne(find, ps -> ps.setInt(1, lagerId), rse);
     }
 
-    public void speichern(Integer lagerId, String name, String thema, Date start, Date stop, int lagerortId, int jahrId) {
+    public int speichern(Integer lagerId, String name, String thema, Date start, Date stop, int lagerortId, int jahrId) {
         if (lagerId == null) {
             Integer id = (Integer) insertOrUpdate(insertLager, ps -> {
                 ps.setString(1, name);
@@ -48,6 +48,7 @@ public class LagerDao extends AbstractDao<Lager> {
                 ps.setInt(1, id);
                 ps.setInt(2, jahrId);
             });
+            return id;
         } else {
             insertOrUpdate(updateLager, ps -> {
                 ps.setString(1, name);
@@ -60,6 +61,7 @@ public class LagerDao extends AbstractDao<Lager> {
                 ps.setInt(1, lagerortId);
                 ps.setInt(2, lagerId);
             });
+            return lagerId;
         }
     }
 
