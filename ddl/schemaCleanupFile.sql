@@ -48,6 +48,8 @@ alter table stlama  DROP column stlamaid;
 alter table stlast  DROP column stlastid;
 alter table stlaze  DROP column stlazeid;
 alter table sttegr  DROP column sttegrid;
+alter table persont DROP column jahrgang ;
+alter table persont DROP column vornamenachname ;
 
 alter table stgrlat drop CONSTRAINT stgrla_pkey;
 alter table stgrle  drop CONSTRAINT stgrle_person_key;
@@ -74,6 +76,23 @@ alter table stlama rename column la to lager_id;
 alter table zverleih rename column ze to zelt_id;
 alter table zeltdetail rename column "schlüssel" to schluessel;
 
+alter table anrede alter column anrede set not null;
+alter table essen alter column lager set not null;
+alter table essen alter column datum set not null;
+alter table funktion alter column name set not null;
+alter table gruppe alter column name set not null;
+alter table jahr alter column jahr set not null;
+alter table lager alter column name set not null;
+alter table lager alter column datumstart set not null;
+alter table lager alter column datumstop set not null;
+alter table lagerinfo alter column person set not null;
+alter table legenda alter column lagerort_id set not null;
+alter table legendatyp alter column typ set not null;
+alter table programm alter column lager set not null;
+alter table programm alter column datum set not null;
+alter table schaeden alter column zeid set not null;
+alter table waehrung alter column waehrung set not null;
+alter table zverleih alter column zelt_id set not null;
 alter table waehrung alter column waehrung set not null;
 alter table sttegr alter column person set not null;
 alter table sttegr alter column gruppe set not null;
@@ -105,3 +124,26 @@ alter table anrede alter column anrede set not null;
 alter table funktion alter column name set not null;
 alter table zeltdetail alter column zelt set not null;
 alter table zverleih alter column zelt_id set not null;
+
+create index "ix_schaeden_zelt" on schaeden(zeid);
+create index "ix_stgrle_person" on stgrle(person);
+create index "ix_stgrze_zelt" on stgrze(zelt);
+create index "ix_sttegr_persont" on sttegr(person);
+create index "ix_zeltdetail_zdbez" on zeltdetail(bezeichnung);
+create index "ix_zeltdetail_zelt" on zeltdetail(zelt);
+create index "ix_zverleih_zelt" on zverleih(zelt_id);
+create index "ix_sttegr_persont" on sttegr(person);
+
+SET search_path TO information_schema,public;
+
+select c.constraint_name, c.table_name as constraint_Table, ctu.table_name as foreign_Table, ccu.column_name,
+'ALTER TABLE '||c.table_name||' DROP CONSTRAINT "'|| c.constraint_name || '";' as drop_Constraint ,
+'ALTER TABLE '||c.table_name||' ADD CONSTRAINT '|| 'fk_' || c.table_name || '_' || ctu.table_name || ' FOREIGN KEY (' || kcu.column_name || ') REFERENCES ' || ctu.table_name || ' ON DELETE CASCADE;' as create_Constraint
+from table_constraints c
+	inner join constraint_table_usage ctu on ctu.constraint_name = c.constraint_name
+	inner join constraint_column_usage ccu on ccu.constraint_name = c.constraint_name
+	inner join key_column_usage kcu on kcu.constraint_name = c.constraint_name
+where c.constraint_type = 'FOREIGN KEY' 
+	and c.table_name in ('stgrlat','stgrle','stgrze','stlaja','stlalo','stlama','stlast','stlaze','sttegr','essen','programm') 
+	and c.constraint_name in ('stgrla_Gruppe_fkey','stgrla_Lager_fkey','stgrle_Gruppe_fkey','stgrze_gruppe_fkey','stlaja_Jahr_fkey','stlaja_Lager_fkey','stlalo_lager_fkey','stlama_la_fkey','stlast_Lager_fkey','stlaze_Lager_fkey','sttegr_Gruppe_fkey','essen_Lager_fkey','programm_Lager_fkey')
+order by c.table_name;
