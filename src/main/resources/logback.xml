@@ -16,10 +16,9 @@
 		<encoder>
 			<pattern>%d{HH:mm:ss.SSS} [%-15.15thread] %-5level [%-36X{TRACE_ID}] %logger{40} - %msg%n</pattern>
 		</encoder>
-		<file>zlvp.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<maxHistory>3</maxHistory>
-			<fileNamePattern>zlvp.%d{ddMMyy}.log</fileNamePattern>
+			<fileNamePattern>zlvp.%d{yyyy-MM-dd}.log</fileNamePattern>
 		</rollingPolicy>
 	</appender>
 
