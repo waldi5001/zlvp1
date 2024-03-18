@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.DateFormatter;
 
+import de.zlvp.Events;
 import de.zlvp.entity.Lagerort;
 import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JComboBoxBuilder;
@@ -280,9 +281,8 @@ public class LagerAnlegen extends AbstractJInternalFrame {
         if (isNull(start) || isNull(stop) || isNull(sName) || sName.isEmpty() || isNull(lagerort)) {
             throw new RuntimeException("Folgende Felder müssen gefüllt sein: Name, Ort, Datum Start und Datum Stop");
         }
-
-        get().speichereLager(null, sName, sThema, start, stop, jahrId, lagerort.getId(), cb -> {
-        });
+        // Das Lager bei fireLagerSaved wird aktuell noch nicht benötigt.
+        get().speichereLager(null, sName, sThema, start, stop, jahrId, lagerort.getId(), cb -> Events.get().fireLagerSaved(null));
     }
 
 }

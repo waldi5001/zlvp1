@@ -29,6 +29,7 @@ import de.zlvp.Events;
 import de.zlvp.Events.Aktualisieren;
 import de.zlvp.Events.GruppeSaved;
 import de.zlvp.Events.LagerRenamed;
+import de.zlvp.Events.LagerSaved;
 import de.zlvp.Events.LeiterSaved;
 import de.zlvp.Events.TeilnehmerSaved;
 import de.zlvp.entity.AbstractEntity;
@@ -403,6 +404,12 @@ public class HauptFenster extends AbstractJInternalFrame {
         }
         return null;
     }
+
+    @Subscribe
+    public void lagerSaved(LagerSaved event) {
+        aktualisieren();
+    }
+
 
     public JPanel getjRightPane() {
         if (jRightPane == null) {
