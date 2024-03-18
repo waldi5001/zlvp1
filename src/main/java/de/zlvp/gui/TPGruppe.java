@@ -1,30 +1,47 @@
 package de.zlvp.gui;
 
-import com.google.common.eventbus.Subscribe;
-import de.javasoft.swing.JYTableScrollPane;
-import de.zlvp.Events;
-import de.zlvp.Events.GruppeSelected;
-import de.zlvp.entity.Gruppe;
-import de.zlvp.entity.Leiter;
-import de.zlvp.entity.Teilnehmer;
-import de.zlvp.entity.Zelt;
-import de.zlvp.ui.JTableBuilder;
-import de.zlvp.ui.JTableBuilders;
-import java.awt.*;
+import static de.zlvp.Client.get;
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
+
+import java.awt.AWTKeyStroke;
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.swing.*;
+
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 
-import static de.zlvp.Client.get;
-import static java.lang.String.format;
-import static java.util.stream.Collectors.joining;
+import com.google.common.eventbus.Subscribe;
+
+import de.javasoft.swing.JYTableScrollPane;
+import de.zlvp.Events;
+import de.zlvp.Events.GruppeSelected;
+import de.zlvp.Events.PersonSaved;
+import de.zlvp.entity.Gruppe;
+import de.zlvp.entity.Leiter;
+import de.zlvp.entity.Teilnehmer;
+import de.zlvp.entity.Zelt;
+import de.zlvp.ui.JTableBuilder;
+import de.zlvp.ui.JTableBuilders;
 
 public class TPGruppe extends JTabbedPane {
 
@@ -322,5 +339,13 @@ public class TPGruppe extends JTabbedPane {
         tableBuilderLeiter.refresh();
         tableBuilderTeilnehmer.refresh();
         tableBuilderZelt.refresh();
+    }
+    
+    @Subscribe
+    private void aktualisiere(PersonSaved event) {
+        if (isVisible()) {
+            tableBuilderLeiter.refresh();
+            tableBuilderTeilnehmer.refresh();
+        }
     }
 }

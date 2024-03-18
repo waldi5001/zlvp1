@@ -1,6 +1,7 @@
 package de.zlvp.gui;
 
 import de.zlvp.Client;
+import de.zlvp.Events;
 import de.zlvp.controller.AsyncCallback;
 import de.zlvp.entity.Geschlecht;
 import de.zlvp.entity.Person;
@@ -118,6 +119,10 @@ public class PersonSuchen extends AbstractJInternalFrame {
         initialize();
         jListBuilder.refresh();
         setupDialog();
+        
+        getJButtonSuchen().setEnabled(false);
+        getJTextFieldVorname().setEnabled(false);
+        getJTextFieldName().setEnabled(false);
     }
 
     private void initialize() {
@@ -279,7 +284,10 @@ public class PersonSuchen extends AbstractJInternalFrame {
                 String nottel = getJTextFieldNottel().getText();
 
                 get().speicherePerson(selectedPerson.getId(), geschlecht, vorname, name, strasse, plz, ort, gebtag, telnr, email, handy,
-                        nottel, asyncCallback -> suchen());
+                        nottel, asyncCallback -> {
+                            setVisible(false);
+                            Events.get().firePersonSaved(getJListPerson().getSelectedValue());
+                        });
             });
         }
         return jButtonOK;

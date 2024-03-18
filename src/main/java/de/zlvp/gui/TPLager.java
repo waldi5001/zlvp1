@@ -1,21 +1,17 @@
 package de.zlvp.gui;
 
-import com.google.common.eventbus.Subscribe;
-import de.javasoft.swing.JYTableScrollPane;
-import de.zlvp.Events;
-import de.zlvp.Events.LagerSelected;
-import de.zlvp.entity.Essen;
-import de.zlvp.entity.Gruppe;
-import de.zlvp.entity.Lager;
-import de.zlvp.entity.Lagerort;
-import de.zlvp.entity.Materialwart;
-import de.zlvp.entity.Programm;
-import de.zlvp.entity.Stab;
-import de.zlvp.entity.Zelt;
-import de.zlvp.ui.JComboBoxBuilder;
-import de.zlvp.ui.JTableBuilder;
-import de.zlvp.ui.JTableBuilders;
-import java.awt.*;
+import static de.zlvp.Client.get;
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
+
+import java.awt.AWTKeyStroke;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.FocusAdapter;
@@ -30,15 +26,42 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
-import javax.swing.*;
+
+import javax.swing.InputMap;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DateFormatter;
 
-import static de.zlvp.Client.get;
-import static java.lang.String.format;
-import static java.util.stream.Collectors.joining;
+import com.google.common.eventbus.Subscribe;
+
+import de.javasoft.swing.JYTableScrollPane;
+import de.zlvp.Events;
+import de.zlvp.Events.LagerSelected;
+import de.zlvp.Events.PersonSaved;
+import de.zlvp.entity.Essen;
+import de.zlvp.entity.Gruppe;
+import de.zlvp.entity.Lager;
+import de.zlvp.entity.Lagerort;
+import de.zlvp.entity.Materialwart;
+import de.zlvp.entity.Programm;
+import de.zlvp.entity.Stab;
+import de.zlvp.entity.Zelt;
+import de.zlvp.ui.JComboBoxBuilder;
+import de.zlvp.ui.JTableBuilder;
+import de.zlvp.ui.JTableBuilders;
 
 public class TPLager extends JTabbedPane {
 
@@ -656,6 +679,14 @@ public class TPLager extends JTabbedPane {
         tableBuilderGruppe.refresh();
         tableBuilderProgramm.refresh();
         tableBuilderEssen.refresh();
+    }
+    
+    @Subscribe
+    private void aktualisiere(PersonSaved event) {
+        if (isVisible()) {
+            tableBuilderStab.refresh();
+            tableBuilderMaterialwart.refresh();
+        }
     }
 
 }

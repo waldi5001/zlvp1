@@ -39,6 +39,10 @@ public class Events {
     public void firePersonSelected(Person person) {
         bus.post((PersonSelected) () -> person);
     }
+    
+    public void firePersonSaved(Person person) {
+        bus.post((PersonSaved) () -> person);
+    }
 
     public void fireJahrSelected(Jahr jahr) {
         bus.post((JahrSelected) () -> jahr);
@@ -193,6 +197,11 @@ public class Events {
 
     @FunctionalInterface
     public  interface PersonSelected {
+        Person get();
+    }
+    
+    @FunctionalInterface
+    public  interface PersonSaved {
         Person get();
     }
 

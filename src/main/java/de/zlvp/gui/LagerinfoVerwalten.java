@@ -7,7 +7,10 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
+import com.google.common.eventbus.Subscribe;
+
 import de.javasoft.swing.JYTableScrollPane;
+import de.zlvp.Events.PersonSaved;
 import de.zlvp.entity.Lagerinfo;
 import de.zlvp.ui.AbstractJInternalFrame;
 import de.zlvp.ui.JTableBuilder;
@@ -61,6 +64,13 @@ public class LagerinfoVerwalten extends AbstractJInternalFrame {
             jTablePerson = tableBuilder.buildAndLoad();
         }
         return jTablePerson;
+    }
+
+    @Subscribe
+    private void aktualisiere(PersonSaved event) {
+        if (isVisible()) {
+            tableBuilder.refresh();
+        }
     }
 
 }
