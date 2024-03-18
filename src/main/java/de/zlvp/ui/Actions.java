@@ -91,8 +91,12 @@ public class Actions {
         public void actionPerformed(ActionEvent e) {
             String gruppenname = JOptionPane.showInputDialog("Neuen Gruppenname eingeben");
             if (gruppenname != null && !gruppenname.isEmpty()) {
-                get().speichereGruppe(true, null, lager.getId(), gruppenname, null,
-                        cb -> Events.get().fireGruppeSaved(cb, null, lager));
+                get().speichereGruppe(true, null, lager.getId(), gruppenname, null, cb -> {
+                    cb.setLager(lager);
+                    cb.setChecked(true);
+                    lager.getGruppe().add(cb);
+                    Events.get().fireGruppeSaved(cb, null, lager);
+                });
             }
         }
 

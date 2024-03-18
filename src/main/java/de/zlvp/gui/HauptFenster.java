@@ -358,8 +358,9 @@ public class HauptFenster extends AbstractJInternalFrame {
         }
         if (gruppeNode != null) {
             ((DefaultTreeModel) getJTree().getModel()).removeNodeFromParent(gruppeNode);
-            ((DefaultTreeModel) getJTree().getModel()).insertNodeInto(gruppeNode, targetNode,
-                    targetNode.getChildCount());
+            if (targetNode != null) {
+                ((DefaultTreeModel) getJTree().getModel()).insertNodeInto(gruppeNode, targetNode, targetNode.getChildCount());
+            }
             getJTree().expandPath(new TreePath(gruppeNode.getPath()));
         } else if (targetNode != null) {
             DefaultMutableTreeNode gruppeLeaf = new UserObjectEqualMutableTreeNode(event.get());
